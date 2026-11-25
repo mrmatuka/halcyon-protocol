@@ -17,7 +17,7 @@
 | AI az MVP-ben     | Eredeti jelenetek/párbeszédek tervezése, konzisztenciaellenőrzés, képek/hangulat, tesztjátékos-agentek |
 | Tesztelés         | Vitest + React Testing Library + Playwright (e2e)                                                      |
 | Első szállítandó  | Közvetlenül az MVP; az 5 perces prototípus mérföldkő benne                                             |
-| Téma/világ        | **Még nyitott** → külön világ- és történettervezési fázis (Fázis 1)                                    |
+| Téma/világ        | „Csendes Jel” sci-fi az Ébenholdon (Fázis 1)                                    |
 
 ### MVP sikerfeltételei (az igényből)
 
@@ -27,29 +27,29 @@
 - Mentés és visszatölthető játékállás (több slot)
 - **Mérföldkő (M1):** ötperces, teljesen végigjátszható prototípus, ≥ 2 eltérő végkimenetellel
 
-## 1. Nyitott kérdések (válasz kell, mielőtt az érintett fázis indul)
+## 1. Lezárt kérdések és MVP-döntések
 
-Ezekről nem volt szó, ezért nem döntöttem el őket.
-
-| #   | Kérdés                                                                                                                                                               | Érinti     |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Q1  | Téma, hangulat, korosztály, hangnem (komor/humoros stb.)? Ezt a Fázis 1-ben közösen döntjük el.                                                                      | F1, F7     |
-| Q2  | A 3 tulajdonság neve és szerepe? (A „Szerencse" a klasszikus mintában tesztelhető és fogy – így legyen?)                                                             | F2, F3     |
-| Q3  | Karakterkészítés: fix hős, vagy a játékos dobja/osztja szét a tulajdonságokat?                                                                                       | F2, F5     |
-| Q4  | Mi történik 0 életerőnél: azonnali „halál" befejezés, vagy van újrapróbálás? Számít-e befejezésnek?                                                                  | F2, F3     |
-| Q5  | Mit jelent a „kártya" az MVP-ben? (A lista az alapmechanikában szerepel, de az MVP-leírásban nincs.) Bekerül, vagy a továbbfejlesztésbe tolódik?                     | F2         |
-| Q6  | Harcrendszer kell-e az MVP-be, vagy csak próbák?                                                                                                                     | F2, F3     |
-| Q7  | Bundler/projektsablon (pl. Vite), csomagkezelő (npm/pnpm), állapotkezelés (pl. useReducer, Zustand)?                                                                 | F0, F5     |
-| Q8  | Hány mentési slot legyen? Van automatikus mentés is?                                                                                                                 | F4         |
-| Q9  | Melyik LLM/képgeneráló szolgáltatás? Az LLM-es lépések futhatnak-e a build/CI részeként, vagy csak kézi, szerzői eszközként (a futásidejű játék LLM nélkül működik)? | F1, F7, F8 |
-| Q10 | Képformátum, méret, arány; hangok/zene az MVP része-e?                                                                                                               | F7         |
-| Q11 | Kell-e reszponzív/mobil támogatás, és mely böngészők a célok?                                                                                                        | F5, F9     |
-| Q12 | Hosting/kiadás módja (statikus oldal)?                                                                                                                               | F10        |
+| #   | Döntés |
+| --- | --- |
+| Q1  | „Csendes Jel”, felnőtt (18+) közönségnek szánt sci-fi, alapvetően komoly hangnemmel és száraz humorral. [Történetterv](docs/story-design.md) |
+| Q2  | Reflex a gyors reakcióhoz, Technika a rendszerekhez, Kitartás a fizikai terheléshez. A Szerencse tesztelhető, Szerencse-próbánként 1 ponttal csökken, minimum 0-ig. [Adatmodell](docs/data-model-spec.md) |
+| Q3  | Három előre elkészített hős közül lehet választani. [Hősök](content/heroes.json) |
+| Q4  | Nulla életerő azonnal halál-befejezésre vezet, amely beleszámít a befejezésekbe. [Motor](src/engine/engine.ts) |
+| Q5  | Minden hősnek egy egyszer használható képességkártyája van. [Hősök](content/heroes.json) |
+| Q6  | A konfliktusokat 2d6-próbák döntik el. Külön harcrendszer az MVP-n kívül marad. [Történetterv](docs/story-design.md) |
+| Q7  | npm, Vite, React, TypeScript strict és React `useReducer`. [UI-specifikáció](docs/ui-spec.md) |
+| Q8  | Három kézi mentési hely és egy automatikus mentés, helyi böngészőtárban. [Mentéskezelés](src/persistence/localStorageSaveRepository.ts) |
+| Q9  | Az LLM-ek kézi szerzői eszközök. Szövegnél nincs kötelező szolgáltató, a konzisztencia-ellenőrzéshez a szerzőétől eltérő szolgáltató modellje kell. A nyolc utolsó kép az OpenAI képgenerátorával készült. A build, a CI és a futásidejű játék LLM-független. [Szerzői munkafolyamat](docs/ai-authoring-workflow.md) |
+| Q10 | JPEG, 1376 px szélesség, 16:9-es célképarány. A meglévő képek 1376 × 768, a nyolc pótlás 1376 × 774 pixeles. Hang és zene az MVP-n kívül marad. [Vizuális stíluskalauz](docs/art-style-guide.md) |
+| Q11 | Reszponzív mobil- és asztali nézet. Az MVP böngészős ellenőrzésének célja a Chromium, mindkét nézetben. [UI-specifikáció](docs/ui-spec.md) |
+| Q12 | Statikus kiadás GitHub Pagesre a `main` ágról, a `/halcyon-protocol/` útvonalon. [Deploy workflow](.github/workflows/deploy.yml) |
 
 ## 2. Architektúra-vázlat (a döntések alapján, részletei a F0/F2-ben pontosítandók)
 
 ```
-/content/story.json        # történetgráf (adat, nem kód)
+/content/nodes.json        # jelenetek, döntések és befejezések
+/content/heroes.json       # hősök és képességkártyák
+/content/items.json        # tárgyak
 /content/schema/           # JSON Schema a gráfhoz
 /src/engine/               # tiszta, framework-független motor (TS)
 /src/ui/                   # React komponensek
@@ -75,7 +75,7 @@ Alapelvek: a motor nem ismeri a Reactet és a böngészőt; minden véletlen egy
 | **B – Kiegyensúlyozott** | Napi kódolás, tesztírás, szerkesztés                                            | Claude Sonnet 5.5                                     | GPT-6.2 Sol   | Gemini 4 Neon           |
 | **C – Gyors/olcsó**      | Tömeges, ismétlődő, kis kockázatú feladat                                       | Claude Haiku 5.5                                      | GPT-6 Luna    | Gemini 4 Hydrogen       |
 
-Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdéstől függ, és a keresés ezt nem ellenőrizte.
+A képgenerálás és az LLM-ek használati módját a Q9 döntés és a szerzői munkafolyamat rögzíti.
 
 ### Fázis–modell hozzárendelés
 
@@ -88,7 +88,7 @@ Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdés
 | F4 Mentés                             | Egyszerű, jól ismert minta             | B: Gemini 4 Neon / Sonnet 5.5                                      | –                                                                                                                                                                              |
 | F5 UI (React)                         | Komponensek, RTL tesztek               | B: Sonnet 5.5 / Gemini 4 Neon                                      | Hozzáférhetőségi review: A                                                                                                                                                     |
 | F6 Tartalom JSON                      | Magyar szöveg + séma                   | A (szöveg), B (JSON-átírás)                                        | Szövegírás A, mechanikus átírás B. Mindkét esetben jóváhagyás szükséges.                                                                                                       |
-| F7 Képek                              | Prompt + kép                           | B (prompt-szöveg), képmodell                                       | Stíluskalauz az A fázisban (F1) készül. A képmodell a Q9-től függ.                                                                                                             |
+| F7 Képek                              | Prompt + kép                           | B (prompt-szöveg), képmodell                                       | Stíluskalauz az A fázisban (F1) készül. A képgenerálás módját a Q9 rögzíti.                                                                                                             |
 | F8.1–F8.3 Validátor, bot, statisztika | Algoritmus, kód                        | B: Sonnet 5.5 / GPT-6.2 Sol                                        | Kódgenerálás, determinisztikus.                                                                                                                                                |
 | F8.4 LLM konzisztenciaellenőr         | Hosszú kontextus, finom ellentmondások | A: **nagy kontextusú** modell (pl. Fable 5.2 vagy Gemini 4 Carbon) | Az egész történet beleférjen egy kontextusba. Érdemes **más szolgáltató** modelljével ellenőrizni, mint amelyik a szöveget írta.                                               |
 | F8.5 LLM tesztjátékos-agent           | Sok futtatás                           | C: Haiku 5.5 / Luna / Hydrogen                                     | Több személyiség (óvatos, kockázatvállaló) → több modell is kombinálható. Ha a költség nem számít, B.                                                                          |
@@ -100,13 +100,13 @@ Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdés
 
 - A szöveget író és a szöveget ellenőrző modell **ne ugyanaz legyen**.
 - Minden fázis elején egy rövid, 2–3 mintás összehasonlítás dönt, ha a fenti javaslat és a tapasztalat eltér.
-- A modellválasztás a Q9 kérdés megválaszolása után véglegesítendő.
+- A konkrét szövegmodellt a szerzői feladathoz választjuk a Q9 szerint.
 
 ---
 
 ## Fázis 0 – Projekt alapok
 
-> **Állapot: KÉSZ.** Döntések: npm, Vite + React + TypeScript (strict), ESLint + Prettier, CI nem kell. Az állapotkezelés (Q7 másik fele) még nyitott, az F5-ben döntendő.
+> **Állapot: KÉSZ.** Döntések: npm, Vite + React + TypeScript (strict), ESLint + Prettier, CI nem kell. Az állapotkezelés az F5-ben rögzített React `useReducer`.
 
 - [x] **F0.1** Projekt inicializálása (TS strict, React, Vite).
 - [x] **F0.2** Vitest + React Testing Library beállítása; egy dummy teszt zöld.
