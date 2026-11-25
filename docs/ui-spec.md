@@ -4,7 +4,8 @@
 
 - **Állapotkezelés:** React `useReducer` (`src/ui/gameReducer.ts`).
 - **Stílus:** Tiszta CSS változókkal (`src/ui/styles.css`), sötét sci-fi / jeges űrállomás hangulat.
-- **Reszponzivitás (Q11):** Asztali nézetben kétoszlopos elrendezés (balra a történet, jobbra a karakterlap és tárgylista), mobilon (`< 840px`) egymás alatt.
+- **Reszponzivitás (Q11):** Asztali nézetben kétoszlopos elrendezés (balra a történet, jobbra a karakterlap és tárgylista), mobilon (legfeljebb 840 px szélességnél) egymás alatt.
+- **Böngészőcél (Q11):** Chromium asztali és mobil nézetben.
 - **Függőség-injektálás:** Az `App` opcionálisan megkaphatja a `content`, `saveRepository` és `getImageUrl` propokat (teszteléshez és a későbbi F6/F7 tartalombekötéshez).
 
 ## Képernyőtérkép
