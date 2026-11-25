@@ -1,0 +1,19 @@
+[
+  {
+    "id": "hopatron",
+    "name": "Hőpatron",
+    "description": "Katonai kémiai melegítő, amely pillanatok alatt felolvasztja a fagyott kesztyűt és ízületeket. +1 Reflex próbamódosító a zárlatnál.",
+    "modifiers": [
+      {
+        "stat": "reflex",
+        "delta": 1,
+        "nodeId": "n14_zarlat"
+      }
+    ]
+  },
+  {
+    "id": "parancsnoki_kartya",
+    "name": "Parancsnoki kártya",
+    "description": "Dr. Hajnal Edit mágneses belépőkártyája. Teljes hozzáférést ad a Halcyon reaktorvezérlőjéhez."
+  }
+]

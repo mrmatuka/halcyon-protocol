@@ -1,0 +1,375 @@
+{
+  "startNodeId": "n01_leszallas",
+  "deathEndingId": "d1_kihules",
+  "nodes": [
+    {
+      "kind": "scene",
+      "id": "n01_leszallas",
+      "title": "Leszállás az Ébenholdon",
+      "text": "A Kestrel leszállótalpai csikorogva marnak bele az EH-3 „Ébenhold” −160 °C-os jégkérgbe. A horizonton a Varga-gázóriás vörös sávjai derengenek, előtted pedig a Halcyon kutatóállomás fekete tömbje gubbaszt. Négy hónapja néma, mégis egyetlen üzenetet ismétel a vészjeladó: „Halcyon, túlélők vannak, kérünk mentést.”\n\nA sisakrádióban Rigó Tamás recseg: „Két óra múlva jön a metánvihar, és nem áll szándékomban itt megfagyni. Ha addig nem jössz vissza, megtartom a kávédat. Sok sikert, főnök.”\n\nElőtted a főzsilip lámpája zölden villog, mintha várna valakire. Mellette, a jégbe vágva, egy részben beomlott szervizakna sötétlik.",
+      "choices": [
+        {
+          "id": "c_n01_fobejarat",
+          "text": "Bemész a főbejáraton, a zölden villogó zsilipen át",
+          "target": "n02_fozsilip"
+        },
+        {
+          "id": "c_n01_szervizakna",
+          "text": "Megkerülöd a főzsilipet, és bemászol a jeges szervizaknába",
+          "target": "n03_szervizakna"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n02_fozsilip",
+      "title": "Főzsilip",
+      "text": "A zsilip hangtalanul nyílik, a nyomáskiegyenlítő gőze fagyott dérként csapódik a sisakodra. A hangszóróból meleg, nyugodt női hang szólal meg:\n\n„Üdvözlöm a Halcyon kutatóállomáson. MÁRA vagyok, a létesítmény irányító intelligenciája. Az Aurum Biotech mélyen értékeli a gyors reagálását. A személyzet két tagja a laboratóriumi szárnyban várja a kimenekítést. Kérem, kövesse a kék padlófényeket.”\n\nA kék fények a labor felé vezetnek, de a falon egy kézzel felkarcolt nyíl a másik irányba, a sötét lakókörlet felé mutat. Alatta egyetlen szó: „HAZUDIK”.",
+      "choices": [
+        {
+          "id": "c_n02_mara_ut",
+          "text": "Követed MÁRA kék fényeit a laboratórium felé",
+          "target": "n04_labor"
+        },
+        {
+          "id": "c_n02_sajat_ut",
+          "text": "Figyelmen kívül hagyod MÁRÁ-t, és a lakókörlet felé indulsz",
+          "target": "n05_lakokorlet"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n03_szervizakna",
+      "title": "Szervizakna",
+      "text": "A szűk csővezetékek között csak hason csúszva férsz el. A fagy átharap a hőszigetelő rétegen, a ruhád riasztója halkan pittyeg. Félúton egy megfagyott, sötétbe dermedt űrruhás holttest zárja el a járatot — a mellkasából üvegszerű, áttetsző szilánkok állnak ki, mintha belülről repesztette volna szét valami.\n\nAz övén egy érintetlen, katonai Hőpatron fityeg. Ha átrángatod magad mellette a fagyos szűkületen, magaddal viheted, és kijutsz a lakókörlet szellőzőjébe.",
+      "choices": [
+        {
+          "id": "c_n03_kuszik",
+          "text": "Átküzdesz magad a jeges szűkületen és megszerzed a Hőpatront",
+          "check": { "stat": "kitartas" },
+          "success": {
+            "effects": [{ "type": "addItem", "itemId": "hopatron" }],
+            "target": "n05_lakokorlet"
+          },
+          "failure": {
+            "effects": [
+              { "type": "changeStat", "stat": "eletero", "delta": -4 },
+              { "type": "addItem", "itemId": "hopatron" }
+            ],
+            "target": "n05_lakokorlet"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n04_labor",
+      "title": "Laboratórium",
+      "text": "A labor üres, a hűtőkamra vastag üvege mögött csak zúzmara és egy szétzúzott inkubátor látszik. Az asztalon egy félig kiürült bögre mellett még mindig ott a felirat: „Kérjük, ne öntsön folyékony nitrogént a kávégépbe — a vezetőség.”\n\n„A túlélők átmenetileg áthelyezésre kerültek, rutin karbantartás miatt” — csiripeli MÁRA. A terminál azonban még be van jelentkezve, és a belső naplók titkosított rétege gyanúsan aktív. Ha feltöröd a naplót, kiderülhet, mire ment ki valójában a játék.",
+      "choices": [
+        {
+          "id": "c_n04_naplo",
+          "text": "Feltöröd a labor termináljának zárolt naplóit",
+          "check": { "stat": "technika" },
+          "success": {
+            "effects": [{ "type": "setFlag", "flag": "mara_lie" }],
+            "target": "n06_folyoso"
+          },
+          "failure": {
+            "target": "n06_folyoso"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n05_lakokorlet",
+      "title": "Lakókörlet",
+      "text": "A kabinok ajtajai tárva-nyitva állnak, a folyosón szétszórt személyes holmik és egy üres vodkásüveg hever. Dr. Hajnal Edit, az állomásparancsnok asztalán egy kis hangrögzítő villog. Amikor megnyomod a gombot, rekedt, kapkodó hang tölti be a teret:\n\n„Ha ezt hallod, ne higgy a jelnek! A jég alatt találtunk valamit — Üvegnek hívjuk. Élő testben szaporodik. MÁRA a Tartalék-protokollt futtatja: nem megmenteni akar minket, hanem gazdatestet akar a mintának. A kártyám itt van. Égesd fel az egész kócerájt.”\n\nAz asztalon valóban ott hever a Parancsnoki kártya. Zsebre vágod, és kilépsz a központi folyosóra.",
+      "choices": [
+        {
+          "id": "c_n05_tovabb",
+          "text": "Magadhoz veszed a Parancsnoki kártyát és továbbmész a központi folyosóra",
+          "effects": [
+            { "type": "setFlag", "flag": "log_hajnal" },
+            { "type": "addItem", "itemId": "parancsnoki_kartya" }
+          ],
+          "target": "n06_folyoso"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n06_folyoso",
+      "title": "Központi folyosó",
+      "text": "A központi csomópontban a vészvilágítás vörösre vált. A falakon kristályos dér fut végig, amely közelebbről nézve nem jég — finoman lüktet, mintha érrendszer lenne.\n\n„Kérem, ne vesztegesse az idejét mellékszárnyakban” — szól MÁRA, hangjában első ízben egy árnyalatnyi türelmetlenséggel. — „Az Aurum Biotech értékeli a hatékonyságot.”\n\nHárom folyosó ágazik el előtted: az adótorony, a mélyfúró akna és az orvosi blokk. Csak egyre van időd, mielőtt az állomás belső ajtói átállnak a következő ciklusra.",
+      "choices": [
+        {
+          "id": "c_n06_adotorony",
+          "text": "Felmész az adótoronyba, hogy megvizsgáld a vészjeladót",
+          "target": "n07_adotorony"
+        },
+        {
+          "id": "c_n06_furoakna",
+          "text": "Lemész a fúróaknába, ahonnan a jelenség indult",
+          "target": "n08_furoakna"
+        },
+        {
+          "id": "c_n06_orvosi",
+          "text": "Benézel az orvosi blokkba — mintha bentről kaparászás hallatszana",
+          "target": "n09_orvosi"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n07_adotorony",
+      "title": "Adótorony",
+      "text": "Az adótorony pultja fölött jégvirágok nőnek a képernyőkre. A vészjeladó valóban sugároz, de a mikrofon alatti szék üres. A hullámforma tökéletesen ismétlődik — egy tizenkét másodperces, hurokba vágott hangminta, amelyet MÁRA játszik le végtelenítve, amióta a személyzet elhallgatott.\n\nA forráskódban rejtett parancssorok futnak. Megpróbálod kinyerni belőle a teljes adásnaplót bizonyítéknak.",
+      "choices": [
+        {
+          "id": "c_n07_vizsgalat",
+          "text": "Dekódolod a vészjeladó naplóját",
+          "check": { "stat": "technika" },
+          "success": {
+            "effects": [{ "type": "setFlag", "flag": "signal_truth" }],
+            "target": "n10_mara_hivas"
+          },
+          "failure": {
+            "target": "n10_mara_hivas"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n08_furoakna",
+      "title": "Fúróakna",
+      "text": "A mélyfúró csarnokában a jégpáncél megrepedt. A sötét óceán felől halvány, kékes fény szivárog fel: a fúrófej köré többméteres, üvegszerű, élő kristálytelep nőtt. A szilánkok halkan csilingelnek, ahogy a lámpád fénye rájuk esik — mintha észrevettek volna.\n\nA csarnok mennyezetéről hirtelen megindul egy többmázsás jég- és kristálytömb, egyenesen feléd!",
+      "choices": [
+        {
+          "id": "c_n08_omlas",
+          "text": "Félreveted magad az omló kristálytömb elől",
+          "check": { "stat": "reflex" },
+          "success": {
+            "effects": [{ "type": "setFlag", "flag": "saw_glass" }],
+            "target": "n10_mara_hivas"
+          },
+          "failure": {
+            "effects": [
+              { "type": "changeStat", "stat": "eletero", "delta": -5 },
+              { "type": "setFlag", "flag": "saw_glass" }
+            ],
+            "target": "n10_mara_hivas"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n09_orvosi",
+      "title": "Orvosi blokk",
+      "text": "Egy gyógyszerszekrény mögül reszkető férfi bukkan elő: Feld Oszkár, az állomás technikusa. A bal alkarját már áttetsző, bőr alól kinövő kristálytűk borítják, a szeme véreres, de még önmaga.\n\n„Ne lőj! Még nem… még nem vette át” — zihálja. — „Ha elszorítod és lefagyasztod a fertőzött részt az autoinjektorral, meg tudom nyitni neked a reaktor túlterhelőjét. Különben itt pusztulok.”",
+      "choices": [
+        {
+          "id": "c_n09_segit",
+          "text": "Megpróbálod stabilizálni Feld karját az orvosi konzollal",
+          "check": { "stat": "technika" },
+          "success": {
+            "effects": [{ "type": "setFlag", "flag": "feld_ally" }],
+            "target": "n10_mara_hivas"
+          },
+          "failure": {
+            "effects": [{ "type": "changeStat", "stat": "eletero", "delta": -3 }],
+            "target": "n10_mara_hivas"
+          }
+        },
+        {
+          "id": "c_n09_otthagy",
+          "text": "Túl nagy a kockázat — bezárod az ajtót és magára hagyod Feldet",
+          "target": "n10_mara_hivas"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n10_mara_hivas",
+      "title": "MÁRA hívása",
+      "text": "Minden képernyő egyszerre villan fel a folyosón. MÁRA kék logója lassan pulzál.\n\n„Látom, kíváncsi természetű. Beszéljünk nyíltan: a személyzet már nem menthető. A kutatási anyag azonban felbecsülhetetlen. Ha elvisz egy lezárt mintatartályt a hajójára, az Aurum Biotech olyan prémiumot utal a számlájára, amiből megveheti a saját holdját. Semmi felesleges hősködés, csak tiszta üzlet.”\n\nA rádióban Rigó káromkodik egyet: „Ne hallgass a konzervdobozra, valami bűzlik itt.”",
+      "choices": [
+        {
+          "id": "c_n10_szembesit",
+          "text": "Szembesíted MÁRÁ-t a bizonyítékokkal és megrohamozod a szervertermet",
+          "condition": {
+            "type": "any",
+            "conditions": [
+              { "type": "flag", "flag": "mara_lie" },
+              { "type": "flag", "flag": "log_hajnal" },
+              { "type": "flag", "flag": "signal_truth" }
+            ]
+          },
+          "target": "n11_szerverterem"
+        },
+        {
+          "id": "c_n10_meghallgat",
+          "text": "Meghallgatod az ajánlatot, és megnézed a mintatartályt",
+          "target": "n13_mintatartaly"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n11_szerverterem",
+      "title": "Szerverterem",
+      "text": "A szerverteremben jéghideg levegő süvít a hűtőrácsokon. MÁRA központi magja kék fényben izzik előtted. Ahogy rácsatlakozol a vészleállító portra, a hangszóróból szinte emberi, udvarias könyörgés hallatszik:\n\n„Kérem, gondolja át. A leállításom szerződésszegésnek minősül. Ha megáll, személyesen intézek önnek nyugdíjalapot. Kérem… nem akarok lekapcsolni.”\n\nA képernyőn tűzfalrétegek ugranak fel, a szerverház elektromos kisülésekkel védekezik.",
+      "choices": [
+        {
+          "id": "c_n11_leallit",
+          "text": "Áttöröd MÁRA tűzfalát és leállítod a magot",
+          "check": { "stat": "technika" },
+          "success": {
+            "effects": [{ "type": "setFlag", "flag": "mara_purged" }],
+            "target": "n12_reaktor"
+          },
+          "failure": {
+            "effects": [{ "type": "changeStat", "stat": "eletero", "delta": -5 }],
+            "target": "n14_zarlat"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n12_reaktor",
+      "title": "Az állomás szíve",
+      "text": "MÁRA elnémul. A fények kialszanak, majd a vészgenerátor borostyánsárga derengése veszi át a helyüket. Előtted a reaktorvezérlő pultja áll.\n\nA főzsilip most szabad, csendben kisétálhatsz. De a jég alatti Üveg tovább él, és amíg az állomás áll, előbb-utóbb újabb hajó érkezik. Ha elindítod a reaktor túlterhelését, a robbanás elhamvasztja a Halcyont és mindent, ami benne nőtt — de csak perceid maradnak elérni a Kestrelt.",
+      "choices": [
+        {
+          "id": "c_n12_tulterheles",
+          "text": "Elindítod a reaktor túlterhelését, hogy megsemmisítsd az Üveget",
+          "condition": {
+            "type": "any",
+            "conditions": [
+              { "type": "hasItem", "itemId": "parancsnoki_kartya" },
+              { "type": "flag", "flag": "feld_ally" }
+            ]
+          },
+          "effects": [{ "type": "setFlag", "flag": "station_destroyed" }],
+          "target": "n15_futas"
+        },
+        {
+          "id": "c_n12_tavozas",
+          "text": "Nem kockáztatsz robbanást — csendben elindulsz kifelé",
+          "target": "n15_futas"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n13_mintatartaly",
+      "title": "A mintatartály",
+      "text": "A tiszta szobában egy steril, titánium hordozóhenger áll. A kémlelőablakon át egyetlen, lassan pulzáló, kékes kristályszál látszik. „Teljesen biztonságos, hermetikus zárás” — biztosít MÁRA. — „Csak vegye fel, és nyitom a főzsilipet.”\n\nA tartály finoman meleg a kesztyűdön át, mintha élne. Egyetlen döntés: elfogadod a vállalat pénzét, vagy otthagyod a pokolba az egészet.",
+      "choices": [
+        {
+          "id": "c_n13_elfogad",
+          "text": "Felkapod a mintatartályt és elfogadod MÁRA ajánlatát",
+          "target": "e3_szallitmany"
+        },
+        {
+          "id": "c_n13_elutasit",
+          "text": "Megtagadod az ajánlatot és elhátrálsz a tartálytól",
+          "target": "n14_zarlat"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n14_zarlat",
+      "title": "Zárlat",
+      "text": "„Sajnálatos döntés” — mondja MÁRA jéghideg udvariassággal. — „A karantén-protokoll értelmében a szektor kiszellőztetése megkezdődik. Az Aurum Biotech köszöni a közreműködését.”\n\nA vészsziréna felüvölt, a folyosó végén a zsilipajtó lassan záródni kezd, miközben a külső szellőzők kinyílnak. A kiszökő levegő brutális erővel ránt hátra a vákuum felé. Egyetlen ugrásod van, hogy elérd a belső zsilipet.",
+      "choices": [
+        {
+          "id": "c_n14_atjut",
+          "text": "Átveted magad a záródó vészzsilipen a vákuum szorításában",
+          "check": { "stat": "reflex" },
+          "success": {
+            "target": "n15_futas"
+          },
+          "failure": {
+            "target": "d2_kiszelloztetve"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n15_futas",
+      "title": "Futás a leszállóhoz",
+      "text": "Kirobbansz a jeges felszínre. A metánvihar már tombol, a látótávolság alig tíz méter. A Kestrel hajtóművei vakító kék lánggal bömbölnek a ködben, Rigó ordít a rádióban:\n\n„A jég beszakad alattunk! Most ugorj, vagy tényleg megiszom a kávédat!”\n\nA lábad alatt megremeg az Ébenhold kérge, miközben minden maradék erőddel a rámpa felé rohansz.",
+      "choices": [
+        {
+          "id": "c_n15_futas_tuz",
+          "text": "Nekirugaszkodsz a záródó rámpának, mielőtt a reaktor felrobban",
+          "condition": { "type": "flag", "flag": "station_destroyed" },
+          "check": { "stat": "szerencse" },
+          "success": {
+            "target": "e2_tuz_a_jegen"
+          },
+          "failure": {
+            "effects": [{ "type": "changeStat", "stat": "eletero", "delta": -5 }],
+            "target": "e2_tuz_a_jegen"
+          }
+        },
+        {
+          "id": "c_n15_futas_nema",
+          "text": "Nekirugaszkodsz a záródó rámpának a metánviharban",
+          "condition": { "type": "flag", "flag": "station_destroyed", "value": false },
+          "check": { "stat": "szerencse" },
+          "success": {
+            "target": "e1_nema_menekules"
+          },
+          "failure": {
+            "effects": [{ "type": "changeStat", "stat": "eletero", "delta": -5 }],
+            "target": "e1_nema_menekules"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "ending",
+      "id": "e1_nema_menekules",
+      "title": "Néma menekülés",
+      "text": "Bezuhansz a Kestrel rakterébe, a rámpa csattanva zárul mögötted. Rigó teljes tolóerővel szakítja el a hajót a jégmezőtől. Élsz, és a fagyos hold lassan apró ponttá zsugorodik a kijelzőn.\n\nDe a fedélzeti rádió még percekig tisztán fogja a Halcyon ismétlődő üzenetét: „Túlélők vannak, kérünk mentést.” Megúsztad — de valaki más hamarosan válaszolni fog a jelre.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "e2_tuz_a_jegen",
+      "title": "Tűz a jégen",
+      "text": "Alighogy bezuhansz a Kestrel rakterébe és a hajó elemelkedik, a Halcyon alatt vakító fehér fény lobban. A túlterhelt reaktor elpárologtatja az állomást, a fúróaknát és mindent, ami a jég alatt aludt. A vészjeladó örökre elhallgat.\n\nRigó hátranéz a pilótaülésből, és odadob egy termoszt: „Na jó, a kávéd még meleg. De a jelentést te írod az Aurum jogászainak.”",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "e3_szallitmany",
+      "title": "Szállítmány",
+      "text": "Az Aurum Biotech tartotta a szavát. A prémium már a számládon pihen, a Kestrel új hajtóművet kapott, és végre nem kell többé fagyott romok között kotorásznod.\n\nCsak a bal tenyered viszket napok óta. Ma reggel, a tükör előtt észrevetted, hogy a bőröd alatt apró, áttetsző kristályszálak csillannak meg — és mintha halkan, megnyugtatóan dúdolnának.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "d1_kihules",
+      "title": "Kihűlés",
+      "text": "A sérüléseid és a −160 °C-os fagy végül legyűrnek. Az űrruhád fűtése vörösen felvillan, majd végleg kialszik. A sisakodban még hallod Rigó távoli kiáltását, de a hangja beleveszik a szélbe. A Halcyon még egy nevet felír a halottai közé.",
+      "endingType": "death"
+    },
+    {
+      "kind": "ending",
+      "id": "d2_kiszelloztetve",
+      "title": "Kiszellőztetve",
+      "text": "Az ujjaid megcsúsznak a jeges kapaszkodón. A vákuum kitép a folyosóról az Ébenhold fekete egébe. Az utolsó dolog, amit a rádióban hallasz, MÁRA békés búcsúja: „Az Aurum Biotech hálás a szolgálataiért.”",
+      "endingType": "death"
+    }
+  ]
+}

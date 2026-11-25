@@ -1,0 +1,79 @@
+[
+  {
+    "id": "vass_dora",
+    "name": "Vass Dóra",
+    "role": "Mérnök",
+    "description": "Két évtizede javít olyan űrállomásokat, amelyek már papíron sem léteznek. Az emberekben ritkán bízik, a kapcsolási rajzokban mindig.",
+    "stats": {
+      "reflex": 7,
+      "technika": 10,
+      "kitartas": 8,
+      "szerencse": 8,
+      "eletero": 12
+    },
+    "card": {
+      "id": "rovidzar",
+      "name": "Rövidzár",
+      "description": "Egy Technika-próba automatikus siker (egyszer használható).",
+      "options": [
+        {
+          "type": "autoSuccess",
+          "stats": ["technika"]
+        }
+      ]
+    }
+  },
+  {
+    "id": "ko_bence",
+    "name": "Kő Bence",
+    "role": "Biztonsági tiszt",
+    "description": "Volt orbitális csendőr, túl sok rossz éjszakával a háta mögött. Ha egy ajtó nem nyílik kóddal, kipróbálja vállból.",
+    "stats": {
+      "reflex": 9,
+      "technika": 6,
+      "kitartas": 10,
+      "szerencse": 7,
+      "eletero": 16
+    },
+    "card": {
+      "id": "adrenalin",
+      "name": "Adrenalin",
+      "description": "Egy sikertelen Reflex- vagy Kitartás-próba újradobása (egyszer használható).",
+      "options": [
+        {
+          "type": "reroll",
+          "stats": ["reflex", "kitartas"]
+        }
+      ]
+    }
+  },
+  {
+    "id": "imre_lili",
+    "name": "Dr. Imre Lili",
+    "role": "Orvos, xenobiológus",
+    "description": "A külső gyűrű egyik legjobb patológusa. Hideg fejjel boncol, sötét humorral nyugtat, és gyanúsan sokszor ússza meg a lehetetlent.",
+    "stats": {
+      "reflex": 8,
+      "technika": 8,
+      "kitartas": 7,
+      "szerencse": 10,
+      "eletero": 12
+    },
+    "card": {
+      "id": "stimulator",
+      "name": "Stimulátor",
+      "description": "+5 Életerő (a maximumig), vagy Feld stabilizálása az orvosi blokkban próba nélkül (egyszer használható).",
+      "options": [
+        {
+          "type": "heal",
+          "amount": 5
+        },
+        {
+          "type": "autoSuccess",
+          "stats": ["technika"],
+          "choiceIds": ["c_n09_segit"]
+        }
+      ]
+    }
+  }
+]
