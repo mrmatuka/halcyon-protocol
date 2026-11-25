@@ -2,7 +2,7 @@
 
 ## Rögzített döntések (Q9, Q10)
 
-- **Generálás:** Beépített `image-generator` subagent, kimenet: `public/images/<nodeId>.png`.
+- **Generálás:** AI-képgenerátor, a játékba kerülő JPEG-fájlok helye: `public/images/<nodeId>.jpg`.
 - **Képarány:** 16:9 (widescreen, illeszkedik a `SceneView` 16:9 keretéhez).
 - **Hangok / zene:** Nem része az MVP-nek.
 

@@ -193,12 +193,12 @@ Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdés
 
 ## Fázis 7 – Vizuális tartalom (AI-generált illusztrációk)
 
-> **Állapot: RÉSZBEN KÉSZ (12/20 kép megvan).** A képgeneráló modell elérte a kvótakorlátot (reset: ~5 óra múlva). A stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)), a 20 csomópont promptja ([illustrations.json](content/illustrations.json)), a bekötés ([illustrations.ts](src/content/illustrations.ts)) és a betöltés/hibakezelés tesztje kész.
+> **Állapot: KÉSZ (20/20 kép).** A stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)), a 20 csomópont promptja ([illustrations.json](content/illustrations.json)), a bekötés ([illustrations.ts](src/content/illustrations.ts)) és a betöltés/hibakezelés tesztje kész.
 
 - [x] **F7.1** Q9, Q10 megválaszolása; stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)).
 - [x] **F7.2** Képleírás-prompt és alt-szöveg mind a 20 csomóponthoz ([illustrations.json](content/illustrations.json)).
-- [ ] **F7.3** Képek generálása: **12/20 kész** (`n01`, `n02`, `n06`, `n07`, `n08`, `n11`, `n12`, `n13`, `n14`, `n15`, `e1`, `e2` a `public/images/` mappában); **8 hiányzik** (`n03`, `n04`, `n05`, `n09`, `n10`, `e3`, `d1`, `d2`) kvótakorlát miatt.
-- [ ] **F7.4** Teszt megírva ([illustrations.test.ts](tests/unit/illustrations.test.ts)) — a maradék 8 kép után zöldül.
+- [x] **F7.3** Elkészült mind a 20 illusztráció a [public/images/](public/images/) mappában.
+- [x] **F7.4** A [teszt](tests/unit/illustrations.test.ts) minden csomóponthoz igazolja a képfájl és az alt-szöveg meglétét.
 - [x] **F7.5** Betöltési viselkedés (`loading="lazy"`, `onError` fallback) implementálva és tesztelve ([SceneView.tsx](src/ui/components/SceneView.tsx), [EndingView.tsx](src/ui/components/EndingView.tsx)).
 
 ## Fázis 8 – AI-eszközök (szerzői oldal, kiadott játékban nem futnak)
@@ -226,7 +226,7 @@ Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdés
 
 ## Fázis 10 – Kiadás és MVP-átvétel
 
-> **Állapot: KÉSZEN ÁLL (8 hiányzó illusztráció nyitott).** Production build (`npm run build`) hibátlan, GitHub Pages deploy (`halcyon-protocol`) beállítva ([deploy.yml](.github/workflows/deploy.yml)). Ismert hibák és következő lépések: [docs/mvp-status.md](docs/mvp-status.md).
+> **Állapot: KIADÁSRA KÉSZ.** Production build (`npm run build`) hibátlan, GitHub Pages deploy (`halcyon-protocol`) beállítva ([deploy.yml](.github/workflows/deploy.yml)). Ismert hibák és következő lépések: [docs/mvp-status.md](docs/mvp-status.md).
 
 - [x] **F10.1** Production build (`npm run build` → `dist/`) és GitHub Pages workflow (`halcyon-protocol`, Q12 lezárva).
 - [x] **F10.2** MVP-checklista végigjárva (lásd lent).
@@ -241,9 +241,9 @@ Képgeneráláshoz külön képmodell kell. A konkrét választás a Q9 kérdés
 - [x] 2d6 ≤ tulajdonság + módosító próbák működnek, tesztelve
 - [x] Életerő, 3 tulajdonság, szerencse, kártya, tárgylista látható és működik
 - [x] Mentés/betöltés több slottal (+ automentés), újratöltés után is
-- [ ] Minden csomóponthoz van illusztráció *(12/20 kész, 8 kép pótlása a képgeneráló kvóta újraindulása után)*
+- [x] Minden csomóponthoz van illusztráció *(20/20, a production buildben is)*
 - [x] Magyar nyelvű tartalom, jóváhagyott
-- [x] Unit + RTL + e2e tesztek zöldek *(139 unit/RTL teszt + 9 e2e teszt zöld; `illustrations.test.ts` a 8 hiányzó kép pótlása után zöldül)*
+- [x] Unit + RTL + e2e tesztek zöldek *(141 unit/RTL teszt + 9 e2e teszt zöld)*
 
 ## Továbbfejlesztés (az MVP-n kívül, nem része a tervnek)
 
