@@ -1,10 +1,9 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { localizedLabel } from './adventure';
 import type { CatalogEntry } from './catalog';
 import { useLanguage } from './language';
 import { portraitUrl, uploadPortrait } from './portraits';
 import {
-  assignedProfile,
   attributeCap,
   attributeLabels,
   attributes,
@@ -17,6 +16,7 @@ import {
   spentPoints,
   traitIds,
   traits,
+  type Attribute,
   type Profile,
   type Profiles,
 } from './profiles';
@@ -38,24 +38,62 @@ function blankProfile(): Profile {
   };
 }
 
+function allocationCap(profile: Profile, stat: Attribute): number {
+  return attributeCap - attributeValue({ ...profile, points: blankPoints }, stat);
+}
+
+function capAllocatedPoints(profile: Profile): Profile {
+  const points = { ...profile.points };
+  for (const stat of attributes) {
+    points[stat] = Math.min(points[stat], allocationCap(profile, stat));
+  }
+  return { ...profile, points };
+}
+
 export function ProfileLibrary({
   library,
   adventures,
   onChange,
-  createOnOpen = false,
+  createForAdventureId,
+  onCloseCreator,
 }: {
   library: Profiles;
   adventures: CatalogEntry[];
   onChange: (next: Profiles) => void;
-  createOnOpen?: boolean;
+  createForAdventureId?: string;
+  onCloseCreator?: () => void;
 }) {
   const { locale, t } = useLanguage();
   const [draft, setDraft] = useState<Profile | undefined>(() =>
-    createOnOpen ? blankProfile() : undefined,
+    createForAdventureId ? blankProfile() : undefined,
+  );
+  const [allAdventures, setAllAdventures] = useState(library.defaultId === null);
+  const [selectedAdventures, setSelectedAdventures] = useState<string[]>(() =>
+    createForAdventureId ? [createForAdventureId] : [],
   );
   const [removeId, setRemoveId] = useState<string>();
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const creatorHeading = useRef<HTMLHeadingElement>(null);
+  const draftId = draft?.id;
+  const defaultProfile = library.profiles.find(({ id }) => id === library.defaultId);
+
+  useEffect(() => {
+    if (draftId) creatorHeading.current?.focus();
+  }, [draftId]);
+
+  function openCreator(profile?: Profile) {
+    setError('');
+    setAllAdventures(profile ? profile.id === library.defaultId : library.defaultId === null);
+    setSelectedAdventures(
+      profile
+        ? Object.keys(library.assignments).filter((id) => library.assignments[id] === profile.id)
+        : createForAdventureId
+          ? [createForAdventureId]
+          : [],
+    );
+    setDraft(profile ?? blankProfile());
+  }
 
   function change(next: Profiles, onSuccess?: () => void) {
     try {
@@ -74,20 +112,48 @@ export function ProfileLibrary({
 
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft?.name.trim() || uploading) return;
-    const character = { ...draft, name: draft.name.trim() };
+    if (!draft || uploading) return;
+    const name = draft.name.trim();
+    if (!name) {
+      setError(t('Adj nevet a karakternek.', 'Give your character a name.'));
+      return;
+    }
+    const character = { ...draft, name };
     const found = library.profiles.some(({ id }) => character.id === id);
+    const assignments = allAdventures
+      ? library.assignments
+      : Object.fromEntries([
+          ...Object.entries(library.assignments).filter(([, id]) => id !== character.id),
+          ...selectedAdventures.map((id) => [id, character.id]),
+        ]);
     change(
       {
         ...library,
         profiles: found
           ? library.profiles.map((profile) => (profile.id === character.id ? character : profile))
           : [...library.profiles, character],
-        defaultId: library.defaultId ?? character.id,
+        defaultId: allAdventures
+          ? character.id
+          : library.defaultId === character.id
+            ? null
+            : library.defaultId,
+        assignments,
       },
-      () => setDraft(undefined),
+      closeCreator,
     );
   }
+
+  function closeCreator() {
+    setDraft(undefined);
+    setError('');
+    onCloseCreator?.();
+  }
+
+  const errorMessage = error && (
+    <p role="alert" className="error-text">
+      {error}
+    </p>
+  );
 
   return (
     <main className="app-shell">
@@ -105,22 +171,28 @@ export function ProfileLibrary({
           className="btn btn--primary"
           type="button"
           disabled={uploading}
-          onClick={() => {
-            setError('');
-            setDraft(blankProfile());
-          }}
+          onClick={() => openCreator()}
         >
           {t('Új karakter', 'New character')}
         </button>
       </div>
-      {error && (
-        <p role="alert" className="error-text">
-          {error}
-        </p>
-      )}
+      {!draft && errorMessage}
       {draft && (
-        <form className="platform-fields character-form" onSubmit={save}>
-          <h2>{t('Karaktergenerátor', 'Character creator')}</h2>
+        <form className="platform-fields character-form character-creator" onSubmit={save}>
+          <h2 ref={creatorHeading} tabIndex={-1}>
+            {t('Karaktergenerátor', 'Character creator')}
+          </h2>
+          <div className="character-creator__actions">
+            <div className="topbar__actions">
+              <button className="btn btn--primary" type="submit" disabled={uploading}>
+                {t('Karakter mentése', 'Save character')}
+              </button>
+              <button className="btn btn--secondary" type="button" onClick={closeCreator}>
+                {t('Mégse', 'Cancel')}
+              </button>
+            </div>
+            {errorMessage}
+          </div>
           <button
             className="btn btn--secondary"
             type="button"
@@ -149,6 +221,43 @@ export function ProfileLibrary({
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
             />
           </label>
+          <fieldset className="character-adventures">
+            <legend>{t('Kalandok', 'Adventures')}</legend>
+            <label>
+              <input
+                type="checkbox"
+                checked={allAdventures}
+                onChange={(event) => setAllAdventures(event.target.checked)}
+              />
+              {t('Összes kaland', 'All stories')}
+            </label>
+            {allAdventures ? (
+              <p className="muted">
+                {t(
+                  'Ez lesz az alapértelmezett karakter. A külön hozzárendelések elsőbbséget élveznek.',
+                  'This becomes the default character. Individual adventure assignments take precedence.',
+                )}
+              </p>
+            ) : (
+              adventures.map(({ manifest }) => (
+                <label key={manifest.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedAdventures.includes(manifest.id)}
+                    onChange={(event) => {
+                      const checked = event.target.checked;
+                      setSelectedAdventures((current) =>
+                        checked
+                          ? [...current, manifest.id]
+                          : current.filter((id) => id !== manifest.id),
+                      );
+                    }}
+                  />
+                  {localizedLabel(manifest.title, locale)}
+                </label>
+              ))
+            )}
+          </fieldset>
           <div className="character-selects">
             <label className="editor-field">
               {t('Kaszt', 'Class')}
@@ -156,14 +265,15 @@ export function ProfileLibrary({
                 value={draft.classId}
                 onChange={(e) => {
                   const classId = e.target.value as Profile['classId'];
-                  setDraft({
-                    ...draft,
-                    classId,
-                    points: { ...blankPoints },
-                    portrait: draft.portrait.startsWith('preset:')
-                      ? `preset:${classId}-1`
-                      : draft.portrait,
-                  });
+                  setDraft(
+                    capAllocatedPoints({
+                      ...draft,
+                      classId,
+                      portrait: draft.portrait.startsWith('preset:')
+                        ? `preset:${classId}-1`
+                        : draft.portrait,
+                    }),
+                  );
                 }}
               >
                 {classIds.map((id) => (
@@ -178,11 +288,9 @@ export function ProfileLibrary({
               <select
                 value={draft.traitId}
                 onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    traitId: e.target.value as Profile['traitId'],
-                    points: { ...blankPoints },
-                  })
+                  setDraft(
+                    capAllocatedPoints({ ...draft, traitId: e.target.value as Profile['traitId'] }),
+                  )
                 }
               >
                 {traitIds.map((id) => (
@@ -213,7 +321,7 @@ export function ProfileLibrary({
           <div className="profile-attributes">
             {attributes.map((stat) => {
               const max = Math.min(
-                attributeCap - attributeValue({ ...draft, points: blankPoints }, stat),
+                allocationCap(draft, stat),
                 draft.points[stat] + pointBudget - spentPoints(draft.points),
               );
               return (
@@ -286,22 +394,6 @@ export function ProfileLibrary({
               />
             </label>
           </div>
-          <div className="topbar__actions">
-            <button
-              className="btn btn--primary"
-              type="submit"
-              disabled={uploading || !draft.name.trim()}
-            >
-              {t('Karakter mentése', 'Save character')}
-            </button>
-            <button
-              className="btn btn--secondary"
-              type="button"
-              onClick={() => setDraft(undefined)}
-            >
-              {t('Mégse', 'Cancel')}
-            </button>
-          </div>
         </form>
       )}
       <div className="profile-grid">
@@ -331,7 +423,7 @@ export function ProfileLibrary({
                 type="button"
                 className="btn btn--secondary"
                 disabled={uploading}
-                onClick={() => setDraft(profile)}
+                onClick={() => openCreator(profile)}
               >
                 {t('Szerkesztés', 'Edit')}
               </button>
@@ -364,10 +456,7 @@ export function ProfileLibrary({
                         ...library,
                         profiles,
                         assignments,
-                        defaultId:
-                          library.defaultId === profile.id
-                            ? (profiles[0]?.id ?? null)
-                            : library.defaultId,
+                        defaultId: library.defaultId === profile.id ? null : library.defaultId,
                       },
                       () => {
                         setRemoveId(undefined);
@@ -406,8 +495,9 @@ export function ProfileLibrary({
                 }}
               >
                 <option value="">
-                  {t('Alapértelmezett', 'Default')} ·{' '}
-                  {assignedProfile({ ...library, assignments: {} }, manifest.id)?.name}
+                  {defaultProfile
+                    ? `${t('Alapértelmezett', 'Default')} · ${defaultProfile.name}`
+                    : t('Nincs hozzárendelve', 'Unassigned')}
                 </option>
                 {library.profiles.map(({ id, name }) => (
                   <option value={id} key={id}>

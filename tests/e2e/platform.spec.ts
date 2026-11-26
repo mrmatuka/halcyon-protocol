@@ -1,5 +1,100 @@
 import { test, expect } from '@playwright/test';
 
+test('mobilon elérhető a mentés, a karakter kalandonként vagy alapértelmezettként rendelhető hozzá', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 630 });
+  await page.goto('/');
+  const openAdventure = async (title: string) => {
+    await page.getByRole('button', { name: 'Könyvkaland', exact: true }).click();
+    await page
+      .getByRole('article')
+      .filter({ has: page.getByRole('heading', { name: title, exact: true }) })
+      .getByRole('button', { name: 'Kaland megnyitása' })
+      .click();
+  };
+  await openAdventure('Csendes Jel');
+  const create = page.getByRole('button', { name: 'Saját karakter létrehozása' });
+  await create.click();
+
+  const save = page.getByRole('button', { name: 'Karakter mentése' });
+  const all = page.getByRole('checkbox', { name: 'Összes kaland', exact: true });
+  const signal = page.getByRole('checkbox', { name: 'Csendes Jel', exact: true });
+  const lantern = page.getByRole('checkbox', { name: 'A ködlámpás őre', exact: true });
+  await expect(save).toBeInViewport({ ratio: 1 });
+  await expect(all).toBeChecked();
+  await expect(signal).toHaveCount(0);
+  await page.getByLabel('Név', { exact: true }).fill('Dóra');
+  await all.uncheck();
+  await expect(signal).toBeChecked();
+  await signal.uncheck();
+  await lantern.check();
+  await page.getByRole('button', { name: 'Kasztportré cseréje' }).scrollIntoViewIfNeeded();
+  await expect(save).toBeInViewport({ ratio: 1 });
+  await save.click();
+  await expect(create).toBeVisible();
+
+  await page.reload();
+  await openAdventure('A ködlámpás őre');
+  const newGame = page.getByRole('button', { name: 'Új játék', exact: true });
+  await newGame.click();
+  await expect(page.getByText('Dóra', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Napló', exact: true }).click();
+  await page.getByRole('button', { name: 'Szerkesztés', exact: true }).click();
+  await expect(all).not.toBeChecked();
+  await expect(lantern).toBeChecked();
+  await expect(signal).not.toBeChecked();
+  await all.check();
+  await save.click();
+
+  await openAdventure('Csendes Jel');
+  await newGame.click();
+  await expect(page.getByText('Dóra', { exact: true })).toBeVisible();
+});
+
+test('a karaktergenerátor megtartja a kiosztott pontokat és visszatér a kalandhoz', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Könyvkaland', exact: true }).click();
+  await page
+    .getByRole('article')
+    .filter({ hasText: 'Csendes Jel' })
+    .getByRole('button', { name: 'Kaland megnyitása' })
+    .click();
+
+  const create = page.getByRole('button', { name: 'Saját karakter létrehozása' });
+  await create.click();
+  await page.getByLabel('Név', { exact: true }).fill('Elvetett karakter');
+  await page.getByRole('button', { name: 'Mégse', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Csendes Jel', exact: true })).toBeVisible();
+
+  await create.click();
+  const name = page.getByLabel('Név', { exact: true });
+  await expect(name).toHaveValue('');
+  await name.fill('Eszter');
+  const knowledge = page.getByRole('spinbutton', { name: /^Tudás/ });
+  const resolve = page.getByRole('spinbutton', { name: /^Elszántság/ });
+  await knowledge.fill('3');
+  await resolve.fill('1');
+  await page.getByRole('combobox', { name: 'Egyéni adottság', exact: true }).selectOption('curious');
+  await expect(knowledge).toHaveValue('3');
+  await expect(resolve).toHaveValue('1');
+  await page.getByRole('combobox', { name: 'Kaszt', exact: true }).selectOption('scholar');
+  await expect(knowledge).toHaveValue('1');
+  await expect(resolve).toHaveValue('1');
+  await expect(page.getByText('Elosztható pontok: 2')).toBeVisible();
+  await resolve.fill('3');
+  await page.getByRole('button', { name: 'Karakter mentése' }).click();
+
+  await page.getByRole('button', { name: 'Új játék', exact: true }).click();
+  await expect(page.getByText('Eszter', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Kaland indítása' }).click();
+  await page.getByRole('button', { name: 'Napló megnyitása' }).click();
+  await expect(page.getByRole('region', { name: 'Karakterlap' })).toContainText('Eszter');
+});
+
 test('saját hős, angol nyelvváltás, nehézség és független automentések', async ({ page }) => {
   await page.goto('/');
   const card = (title: string) =>
@@ -290,6 +385,7 @@ test('a mobil polc és olvasó elfér, a karakterlap nyitható, és az arculat n
     .getByRole('button', { name: 'Open adventure' })
     .click();
   await page.getByRole('button', { name: 'Create your character' }).click();
+  await expect(page.getByRole('checkbox', { name: 'All stories', exact: true })).toBeChecked();
   await page.getByLabel('Name', { exact: true }).fill('Alma');
   await page.getByRole('button', { name: 'Save character' }).click();
   await page.getByRole('button', { name: 'New game' }).click();
