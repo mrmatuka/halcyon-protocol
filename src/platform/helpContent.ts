@@ -137,6 +137,33 @@ export const helpTopics: readonly GuideTopic[] = [
     ],
   },
   {
+    title: ['Térkép és haladás', 'Map and progress'],
+    steps: [
+      {
+        icon: 'map',
+        title: ['Bejárt útvonal', 'Route map'],
+        text: [
+          'Játék közben kattints a jelenet fölötti Térkép gombra, vagy nyisd meg a Napló Térkép fülét. A térkép a már bejárt útvonalat mutatja, legfelül az aktuális helyszínnel. A korábban látott, majd újra meglátogatott helyszínek ismét szerepelnek az útvonalon.',
+          'During play, select Map above the scene or open the Map tab in the Journal. The map shows the route you have taken, with your current location at the top. Revisiting a location adds it to the route again.',
+        ],
+      },
+      {
+        title: ['Felfedezett jelenetek', 'Scenes discovered'],
+        text: [
+          'A sáv azt mutatja, hány különböző jelenetet láttál a kaland összes jelenetéből. Egy visszatérés nem növeli a számlálót. A Befejezés elérve felirat külön jelzi, ha véget ért a játék, akkor is, ha más útvonalakon maradtak felfedezetlen jelenetek.',
+          'The bar shows how many distinct scenes you have seen out of all scenes in the adventure. Revisits do not increase the count. Ending reached appears when your run ends, even if other routes still contain unexplored scenes.',
+        ],
+      },
+      {
+        title: ['Az útvonal mentése', 'Saving your route'],
+        text: [
+          'A kézi mentés és az automentés az útvonalat is tárolja. Régi mentés betöltésekor az útvonal rögzítése a betöltött helyszíntől indul, a sáv a rögzített jeleneteket számolja.',
+          'Manual saves and autosaves include the route. When you load an older save, tracking starts at the loaded location and the bar counts the recorded scenes.',
+        ],
+      },
+    ],
+  },
+  {
     title: ['Napló, felszerelés és mentések', 'Journal, equipment, and saves'],
     steps: [
       {

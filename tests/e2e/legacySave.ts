@@ -18,13 +18,15 @@ export async function continueLegacyRun(page: Page, heroId: string, seed: string
     story: storySchema.parse(readContent('nodes')),
   };
   const hero = content.heroes.find((entry) => entry.id === heroId)!;
+  const state = createInitialState(content, heroId);
+  delete state.route;
   const envelope = JSON.stringify({
     metadata: {
       savedAt: '2026-11-25T00:00:00.000Z',
       heroName: hero.name,
       nodeTitle: 'Leszállás az Ébenholdon',
     },
-    payload: serializeGame(createInitialState(content, heroId), createRng(seed)),
+    payload: serializeGame(state, createRng(seed)),
   });
   await page.addInitScript((save) => {
     const key = 'kalandjatek:adventure:csendes-jel:autosave';

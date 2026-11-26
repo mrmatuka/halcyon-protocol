@@ -7,6 +7,13 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
     await expect(page.getByRole('heading', { name: 'Leszállás az Ébenholdon' })).toBeVisible();
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await expect(page.getByRole('heading', { name: 'Főzsilip' })).toBeVisible();
+    await page.getByRole('button', { name: 'Térkép', exact: true }).click();
+    await expect(page.getByText(/Régi mentésből folytatod/)).toBeVisible();
+    const route = page.getByRole('list', { name: /Útvonal/ });
+    await expect(route.getByRole('listitem')).toHaveText([
+      'FőzsilipItt tartasz',
+      'Leszállás az Ébenholdon',
+    ]);
   });
 
   test('F9.2 – Seedelt teljes végigjátszás: E1 (Néma menekülés)', async ({ page }) => {
@@ -48,6 +55,9 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
     await page.getByRole('button', { name: 'Betöltés' }).click();
     await page.getByRole('button', { name: /Betöltés: 1\. mentés/i }).click();
     await expect(page.getByRole('heading', { name: 'Lakókörlet' })).toBeVisible();
+    await page.getByRole('button', { name: 'Térkép', exact: true }).click();
+    await expect(page.getByRole('list', { name: /Útvonal/ }).getByRole('listitem')).toHaveCount(3);
+    await page.getByRole('button', { name: 'Vissza', exact: true }).click();
 
     // Folytatás
     await page.getByRole('button', { name: /Parancsnoki kártyát/i }).click();
@@ -116,4 +126,46 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
     await expect(page.getByRole('heading', { name: 'Az állomás szíve' })).toBeVisible();
     await expect(page.getByRole('button', { name: /reaktor túlterhelését/i })).toBeVisible();
   });
+});
+
+test('a felfedezési sáv és a térkép mentés után is a bejárt jeleneteket mutatja mobilon', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 630 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Új kaland', exact: true }).click();
+  await page
+    .getByRole('article')
+    .filter({ hasText: 'A ködlámpás őre' })
+    .getByRole('button', { name: 'Kaland megnyitása' })
+    .click();
+  await page.getByRole('button', { name: 'Saját karakter létrehozása' }).click();
+  await page.getByLabel('Név', { exact: true }).fill('Alma');
+  await page.getByRole('button', { name: 'Karakter mentése' }).click();
+  await page.getByRole('button', { name: 'Új játék' }).click();
+  await page.getByRole('button', { name: 'Kaland indítása' }).click();
+
+  const progress = page.getByRole('progressbar', { name: /Felfedezett jelenetek/ });
+  await expect(progress).toHaveAttribute('value', '1');
+  const climb = page.getByRole('button', { name: /Felfutsz a toronyba/ });
+  await climb.scrollIntoViewIfNeeded();
+  await expect(progress).toBeInViewport();
+  await climb.click();
+  await expect(progress).toHaveAttribute('value', '2');
+  await page.getByRole('button', { name: 'Térkép', exact: true }).click();
+  const route = page.getByRole('list', { name: /Útvonal/ });
+  await expect(route.getByRole('listitem')).toHaveCount(2);
+  await expect(route.locator('[aria-current="step"]')).toContainText('A hideg lámpa');
+  await expect(route.getByText('A part', { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+
+  await page.reload();
+  await page.getByRole('button', { name: 'Folytatás', exact: true }).click();
+  await expect(progress).toHaveAttribute('value', '2');
+  await page.getByRole('button', { name: /A toronyharanggal jelzel/ }).click();
+  await expect(progress).toHaveAttribute('value', '2');
+  await page.getByRole('button', { name: 'Térkép', exact: true }).click();
+  await expect(page.getByText('Befejezés elérve', { exact: true })).toBeVisible();
+  await expect(route.getByRole('listitem')).toHaveCount(3);
+  await expect(route.locator('[aria-current="step"]')).toContainText('Partot értek');
 });

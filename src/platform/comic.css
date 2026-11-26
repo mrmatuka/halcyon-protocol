@@ -665,13 +665,115 @@
 }
 
 .comic-journal-tabs button {
-  flex: 1 1 5rem;
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
   font-size: clamp(0.82rem, 3.5vw, 1rem);
   padding-inline: 0.15rem;
+}
+
+@media (max-width: 430px) {
+  .comic-journal-tabs button {
+    flex-direction: column;
+  }
+}
+
+.adventure-progress {
+  margin-block: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+
+.reading-column > .adventure-progress {
+  position: sticky;
+  z-index: 2;
+  top: env(safe-area-inset-top, 0px);
+}
+
+.reading-column .scene-card__title {
+  scroll-margin-block-start: 5rem;
+}
+
+.adventure-progress__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adventure-progress__meter {
+  display: grid;
+  flex: 1;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
+.adventure-progress progress {
+  width: 100%;
+  height: 0.55rem;
+  accent-color: var(--accent);
+}
+
+.adventure-progress p {
+  margin: 0.6rem 0 0;
+}
+
+.adventure-route {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0.8rem 0 0.35rem;
+  padding: 0;
+  list-style: none;
+}
+
+.adventure-route li {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  margin-inline-start: 1.4rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+.adventure-route li::before {
+  position: absolute;
+  inset-block-start: 0.9rem;
+  inset-inline-start: -1.3rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  content: '';
+}
+
+.adventure-route li:not(:last-child)::after {
+  position: absolute;
+  inset-block: 1.6rem -1.6rem;
+  inset-inline-start: -1.05rem;
+  border-inline-start: 2px solid var(--border);
+  content: '';
+}
+
+.adventure-route li[aria-current='step'] {
+  border-color: var(--accent);
+  background: var(--surface-elevated);
+}
+
+.adventure-route li[aria-current='step']::before {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.adventure-route strong {
+  color: var(--amber);
+  font-size: 0.85rem;
 }
 
 .comic-journal h2 {

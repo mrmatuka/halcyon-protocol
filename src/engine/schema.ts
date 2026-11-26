@@ -185,6 +185,12 @@ export const gameStateSchema = z.strictObject({
   customHero: heroSchema.optional(),
   difficultyModifier: z.number().int().min(-4).max(4).optional(),
   nodeId: idSchema,
+  route: z
+    .strictObject({
+      nodeIds: z.array(idSchema).min(1),
+      partial: z.boolean(),
+    })
+    .optional(),
   stats: statsSchema,
   maxHp: z.number().int().min(1),
   items: z

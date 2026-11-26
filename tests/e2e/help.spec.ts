@@ -24,6 +24,8 @@ test('a Súgó mobilon, magyarul és angolul is megnyitható játék közben', a
   await page.getByRole('button', { name: 'Help', exact: true }).click();
   const englishHelp = page.getByRole('dialog', { name: 'Help' });
   await expect(englishHelp.getByText('Finding your way', { exact: true })).toBeVisible();
+  await englishHelp.getByText('Map and progress', { exact: true }).click();
+  await expect(englishHelp.getByText('Saving your route', { exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(englishHelp).toHaveCount(0);
 

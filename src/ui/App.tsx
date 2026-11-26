@@ -11,6 +11,7 @@ import {
   type SlotId,
 } from '../persistence/saveRepository';
 import { ComicIcon } from './components/ComicIcon';
+import { AdventureProgress } from './components/AdventureProgress';
 import { CharacterSheet } from './components/CharacterSheet';
 import { EndingView } from './components/EndingView';
 import { InventoryPanel } from './components/InventoryPanel';
@@ -61,7 +62,7 @@ export function App({
   const [ui, dispatch] = useReducer(gameReducer, undefined, createInitialUiState);
   const [modalOpen, setModalOpen] = useState(false);
   const [localJournalOpen, setLocalJournalOpen] = useState(false);
-  const [journalTab, setJournalTab] = useState<'people' | 'bag' | 'book'>('people');
+  const [journalTab, setJournalTab] = useState<'people' | 'bag' | 'book' | 'map'>('people');
   const showJournal = journalOpen ?? localJournalOpen;
   const setJournalOpen = onJournalChange ?? setLocalJournalOpen;
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
@@ -331,6 +332,7 @@ export function App({
                   ['people', 'Társak', 'Companions'],
                   ['bag', 'Eszközök', 'Equipment'],
                   ['book', 'Jegyzetek', 'Notes'],
+                  ['map', 'Térkép', 'Map'],
                 ] as const).map(([tab, hu, en]) => (
                   <button key={tab} type="button" aria-pressed={journalTab === tab} onClick={() => setJournalTab(tab)}>
                     <ComicIcon name={tab} />
@@ -349,8 +351,11 @@ export function App({
                   />
                 </div>
               )}
-              {journalTab !== 'book' && (
+              {(journalTab === 'people' || journalTab === 'bag') && (
                 <InventoryPanel itemIds={ui.gameState.items} allItems={content.items} />
+              )}
+              {journalTab === 'map' && (
+                <AdventureProgress state={ui.gameState} nodes={content.story.nodes} />
               )}
               <section className="comic-journal-location" aria-label={t('Kaland állapota', 'Adventure status')}>
                 {image && <img src={image.url} alt="" />}
@@ -367,6 +372,14 @@ export function App({
             </main>
           ) : (
             <main className="reading-column">
+                <AdventureProgress
+                  state={ui.gameState}
+                  nodes={content.story.nodes}
+                  onOpenMap={() => {
+                    setJournalTab('map');
+                    setJournalOpen(true);
+                  }}
+                />
                 {currentNode.kind === 'scene' ? (
                   <SceneView
                     node={currentNode}
