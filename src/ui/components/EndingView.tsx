@@ -1,3 +1,4 @@
+import { useLanguage } from '../../platform/language';
 import { useEffect, useRef, useState } from 'react';
 import type { CheckResult } from '../../engine/checks';
 import type { StoryNode } from '../../engine/schema';
@@ -6,6 +7,7 @@ import { DiceRollBanner } from './DiceRollBanner';
 type EndingNode = Extract<StoryNode, { kind: 'ending' }>;
 
 export interface EndingViewProps {
+  statLabels?: Record<string, string>;
   node: EndingNode;
   lastCheck: CheckResult | null;
   imageUrl?: string;
@@ -16,12 +18,14 @@ export interface EndingViewProps {
 
 export function EndingView({
   node,
+  statLabels,
   lastCheck,
   imageUrl,
   imageAlt,
   onRestart,
   onMenu,
 }: EndingViewProps) {
+  const { t } = useLanguage();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
@@ -37,7 +41,11 @@ export function EndingView({
       className={`scene-card ending-card ${isDeath ? 'ending-card--death' : 'ending-card--victory'}`}
       aria-labelledby="ending-heading"
     >
-      <p className="ending-card__tag">{isDeath ? 'Befejezés · Halál' : 'Befejezés · Túlélés'}</p>
+      <p className="ending-card__tag">
+        {isDeath
+          ? t('Befejezés · Halál', 'Ending · Death')
+          : t('Befejezés · Túlélés', 'Ending · Survival')}
+      </p>
       <h1 id="ending-heading" ref={headingRef} tabIndex={-1} className="scene-card__title">
         {node.title}
       </h1>
@@ -52,12 +60,14 @@ export function EndingView({
           />
         ) : (
           <div className="scene-card__placeholder" role="img" aria-label={imageAlt ?? node.title}>
-            <span>Illusztráció nem elérhető · {node.title}</span>
+            <span>
+              {t('Illusztráció nem elérhető', 'Illustration unavailable')} · {node.title}
+            </span>
           </div>
         )}
       </figure>
 
-      {lastCheck && <DiceRollBanner result={lastCheck} />}
+      {lastCheck && <DiceRollBanner result={lastCheck} statLabels={statLabels} />}
 
       <div className="scene-card__text">
         {node.text.split('\n').map((para, idx) => (
@@ -67,10 +77,10 @@ export function EndingView({
 
       <div className="ending-card__actions">
         <button type="button" className="btn btn--primary" onClick={onRestart}>
-          Új játék
+          {t('Új játék', 'New game')}
         </button>
         <button type="button" className="btn btn--secondary" onClick={onMenu}>
-          Főmenü
+          {t('Főmenü', 'Main menu')}
         </button>
       </div>
     </article>

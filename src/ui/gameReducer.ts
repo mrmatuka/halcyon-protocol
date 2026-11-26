@@ -21,7 +21,13 @@ export type UiAction =
   | { type: 'GO_HERO_SELECT' }
   | { type: 'SELECT_HERO'; heroId: string }
   | { type: 'SET_SEED_INPUT'; seed: string }
-  | { type: 'START_GAME'; content: Content; fallbackSeed: number }
+  | {
+      type: 'START_GAME';
+      content: Content;
+      fallbackSeed: number;
+      customHero?: Content['heroes'][number];
+      difficultyModifier?: number;
+    }
   | { type: 'CHOOSE'; content: Content; choiceId: string; useCard?: boolean }
   | { type: 'USE_HEAL_CARD'; content: Content }
   | { type: 'LOAD_GAME'; gameState: GameState; rng: RngState }
@@ -50,13 +56,19 @@ export function gameReducer(state: UiState, action: UiAction): UiState {
     case 'SET_SEED_INPUT':
       return { ...state, seedInput: action.seed };
     case 'START_GAME': {
-      const heroId = state.selectedHeroId || action.content.heroes[0].id;
+      const heroId = action.customHero?.id ?? (state.selectedHeroId || action.content.heroes[0].id);
+      const content = action.customHero
+        ? { ...action.content, heroes: [action.customHero] }
+        : action.content;
+      const gameState = createInitialState(content, heroId);
+      if (action.customHero) gameState.customHero = action.customHero;
+      if (action.difficultyModifier) gameState.difficultyModifier = action.difficultyModifier;
       const seedValue =
         state.seedInput.trim() !== '' ? state.seedInput.trim() : action.fallbackSeed;
       return {
         ...state,
         screen: 'playing',
-        gameState: createInitialState(action.content, heroId),
+        gameState,
         rng: createRng(seedValue),
         lastCheck: null,
         error: null,

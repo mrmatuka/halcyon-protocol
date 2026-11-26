@@ -1,12 +1,15 @@
+import { useLanguage } from '../../platform/language';
 import type { CheckResult } from '../../engine/checks';
-import { CHECK_STAT_LABELS } from '../labels';
+import { fallbackStatLabel } from '../labels';
 
 export interface DiceRollBannerProps {
+  statLabels?: Record<string, string>;
   result: CheckResult;
 }
 
-export function DiceRollBanner({ result }: DiceRollBannerProps) {
-  const statLabel = CHECK_STAT_LABELS[result.stat];
+export function DiceRollBanner({ result, statLabels }: DiceRollBannerProps) {
+  const { locale, t } = useLanguage();
+  const statLabel = statLabels?.[result.stat] ?? fallbackStatLabel(result.stat, locale);
   const modText =
     result.modifier !== 0
       ? ` (${result.baseStat} ${result.modifier > 0 ? '+' : '−'} ${Math.abs(result.modifier)})`
@@ -19,27 +22,35 @@ export function DiceRollBanner({ result }: DiceRollBannerProps) {
       className={`dice-banner ${result.success ? 'dice-banner--success' : 'dice-banner--failure'}`}
     >
       <div className="dice-banner__header">
-        <strong>{statLabel}-próba:</strong>{' '}
-        <span className="dice-banner__outcome">{result.success ? 'Siker' : 'Kudarc'}</span>
+        <strong>{t(`${statLabel}-próba:`, `${statLabel} check:`)}</strong>{' '}
+        <span className="dice-banner__outcome">
+          {result.success ? t('Siker', 'Success') : t('Kudarc', 'Failure')}
+        </span>
       </div>
       <div className="dice-banner__details">
         {result.cardUsed === 'autoSuccess' ? (
-          <span>Képességkártya aktiválva — automatikus siker.</span>
+          <span>
+            {t(
+              'Képességkártya aktiválva — automatikus siker.',
+              'Ability card activated. Automatic success.',
+            )}
+          </span>
         ) : (
           <>
             <span>
-              Dobás:{' '}
+              {t('Dobás:', 'Roll:')}{' '}
               <strong>
                 {result.dice![0]} + {result.dice![1]} = {result.total}
               </strong>{' '}
-              (célszám: ≤ {result.target}
+              ({t('célszám:', 'target:')} ≤ {result.target}
               {modText})
             </span>
             {result.rerolledFrom && (
               <span className="dice-banner__reroll">
                 {' '}
-                · Kártya újradobás (első dobás: {result.rerolledFrom.dice[0]} +{' '}
-                {result.rerolledFrom.dice[1]} = {result.rerolledFrom.total})
+                · {t('Kártya újradobás (első dobás:', 'Card reroll (first roll:')}{' '}
+                {result.rerolledFrom.dice[0]} + {result.rerolledFrom.dice[1]} ={' '}
+                {result.rerolledFrom.total})
               </span>
             )}
           </>

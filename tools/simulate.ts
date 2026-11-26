@@ -3,9 +3,11 @@ import { heroesSchema, itemsSchema, storySchema } from '../src/engine/schema';
 import { simulateRuns, type BotStrategy } from './lib/simulator';
 
 const content = {
-  heroes: heroesSchema.parse(JSON.parse(readFileSync('content/heroes.json', 'utf8'))),
-  items: itemsSchema.parse(JSON.parse(readFileSync('content/items.json', 'utf8'))),
-  story: storySchema.parse(JSON.parse(readFileSync('content/nodes.json', 'utf8'))),
+  heroes: heroesSchema.parse(
+    JSON.parse(readFileSync('adventures/csendes-jel/heroes.json', 'utf8')),
+  ),
+  items: itemsSchema.parse(JSON.parse(readFileSync('adventures/csendes-jel/items.json', 'utf8'))),
+  story: storySchema.parse(JSON.parse(readFileSync('adventures/csendes-jel/nodes.json', 'utf8'))),
 };
 
 const runsPerHero = Number(process.argv[2] ?? 500);

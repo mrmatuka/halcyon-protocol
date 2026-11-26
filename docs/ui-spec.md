@@ -6,7 +6,7 @@
 - **Stílus:** Tiszta CSS változókkal (`src/ui/styles.css`), sötét sci-fi / jeges űrállomás hangulat.
 - **Reszponzivitás (Q11):** Asztali nézetben kétoszlopos elrendezés (balra a történet, jobbra a karakterlap és tárgylista), mobilon (legfeljebb 840 px szélességnél) egymás alatt.
 - **Böngészőcél (Q11):** Chromium asztali és mobil nézetben.
-- **Függőség-injektálás:** Az `App` opcionálisan megkaphatja a `content`, `saveRepository` és `getImageUrl` propokat (teszteléshez és a későbbi F6/F7 tartalombekötéshez).
+- **Függőség-injektálás:** A közös játékfelület a kiválasztott kaland `content`, `manifest`, `saveRepository` és `resolveIllustration` értékeit a platformtól kapja.
 
 ## Képernyőtérkép
 

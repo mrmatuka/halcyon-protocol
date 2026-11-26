@@ -17,7 +17,10 @@ export interface Content {
  * Hivatkozás-ellenőrzés: a három tartalomfájl együtt konzisztens-e.
  * A szerkezeti (séma-) ellenőrzést a zod sémák végzik, ez már a sémán átment adatot feltételez.
  */
-export function validateContent({ heroes, items, story }: Content): ContentError[] {
+export function validateContent(
+  { heroes, items, story }: Content,
+  statIds?: string[],
+): ContentError[] {
   const errors: ContentError[] = [];
   const add = (path: string, message: string) => errors.push({ path, message });
 
@@ -55,10 +58,16 @@ export function validateContent({ heroes, items, story }: Content): ContentError
   const checkItem = (id: string, path: string) => {
     if (!itemSet.has(id)) add(path, `A(z) „${id}" tárgy nem létezik.`);
   };
+  const stats = statIds ? new Set(['eletero', ...statIds]) : undefined;
+  const checkStat = (stat: string, path: string) => {
+    if (stats && !stats.has(stat)) add(path, `Unknown stat: ${stat}`);
+  };
   const checkCondition = (c: Condition, path: string): void => {
     switch (c.type) {
       case 'hasItem':
         return checkItem(c.itemId, `${path}.itemId`);
+      case 'statAtLeast':
+        return checkStat(c.stat, `${path}.stat`);
       case 'all':
       case 'any':
         return c.conditions.forEach((sub, i) => checkCondition(sub, `${path}.conditions[${i}]`));
@@ -70,6 +79,7 @@ export function validateContent({ heroes, items, story }: Content): ContentError
   };
   const checkEffects = (effects: Effect[] | undefined, path: string) => {
     effects?.forEach((e, i) => {
+      if (e.type === 'changeStat') checkStat(e.stat, `${path}[${i}].stat`);
       if (e.type === 'addItem' || e.type === 'removeItem')
         checkItem(e.itemId, `${path}[${i}].itemId`);
     });
@@ -96,6 +106,7 @@ export function validateContent({ heroes, items, story }: Content): ContentError
       const base = `story.nodes[${node.id}].choices[${choice.id}]`;
       if (choice.condition) checkCondition(choice.condition, `${base}.condition`);
       if ('check' in choice) {
+        checkStat(choice.check.stat, `${base}.check.stat`);
         checkNode(choice.success.target, `${base}.success.target`);
         checkNode(choice.failure.target, `${base}.failure.target`);
         checkEffects(choice.success.effects, `${base}.success.effects`);
@@ -110,13 +121,21 @@ export function validateContent({ heroes, items, story }: Content): ContentError
   // Tárgyak
   for (const item of items) {
     item.modifiers?.forEach((m, i) => {
+      checkStat(m.stat, `items[${item.id}].modifiers[${i}].stat`);
       if (m.nodeId !== undefined) checkNode(m.nodeId, `items[${item.id}].modifiers[${i}].nodeId`);
     });
   }
 
   // Hősök
   for (const hero of heroes) {
+    for (const stat of stats ?? []) {
+      if (!Object.hasOwn(hero.stats, stat))
+        add(`heroes[${hero.id}].stats`, `Missing stat: ${stat}`);
+    }
+    Object.keys(hero.stats).forEach((stat) => checkStat(stat, `heroes[${hero.id}].stats`));
     hero.card.options.forEach((o, i) => {
+      if ('stats' in o)
+        o.stats.forEach((stat) => checkStat(stat, `heroes[${hero.id}].card.options[${i}].stats`));
       if (o.type === 'autoSuccess') {
         o.choiceIds?.forEach((id) => {
           if (!choiceSet.has(id)) {

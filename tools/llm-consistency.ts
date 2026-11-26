@@ -8,9 +8,9 @@ import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
  *
  * Használat: npx tsx tools/llm-consistency.ts
  */
-const heroes = readFileSync('content/heroes.json', 'utf8');
-const items = readFileSync('content/items.json', 'utf8');
-const nodes = readFileSync('content/nodes.json', 'utf8');
+const heroes = readFileSync('adventures/csendes-jel/heroes.json', 'utf8');
+const items = readFileSync('adventures/csendes-jel/items.json', 'utf8');
+const nodes = readFileSync('adventures/csendes-jel/nodes.json', 'utf8');
 
 const prompt = `# Konzisztenciaellenőrzés – Csendes Jel
 

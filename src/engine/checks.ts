@@ -73,7 +73,7 @@ export function performCheck(params: PerformCheckParams): {
 } {
   const { state, hero, items, stat, choiceId, rng, useCard = false } = params;
   const baseStat = state.stats[stat];
-  const modifier = computeModifier(state, items, stat);
+  const modifier = computeModifier(state, items, stat) + (state.difficultyModifier ?? 0);
   const target = baseStat + modifier;
 
   let cardOption: Extract<CardOption, { type: 'autoSuccess' | 'reroll' }> | null = null;

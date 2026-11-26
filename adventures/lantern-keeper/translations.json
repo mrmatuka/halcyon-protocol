@@ -1,0 +1,21 @@
+{
+  "hero.mira.role": "Lantern keeper",
+  "hero.mira.description": "She knows every bell in the harbor by its sound.",
+  "card.csend.name": "Deep Quiet",
+  "card.csend.description": "Reroll one Awareness check.",
+  "node.part.title": "The shore",
+  "node.part.text": "The lighthouse goes dark. Three short rings sound below. Your sister's boat drifts beside the pier.",
+  "choice.hang": "Look for the source of the ringing",
+  "choice.toronyba": "Run up to the lighthouse",
+  "node.or.title": "The keeper in the fog",
+  "node.or.text": "The bell is ringing underwater. The fog wants a name in exchange for the boat. You give it yours, and the bell falls silent.",
+  "choice.haza": "Use the rope to pull in the boat",
+  "node.torony.title": "The cold lantern",
+  "node.torony.text": "The lantern has run out of oil. Someone left the spare bottle on the outer ledge.",
+  "choice.olaj": "Climb out into the wind to get it",
+  "choice.jel": "Signal the boat with the tower bell",
+  "node.menedek.title": "Back on shore",
+  "node.menedek.text": "The bow scrapes against the pier. Your sister leaps ashore. Only once you are both in the light does she start to tell you what happened out there.",
+  "node.kod.title": "The silent bell",
+  "node.kod.text": "The sound of the bell sinks away. In the morning, all they find on the shore is your lantern."
+}

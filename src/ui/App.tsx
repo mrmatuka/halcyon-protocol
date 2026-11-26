@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { canUseCardOnChoice, getAvailableChoices } from '../engine/engine';
 import type { Content } from '../engine/validate';
+import type { GameState } from '../engine/schema';
 import { LocalStorageSaveRepository } from '../persistence/localStorageSaveRepository';
 import {
   AUTOSAVE_SLOT_ID,
@@ -13,22 +14,47 @@ import { EndingView } from './components/EndingView';
 import { InventoryPanel } from './components/InventoryPanel';
 import { SaveLoadModal } from './components/SaveLoadModal';
 import { SceneView } from './components/SceneView';
-import { getIllustration } from '../content/illustrations';
-import { loadGameContent } from '../content/loadContent';
 import { createInitialUiState, gameReducer } from './gameReducer';
-import { SLOT_LABELS } from './labels';
+import { fallbackStatLabel, slotLabel } from './labels';
+import { localizedLabel, type AdventureManifest } from '../platform/adventure';
+import { useLanguage } from '../platform/language';
+import { CharacterCreator } from '../platform/character';
 
 export interface AppProps {
-  content?: Content;
+  content: Content;
   saveRepository?: SaveRepository;
-  getImageUrl?: (nodeId: string) => string | undefined;
+  manifest?: AdventureManifest;
+  onLibrary?: () => void;
+  initialSlot?: SlotId;
+  resolveIllustration?: (nodeId: string) => { url: string; alt: string } | undefined;
 }
 
-export function App({ content = loadGameContent(), saveRepository, getImageUrl }: AppProps) {
+export function App({
+  content,
+  saveRepository,
+  manifest,
+  onLibrary,
+  initialSlot,
+  resolveIllustration,
+}: AppProps) {
+  const { locale, t } = useLanguage();
+  const title = manifest ? localizedLabel(manifest.title, locale) : 'Csendes Jel';
+  const statLabels =
+    manifest &&
+    Object.fromEntries(
+      Object.entries(manifest.statLabels).map(([id, label]) => [id, localizedLabel(label, locale)]),
+    );
+  const [customHero, setCustomHero] = useState<Content['heroes'][number]>();
+  const [gameDifficulty, setGameDifficulty] = useState(0);
+  const [mode, setMode] = useState<'preset' | 'custom'>(
+    manifest?.characterMode === 'custom' ? 'custom' : 'preset',
+  );
   const repo = useMemo(() => saveRepository ?? new LocalStorageSaveRepository(), [saveRepository]);
   const [ui, dispatch] = useReducer(gameReducer, content, createInitialUiState);
   const [modalOpen, setModalOpen] = useState(false);
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
+  const [initialContent] = useState(content);
+  const [loadError, setLoadError] = useState(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
 
   const refreshSlots = useCallback(async () => {
@@ -42,12 +68,35 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
     setModalOpen(true);
   }, [refreshSlots]);
 
-  const currentHero = ui.gameState
-    ? content.heroes.find((h) => h.id === ui.gameState!.heroId)
-    : undefined;
+  useEffect(() => {
+    if (!initialSlot) return;
+    let active = true;
+    void repo
+      .load(initialSlot)
+      .then((loaded) => {
+        if (!active) return;
+        if (!canLoadState(initialContent, loaded.state)) {
+          setLoadError(true);
+          return;
+        }
+        dispatch({ type: 'LOAD_GAME', gameState: loaded.state, rng: loaded.rng });
+      })
+      .catch(() => {
+        if (active) setLoadError(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [initialSlot, repo, initialContent]);
+
+  const currentHero =
+    ui.gameState?.customHero ??
+    (ui.gameState ? content.heroes.find((h) => h.id === ui.gameState!.heroId) : undefined);
   const currentNode = ui.gameState
     ? content.story.nodes.find((n) => n.id === ui.gameState!.nodeId)
     : undefined;
+
+  const image = currentNode ? resolveIllustration?.(currentNode.id) : undefined;
 
   // Automentés minden állapotváltozás után játék közben
   useEffect(() => {
@@ -58,7 +107,7 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
         heroName: currentHero.name,
       })
       .catch(() => {
-        // Automentés hibája ne akassza meg a játékmenetet
+        // A failed autosave must not interrupt play.
       });
   }, [repo, ui.screen, ui.gameState, ui.rng, currentHero, currentNode]);
 
@@ -69,7 +118,7 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
         nodeTitle: currentNode.title,
         heroName: currentHero.name,
       });
-      setModalMessage(`Mentve: ${SLOT_LABELS[slotId]}.`);
+      setModalMessage(`${t('Mentve', 'Saved')}: ${slotLabel(slotId, locale)}.`);
       await refreshSlots();
     } catch (err) {
       setModalMessage(err instanceof Error ? err.message : 'A mentés nem sikerült.');
@@ -79,6 +128,15 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
   const handleLoad = async (slotId: SlotId) => {
     try {
       const loaded = await repo.load(slotId);
+      if (!canLoadState(content, loaded.state)) {
+        setModalMessage(
+          t(
+            'A mentés nem kompatibilis a kaland jelenlegi változatával.',
+            'The save is incompatible with this revision of the adventure.',
+          ),
+        );
+        return;
+      }
       dispatch({ type: 'LOAD_GAME', gameState: loaded.state, rng: loaded.rng });
       setModalOpen(false);
     } catch (err) {
@@ -88,7 +146,7 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
 
   const handleDelete = async (slotId: SlotId) => {
     await repo.delete(slotId);
-    setModalMessage(`Törölve: ${SLOT_LABELS[slotId]}.`);
+    setModalMessage(`${t('Törölve', 'Deleted')}: ${slotLabel(slotId, locale)}.`);
     await refreshSlots();
   };
 
@@ -96,9 +154,19 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
     <div className="app-shell">
       {ui.screen === 'menu' && (
         <main className="menu-screen">
-          <h1 className="menu-screen__title">Csendes Jel</h1>
+          <h1 className="menu-screen__title">{title}</h1>
+          {loadError && (
+            <p role="alert" className="error-text">
+              {t('A mentést nem sikerült betölteni.', 'The save could not be loaded.')}
+            </p>
+          )}
           <p className="menu-screen__subtitle">
-            Interaktív sci-fi kalandjáték az Ébenhold fagyos kutatóállomásán.
+            {manifest
+              ? localizedLabel(manifest.description, locale)
+              : t(
+                  'Interaktív sci-fi kalandjáték az Ébenhold fagyos kutatóállomásán.',
+                  'An interactive sci-fi adventure on Ebony Moon.',
+                )}
           </p>
           <div className="menu-screen__actions">
             <button
@@ -106,50 +174,109 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
               className="btn btn--primary"
               onClick={() => dispatch({ type: 'GO_HERO_SELECT' })}
             >
-              Új játék
+              {t('Új játék', 'New game')}
             </button>
             <button type="button" className="btn btn--secondary" onClick={openModal}>
-              Betöltés
+              {t('Betöltés', 'Load')}
             </button>
+            {onLibrary && (
+              <button type="button" className="btn btn--secondary" onClick={onLibrary}>
+                {t('Kalandkönyvtár', 'Adventure library')}
+              </button>
+            )}
           </div>
         </main>
       )}
 
       {ui.screen === 'heroSelect' && (
         <main className="hero-screen">
-          <h1>Válassz hőst</h1>
-          <div className="hero-grid">
-            {content.heroes.map((hero) => {
-              const selected = hero.id === ui.selectedHeroId;
-              return (
-                <button
-                  key={hero.id}
-                  type="button"
-                  aria-pressed={selected}
-                  className={`hero-card ${selected ? 'hero-card--selected' : ''}`}
-                  onClick={() => dispatch({ type: 'SELECT_HERO', heroId: hero.id })}
-                >
-                  <strong>{hero.name}</strong>
-                  <span className="hero-card__role">{hero.role}</span>
-                  <span>{hero.description}</span>
-                  <span className="hero-card__stats">
-                    Életerő {hero.stats.eletero} · Reflex {hero.stats.reflex} · Technika{' '}
-                    {hero.stats.technika} · Kitartás {hero.stats.kitartas} · Szerencse{' '}
-                    {hero.stats.szerencse}
-                  </span>
-                  <span className="badge badge--accent">Kártya: {hero.card.name}</span>
-                </button>
-              );
-            })}
-          </div>
-
+          <h1>{t('Válassz hőst', 'Choose a hero')}</h1>
+          {manifest?.characterMode === 'both' && (
+            <div className="topbar__actions">
+              <button
+                type="button"
+                className="btn btn--secondary"
+                aria-pressed={mode === 'preset'}
+                onClick={() => setMode('preset')}
+              >
+                {t('Kész hősök', 'Preset heroes')}
+              </button>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                aria-pressed={mode === 'custom'}
+                onClick={() => {
+                  setMode('custom');
+                  setCustomHero(undefined);
+                }}
+              >
+                {t('Saját karakter', 'Custom character')}
+              </button>
+            </div>
+          )}
+          {manifest && mode === 'custom' && (
+            <CharacterCreator
+              heroes={content.heroes}
+              manifest={manifest}
+              onCreate={setCustomHero}
+            />
+          )}
+          {mode === 'custom' && customHero && (
+            <p role="status">
+              {customHero.name} {t('készen áll.', 'is ready.')}
+            </p>
+          )}
+          {mode === 'preset' && (
+            <div className="hero-grid">
+              {content.heroes.map((hero) => {
+                const selected = hero.id === ui.selectedHeroId;
+                return (
+                  <button
+                    key={hero.id}
+                    type="button"
+                    aria-pressed={selected}
+                    className={`hero-card ${selected ? 'hero-card--selected' : ''}`}
+                    onClick={() => dispatch({ type: 'SELECT_HERO', heroId: hero.id })}
+                  >
+                    <strong>{hero.name}</strong>
+                    <span className="hero-card__role">{hero.role}</span>
+                    <span>{hero.description}</span>
+                    <span className="hero-card__stats">
+                      {Object.entries(hero.stats)
+                        .map(
+                          ([stat, value]) =>
+                            `${statLabels?.[stat] ?? fallbackStatLabel(stat, locale)} ${value}`,
+                        )
+                        .join(' · ')}
+                    </span>
+                    <span className="badge badge--accent">
+                      {t('Kártya:', 'Card:')} {hero.card.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {manifest && (
+            <label className="seed-row">
+              {t('Játékmód', 'Difficulty mode')}
+              <select
+                value={gameDifficulty}
+                onChange={(event) => setGameDifficulty(Number(event.target.value))}
+              >
+                <option value={2}>{t('Könnyű (+2 a próbákhoz)', 'Easy (+2 to checks)')}</option>
+                <option value={0}>{t('Normál', 'Normal')}</option>
+                <option value={-2}>{t('Nehéz (−2 a próbákhoz)', 'Hard (−2 to checks)')}</option>
+              </select>
+            </label>
+          )}
           <div className="seed-row">
-            <label htmlFor="seed-input">Seed (opcionális):</label>
+            <label htmlFor="seed-input">{t('Seed (opcionális):', 'Seed (optional):')}</label>
             <input
               id="seed-input"
               type="text"
               value={ui.seedInput}
-              placeholder="Üresen véletlen"
+              placeholder={t('Üresen véletlen', 'Leave empty for a random seed')}
               onChange={(e) => dispatch({ type: 'SET_SEED_INPUT', seed: e.target.value })}
             />
           </div>
@@ -158,16 +285,25 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
             <button
               type="button"
               className="btn btn--primary"
-              onClick={() => dispatch({ type: 'START_GAME', content, fallbackSeed: Date.now() })}
+              disabled={mode === 'custom' && !customHero}
+              onClick={() =>
+                dispatch({
+                  type: 'START_GAME',
+                  content,
+                  fallbackSeed: Date.now(),
+                  customHero: mode === 'custom' ? customHero : undefined,
+                  difficultyModifier: gameDifficulty,
+                })
+              }
             >
-              Kaland indítása
+              {t('Kaland indítása', 'Start adventure')}
             </button>
             <button
               type="button"
               className="btn btn--secondary"
               onClick={() => dispatch({ type: 'GO_MENU' })}
             >
-              Vissza
+              {t('Vissza', 'Back')}
             </button>
           </div>
         </main>
@@ -176,17 +312,17 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
       {ui.screen === 'playing' && ui.gameState && currentHero && currentNode && (
         <>
           <header className="topbar">
-            <span className="topbar__brand">Csendes Jel</span>
+            <span className="topbar__brand">{title}</span>
             <div className="topbar__actions">
               <button type="button" className="btn btn--secondary" onClick={openModal}>
-                Mentés / Betöltés
+                {t('Mentés / Betöltés', 'Save / load')}
               </button>
               <button
                 type="button"
                 className="btn btn--secondary"
                 onClick={() => dispatch({ type: 'GO_MENU' })}
               >
-                Főmenü
+                {t('Főmenü', 'Main menu')}
               </button>
             </div>
           </header>
@@ -205,11 +341,10 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
                   choices={getAvailableChoices(content, ui.gameState)}
                   canUseCard={(choiceId) => canUseCardOnChoice(content, ui.gameState!, choiceId)}
                   cardName={currentHero.card.name}
+                  statLabels={statLabels}
                   lastCheck={ui.lastCheck}
-                  imageUrl={
-                    getImageUrl ? getImageUrl(currentNode.id) : getIllustration(currentNode.id)?.url
-                  }
-                  imageAlt={getIllustration(currentNode.id)?.alt}
+                  imageUrl={image?.url}
+                  imageAlt={image?.alt}
                   onChoose={(choiceId, useCard) =>
                     dispatch({ type: 'CHOOSE', content, choiceId, useCard })
                   }
@@ -217,20 +352,20 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
               ) : (
                 <EndingView
                   node={currentNode}
+                  statLabels={statLabels}
                   lastCheck={ui.lastCheck}
-                  imageUrl={
-                    getImageUrl ? getImageUrl(currentNode.id) : getIllustration(currentNode.id)?.url
-                  }
-                  imageAlt={getIllustration(currentNode.id)?.alt}
+                  imageUrl={image?.url}
+                  imageAlt={image?.alt}
                   onRestart={() => dispatch({ type: 'GO_HERO_SELECT' })}
                   onMenu={() => dispatch({ type: 'GO_MENU' })}
                 />
               )}
             </main>
 
-            <aside className="sidebar" aria-label="Karakter adatok">
+            <aside className="sidebar" aria-label={t('Karakter adatok', 'Character information')}>
               <CharacterSheet
                 hero={currentHero}
+                statLabels={statLabels}
                 state={ui.gameState}
                 onUseHealCard={() => dispatch({ type: 'USE_HEAL_CARD', content })}
               />
@@ -252,5 +387,18 @@ export function App({ content = loadGameContent(), saveRepository, getImageUrl }
         />
       )}
     </div>
+  );
+}
+
+function canLoadState(content: Content, state: GameState): boolean {
+  const hero = state.customHero ?? content.heroes.find(({ id }) => id === state.heroId);
+  const activeNode = content.story.nodes.find(({ id }) => id === state.nodeId);
+  const statKeys = Object.keys(content.heroes[0]?.stats ?? {});
+  return Boolean(
+    hero &&
+    activeNode &&
+    state.endingId === (activeNode.kind === 'ending' ? activeNode.id : null) &&
+    statKeys.every((stat) => Object.hasOwn(state.stats, stat)) &&
+    state.items.every((id) => content.items.some((item) => item.id === id)),
   );
 }

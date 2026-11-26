@@ -1,12 +1,14 @@
+import { useLanguage } from '../../platform/language';
 import { useEffect, useRef, useState } from 'react';
 import type { CheckResult } from '../../engine/checks';
 import type { Choice, StoryNode } from '../../engine/schema';
-import { CHECK_STAT_LABELS } from '../labels';
+import { fallbackStatLabel } from '../labels';
 import { DiceRollBanner } from './DiceRollBanner';
 
 type SceneNode = Extract<StoryNode, { kind: 'scene' }>;
 
 export interface SceneViewProps {
+  statLabels?: Record<string, string>;
   node: SceneNode;
   choices: Choice[];
   canUseCard: (choiceId: string) => boolean;
@@ -19,6 +21,7 @@ export interface SceneViewProps {
 
 export function SceneView({
   node,
+  statLabels,
   choices,
   canUseCard,
   cardName,
@@ -27,6 +30,7 @@ export function SceneView({
   imageAlt,
   onChoose,
 }: SceneViewProps) {
+  const { locale, t } = useLanguage();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
@@ -52,12 +56,14 @@ export function SceneView({
           />
         ) : (
           <div className="scene-card__placeholder" role="img" aria-label={imageAlt ?? node.title}>
-            <span>Illusztráció nem elérhető · {node.title}</span>
+            <span>
+              {t('Illusztráció nem elérhető', 'Illustration unavailable')} · {node.title}
+            </span>
           </div>
         )}
       </figure>
 
-      {lastCheck && <DiceRollBanner result={lastCheck} />}
+      {lastCheck && <DiceRollBanner result={lastCheck} statLabels={statLabels} />}
 
       <div className="scene-card__text">
         {node.text.split('\n').map((para, idx) => (
@@ -65,7 +71,7 @@ export function SceneView({
         ))}
       </div>
 
-      <section className="choices" aria-label="Választási lehetőségek">
+      <section className="choices" aria-label={t('Választási lehetőségek', 'Choices')}>
         {choices.map((choice) => {
           const isCheck = 'check' in choice;
           const cardEligible = canUseCard(choice.id);
@@ -80,7 +86,9 @@ export function SceneView({
                 <span>{choice.text}</span>
                 {isCheck && (
                   <span className="badge badge--check">
-                    2d6 ≤ {CHECK_STAT_LABELS[choice.check.stat]}
+                    2d6 ≤{' '}
+                    {statLabels?.[choice.check.stat] ??
+                      fallbackStatLabel(choice.check.stat, locale)}
                   </span>
                 )}
               </button>
@@ -90,7 +98,7 @@ export function SceneView({
                   className="btn btn--card"
                   onClick={() => onChoose(choice.id, true)}
                 >
-                  Kártya: {cardName ?? 'Képesség'}
+                  {t('Kártya:', 'Card:')} {cardName ?? t('Képesség', 'Ability')}
                 </button>
               )}
             </div>

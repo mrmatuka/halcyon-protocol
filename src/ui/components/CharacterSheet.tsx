@@ -1,13 +1,16 @@
+import { useLanguage } from '../../platform/language';
 import type { GameState, Hero } from '../../engine/schema';
-import { STAT_LABELS } from '../labels';
+import { fallbackStatLabel } from '../labels';
 
 export interface CharacterSheetProps {
+  statLabels?: Record<string, string>;
   hero: Hero;
   state: GameState;
   onUseHealCard?: () => void;
 }
 
-export function CharacterSheet({ hero, state, onUseHealCard }: CharacterSheetProps) {
+export function CharacterSheet({ hero, state, onUseHealCard, statLabels }: CharacterSheetProps) {
+  const { locale, t } = useLanguage();
   const healOpt = hero.card.options.find((o) => o.type === 'heal');
   const canHeal =
     healOpt !== undefined &&
@@ -20,8 +23,8 @@ export function CharacterSheet({ hero, state, onUseHealCard }: CharacterSheetPro
   );
 
   return (
-    <section className="panel" aria-label="Karakterlap">
-      <h2 className="panel__title">Karakterlap</h2>
+    <section className="panel" aria-label={t('Karakterlap', 'Character sheet')}>
+      <h2 className="panel__title">{t('Karakterlap', 'Character sheet')}</h2>
       <div className="hero-meta">
         <strong className="hero-meta__name">{hero.name}</strong>
         <span className="hero-meta__role">{hero.role}</span>
@@ -29,7 +32,7 @@ export function CharacterSheet({ hero, state, onUseHealCard }: CharacterSheetPro
 
       <div className="hp-block">
         <div className="hp-block__row">
-          <span>{STAT_LABELS.eletero}</span>
+          <span>{fallbackStatLabel('eletero', locale)}</span>
           <strong>
             {state.stats.eletero} / {state.maxHp}
           </strong>
@@ -37,7 +40,7 @@ export function CharacterSheet({ hero, state, onUseHealCard }: CharacterSheetPro
         <div
           className="hp-bar"
           role="progressbar"
-          aria-label="Életerő"
+          aria-label={fallbackStatLabel('eletero', locale)}
           aria-valuenow={state.stats.eletero}
           aria-valuemin={0}
           aria-valuemax={state.maxHp}
@@ -47,25 +50,27 @@ export function CharacterSheet({ hero, state, onUseHealCard }: CharacterSheetPro
       </div>
 
       <dl className="stat-grid">
-        {(['reflex', 'technika', 'kitartas', 'szerencse'] as const).map((stat) => (
-          <div key={stat} className="stat-box" data-testid={`stat-${stat}`}>
-            <dt>{STAT_LABELS[stat]}</dt>
-            <dd>{state.stats[stat]}</dd>
-          </div>
-        ))}
+        {Object.keys(state.stats)
+          .filter((stat) => stat !== 'eletero')
+          .map((stat) => (
+            <div key={stat} className="stat-box" data-testid={`stat-${stat}`}>
+              <dt>{statLabels?.[stat] ?? fallbackStatLabel(stat, locale)}</dt>
+              <dd>{state.stats[stat]}</dd>
+            </div>
+          ))}
       </dl>
 
       <div className="card-box">
         <div className="card-box__header">
           <strong>{hero.card.name}</strong>
           <span className={`badge ${state.cardUsed ? 'badge--muted' : 'badge--accent'}`}>
-            {state.cardUsed ? 'Elhasználva' : 'Elérhető'}
+            {state.cardUsed ? t('Elhasználva', 'Used') : t('Elérhető', 'Available')}
           </span>
         </div>
         <p className="card-box__desc">{hero.card.description}</p>
         {canHeal && healOpt.type === 'heal' && (
           <button type="button" className="btn btn--card" onClick={onUseHealCard}>
-            Gyógyítás (+{healOpt.amount} Életerő)
+            {t('Gyógyítás', 'Heal')} (+{healOpt.amount} {fallbackStatLabel('eletero', locale)})
           </button>
         )}
       </div>

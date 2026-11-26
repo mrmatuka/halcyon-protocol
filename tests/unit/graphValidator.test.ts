@@ -10,9 +10,15 @@ const clone = <T>(v: T): T => structuredClone(v);
 describe('F8.1 – Determinisztikus gráfvalidátor', () => {
   it('a valós Csendes Jel történetgráf hibátlan (nincs holtpont, elérhetetlen csomópont, kijárat nélküli ciklus)', () => {
     const content: Content = {
-      heroes: heroesSchema.parse(JSON.parse(readFileSync('content/heroes.json', 'utf8'))),
-      items: itemsSchema.parse(JSON.parse(readFileSync('content/items.json', 'utf8'))),
-      story: storySchema.parse(JSON.parse(readFileSync('content/nodes.json', 'utf8'))),
+      heroes: heroesSchema.parse(
+        JSON.parse(readFileSync('adventures/csendes-jel/heroes.json', 'utf8')),
+      ),
+      items: itemsSchema.parse(
+        JSON.parse(readFileSync('adventures/csendes-jel/items.json', 'utf8')),
+      ),
+      story: storySchema.parse(
+        JSON.parse(readFileSync('adventures/csendes-jel/nodes.json', 'utf8')),
+      ),
     };
     expect(validateStoryGraph(content)).toEqual([]);
   });

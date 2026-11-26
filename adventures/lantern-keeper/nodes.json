@@ -1,0 +1,61 @@
+{
+  "startNodeId": "part",
+  "deathEndingId": "kod",
+  "nodes": [
+    {
+      "id": "part",
+      "kind": "scene",
+      "title": "A part",
+      "text": "A világítótorony kialszik. Lentről három rövid csengetés hallatszik. A mólón a húgod csónakja sodródik.",
+      "choices": [
+        {
+          "id": "hang",
+          "text": "Megkeresed a csengetés forrását",
+          "check": { "stat": "figyelem" },
+          "success": { "target": "or" },
+          "failure": { "target": "kod" }
+        },
+        { "id": "toronyba", "text": "Felfutsz a toronyba", "target": "torony" }
+      ]
+    },
+    {
+      "id": "or",
+      "kind": "scene",
+      "title": "A köd őre",
+      "text": "A harang a víz alatt szól. A köd egy nevet kér cserébe a csónakért. A sajátodat mondod, és a harang elhallgat.",
+      "choices": [
+        { "id": "haza", "text": "A kötélnél fogva behúzod a csónakot", "target": "menedek" }
+      ]
+    },
+    {
+      "id": "torony",
+      "kind": "scene",
+      "title": "A hideg lámpa",
+      "text": "A lámpásból kifogyott az olaj. A tartalék üveget valaki a külső párkányon felejtette.",
+      "choices": [
+        {
+          "id": "olaj",
+          "text": "Kimászol érte a szélbe",
+          "check": { "stat": "batorsag" },
+          "success": { "target": "menedek" },
+          "failure": { "target": "kod" }
+        },
+        { "id": "jel", "text": "A toronyharanggal jelzel a csónaknak", "target": "menedek" }
+      ]
+    },
+    {
+      "id": "menedek",
+      "kind": "ending",
+      "endingType": "victory",
+      "title": "Partot értek",
+      "text": "A csónak orra súrolja a mólót. A húgod a partra ugrik, és csak akkor kezdi el mesélni, mi történt odaát, amikor már mindketten bent vagytok a fényben."
+    },
+    {
+      "id": "kod",
+      "kind": "ending",
+      "endingType": "death",
+      "title": "Néma harang",
+      "text": "A harang hangja elsüllyed. Reggel a parton csak a lámpásodat találják meg."
+    }
+  ]
+}

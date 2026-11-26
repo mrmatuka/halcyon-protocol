@@ -11,19 +11,13 @@ export const idSchema = z
 const nonEmpty = z.string().min(1);
 const statValue = z.number().int().min(0);
 
-export const checkStatSchema = z.enum(['reflex', 'technika', 'kitartas', 'szerencse']);
-export const statSchema = z.enum(['reflex', 'technika', 'kitartas', 'szerencse', 'eletero']);
+export const checkStatSchema = idSchema.refine((stat) => stat !== 'eletero');
+export const statSchema = idSchema;
 
 export type CheckStat = z.infer<typeof checkStatSchema>;
 export type Stat = z.infer<typeof statSchema>;
 
-export const statsSchema = z.strictObject({
-  reflex: statValue,
-  technika: statValue,
-  kitartas: statValue,
-  szerencse: statValue,
-  eletero: statValue,
-});
+export const statsSchema = z.object({ eletero: statValue }).catchall(statValue);
 export type Stats = z.infer<typeof statsSchema>;
 
 // ---------- Condition ----------
@@ -180,6 +174,8 @@ export type Story = z.infer<typeof storySchema>;
 
 export const gameStateSchema = z.strictObject({
   heroId: idSchema,
+  customHero: heroSchema.optional(),
+  difficultyModifier: z.number().int().min(-4).max(4).optional(),
   nodeId: idSchema,
   stats: statsSchema,
   maxHp: z.number().int().min(1),

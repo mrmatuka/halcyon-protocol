@@ -17,7 +17,7 @@
 | AI az MVP-ben     | Eredeti jelenetek/párbeszédek tervezése, konzisztenciaellenőrzés, képek/hangulat, tesztjátékos-agentek |
 | Tesztelés         | Vitest + React Testing Library + Playwright (e2e)                                                      |
 | Első szállítandó  | Közvetlenül az MVP; az 5 perces prototípus mérföldkő benne                                             |
-| Téma/világ        | „Csendes Jel” sci-fi az Ébenholdon (Fázis 1)                                    |
+| Téma/világ        | „Csendes Jel” sci-fi az Ébenholdon (Fázis 1)                                                           |
 
 ### MVP sikerfeltételei (az igényből)
 
@@ -29,27 +29,27 @@
 
 ## 1. Lezárt kérdések és MVP-döntések
 
-| #   | Döntés |
-| --- | --- |
-| Q1  | „Csendes Jel”, felnőtt (18+) közönségnek szánt sci-fi, alapvetően komoly hangnemmel és száraz humorral. [Történetterv](docs/story-design.md) |
-| Q2  | Reflex a gyors reakcióhoz, Technika a rendszerekhez, Kitartás a fizikai terheléshez. A Szerencse tesztelhető, Szerencse-próbánként 1 ponttal csökken, minimum 0-ig. [Adatmodell](docs/data-model-spec.md) |
-| Q3  | Három előre elkészített hős közül lehet választani. [Hősök](content/heroes.json) |
-| Q4  | Nulla életerő azonnal halál-befejezésre vezet, amely beleszámít a befejezésekbe. [Motor](src/engine/engine.ts) |
-| Q5  | Minden hősnek egy egyszer használható képességkártyája van. [Hősök](content/heroes.json) |
-| Q6  | A konfliktusokat 2d6-próbák döntik el. Külön harcrendszer az MVP-n kívül marad. [Történetterv](docs/story-design.md) |
-| Q7  | npm, Vite, React, TypeScript strict és React `useReducer`. [UI-specifikáció](docs/ui-spec.md) |
-| Q8  | Három kézi mentési hely és egy automatikus mentés, helyi böngészőtárban. [Mentéskezelés](src/persistence/localStorageSaveRepository.ts) |
+| #   | Döntés                                                                                                                                                                                                                                                                                                               |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Q1  | „Csendes Jel”, felnőtt (18+) közönségnek szánt sci-fi, alapvetően komoly hangnemmel és száraz humorral. [Történetterv](docs/story-design.md)                                                                                                                                                                         |
+| Q2  | Reflex a gyors reakcióhoz, Technika a rendszerekhez, Kitartás a fizikai terheléshez. A Szerencse tesztelhető, Szerencse-próbánként 1 ponttal csökken, minimum 0-ig. [Adatmodell](docs/data-model-spec.md)                                                                                                            |
+| Q3  | Három előre elkészített hős közül lehet választani. [Hősök](adventures/csendes-jel/heroes.json)                                                                                                                                                                                                                      |
+| Q4  | Nulla életerő azonnal halál-befejezésre vezet, amely beleszámít a befejezésekbe. [Motor](src/engine/engine.ts)                                                                                                                                                                                                       |
+| Q5  | Minden hősnek egy egyszer használható képességkártyája van. [Hősök](adventures/csendes-jel/heroes.json)                                                                                                                                                                                                              |
+| Q6  | A konfliktusokat 2d6-próbák döntik el. Külön harcrendszer az MVP-n kívül marad. [Történetterv](docs/story-design.md)                                                                                                                                                                                                 |
+| Q7  | npm, Vite, React, TypeScript strict és React `useReducer`. [UI-specifikáció](docs/ui-spec.md)                                                                                                                                                                                                                        |
+| Q8  | Három kézi mentési hely és egy automatikus mentés, helyi böngészőtárban. [Mentéskezelés](src/persistence/localStorageSaveRepository.ts)                                                                                                                                                                              |
 | Q9  | Az LLM-ek kézi szerzői eszközök. Szövegnél nincs kötelező szolgáltató, a konzisztencia-ellenőrzéshez a szerzőétől eltérő szolgáltató modellje kell. A nyolc utolsó kép az OpenAI képgenerátorával készült. A build, a CI és a futásidejű játék LLM-független. [Szerzői munkafolyamat](docs/ai-authoring-workflow.md) |
-| Q10 | JPEG, 1376 px szélesség, 16:9-es célképarány. A meglévő képek 1376 × 768, a nyolc pótlás 1376 × 774 pixeles. Hang és zene az MVP-n kívül marad. [Vizuális stíluskalauz](docs/art-style-guide.md) |
-| Q11 | Reszponzív mobil- és asztali nézet. Az MVP böngészős ellenőrzésének célja a Chromium, mindkét nézetben. [UI-specifikáció](docs/ui-spec.md) |
-| Q12 | Statikus kiadás GitHub Pagesre a `main` ágról, a `/halcyon-protocol/` útvonalon. [Deploy workflow](.github/workflows/deploy.yml) |
+| Q10 | JPEG, 1376 px szélesség, 16:9-es célképarány. A meglévő képek 1376 × 768, a nyolc pótlás 1376 × 774 pixeles. Hang és zene az MVP-n kívül marad. [Vizuális stíluskalauz](docs/art-style-guide.md)                                                                                                                     |
+| Q11 | Reszponzív mobil- és asztali nézet. Az MVP böngészős ellenőrzésének célja a Chromium, mindkét nézetben. [UI-specifikáció](docs/ui-spec.md)                                                                                                                                                                           |
+| Q12 | Statikus kiadás GitHub Pagesre a `main` ágról, a `/halcyon-protocol/` útvonalon. [Deploy workflow](.github/workflows/deploy.yml)                                                                                                                                                                                     |
 
 ## 2. Architektúra-vázlat (a döntések alapján, részletei a F0/F2-ben pontosítandók)
 
 ```
-/content/nodes.json        # jelenetek, döntések és befejezések
-/content/heroes.json       # hősök és képességkártyák
-/content/items.json        # tárgyak
+/adventures/csendes-jel/nodes.json        # jelenetek, döntések és befejezések
+/adventures/csendes-jel/heroes.json       # hősök és képességkártyák
+/adventures/csendes-jel/items.json        # tárgyak
 /content/schema/           # JSON Schema a gráfhoz
 /src/engine/               # tiszta, framework-független motor (TS)
 /src/ui/                   # React komponensek
@@ -88,7 +88,7 @@ A képgenerálás és az LLM-ek használati módját a Q9 döntés és a szerző
 | F4 Mentés                             | Egyszerű, jól ismert minta             | B: Gemini 4 Neon / Sonnet 5.5                                      | –                                                                                                                                                                              |
 | F5 UI (React)                         | Komponensek, RTL tesztek               | B: Sonnet 5.5 / Gemini 4 Neon                                      | Hozzáférhetőségi review: A                                                                                                                                                     |
 | F6 Tartalom JSON                      | Magyar szöveg + séma                   | A (szöveg), B (JSON-átírás)                                        | Szövegírás A, mechanikus átírás B. Mindkét esetben jóváhagyás szükséges.                                                                                                       |
-| F7 Képek                              | Prompt + kép                           | B (prompt-szöveg), képmodell                                       | Stíluskalauz az A fázisban (F1) készül. A képgenerálás módját a Q9 rögzíti.                                                                                                             |
+| F7 Képek                              | Prompt + kép                           | B (prompt-szöveg), képmodell                                       | Stíluskalauz az A fázisban (F1) készül. A képgenerálás módját a Q9 rögzíti.                                                                                                    |
 | F8.1–F8.3 Validátor, bot, statisztika | Algoritmus, kód                        | B: Sonnet 5.5 / GPT-6.2 Sol                                        | Kódgenerálás, determinisztikus.                                                                                                                                                |
 | F8.4 LLM konzisztenciaellenőr         | Hosszú kontextus, finom ellentmondások | A: **nagy kontextusú** modell (pl. Fable 5.2 vagy Gemini 4 Carbon) | Az egész történet beleférjen egy kontextusba. Érdemes **más szolgáltató** modelljével ellenőrizni, mint amelyik a szöveget írta.                                               |
 | F8.5 LLM tesztjátékos-agent           | Sok futtatás                           | C: Haiku 5.5 / Luna / Hydrogen                                     | Több személyiség (óvatos, kockázatvállaló) → több modell is kombinálható. Ha a költség nem számít, B.                                                                          |
@@ -184,20 +184,20 @@ A képgenerálás és az LLM-ek használati módját a Q9 döntés és a szerző
 
 ## Fázis 6 – Tartalom: történetgráf JSON
 
-> **Állapot: KÉSZ (szövegek jóváhagyva 2026-11-25).** A teljes 15 jelenetes + 5 befejezéses gráf ([heroes.json](content/heroes.json), [items.json](content/items.json), [nodes.json](content/nodes.json)) elkészült, be van kötve az alkalmazásba ([loadContent.ts](src/content/loadContent.ts)), validálva van, és az **M1 prototípus** e2e teszttel igazolt.
+> **Állapot: KÉSZ (szövegek jóváhagyva 2026-11-25).** A teljes 15 jelenetes + 5 befejezéses gráf ([heroes.json](adventures/csendes-jel/heroes.json), [items.json](adventures/csendes-jel/items.json), [nodes.json](adventures/csendes-jel/nodes.json)) elkészült, be van kötve az alkalmazásba ([loadContent.ts](src/content/loadContent.ts)), validálva van, és az **M1 prototípus** e2e teszttel igazolt.
 
-- [x] **F6.1** Az F1.3 gráf átírása `content/heroes.json`, `content/items.json`, `content/nodes.json`-ba (15 jelenet + 5 befejezés: 3 nem-halál, 2 halál).
+- [x] **F6.1** Az F1.3 gráf átírása `adventures/csendes-jel/heroes.json`, `adventures/csendes-jel/items.json`, `adventures/csendes-jel/nodes.json`-ba (15 jelenet + 5 befejezés: 3 nem-halál, 2 halál).
 - [x] **F6.2** Teszt: a gráf átmegy a zod sémákon és a `validateContent` ellenőrzésen ([content.test.ts](tests/unit/content.test.ts)).
 - [x] **F6.3** Magyar szövegek véglegesítése csomópontonként (felhasználó által jóváhagyva).
 - [x] **F6.4** **Mérföldkő M1 – ötperces prototípus:** teljes végigjátszás ≥ 2 befejezéssel (E2 és E3) e2e teszttel ellenőrizve ([m1-prototype.spec.ts](tests/e2e/m1-prototype.spec.ts)).
 
 ## Fázis 7 – Vizuális tartalom (AI-generált illusztrációk)
 
-> **Állapot: KÉSZ (20/20 kép).** A stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)), a 20 csomópont promptja ([illustrations.json](content/illustrations.json)), a bekötés ([illustrations.ts](src/content/illustrations.ts)) és a betöltés/hibakezelés tesztje kész.
+> **Állapot: KÉSZ (20/20 kép).** A stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)), a 20 csomópont promptja ([illustrations.json](adventures/csendes-jel/illustrations.json)), a bekötés ([illustrations.ts](src/content/illustrations.ts)) és a betöltés/hibakezelés tesztje kész.
 
 - [x] **F7.1** Q9, Q10 megválaszolása; stíluskalauz ([art-style-guide.md](docs/art-style-guide.md)).
-- [x] **F7.2** Képleírás-prompt és alt-szöveg mind a 20 csomóponthoz ([illustrations.json](content/illustrations.json)).
-- [x] **F7.3** Elkészült mind a 20 illusztráció a [public/images/](public/images/) mappában.
+- [x] **F7.2** Képleírás-prompt és alt-szöveg mind a 20 csomóponthoz ([illustrations.json](adventures/csendes-jel/illustrations.json)).
+- [x] **F7.3** Elkészült mind a 20 illusztráció a [adventures/csendes-jel/images/](adventures/csendes-jel/images/) mappában.
 - [x] **F7.4** A [teszt](tests/unit/illustrations.test.ts) minden csomóponthoz igazolja a képfájl és az alt-szöveg meglétét.
 - [x] **F7.5** Betöltési viselkedés (`loading="lazy"`, `onError` fallback) implementálva és tesztelve ([SceneView.tsx](src/ui/components/SceneView.tsx), [EndingView.tsx](src/ui/components/EndingView.tsx)).
 
@@ -241,9 +241,9 @@ A képgenerálás és az LLM-ek használati módját a Q9 döntés és a szerző
 - [x] 2d6 ≤ tulajdonság + módosító próbák működnek, tesztelve
 - [x] Életerő, 3 tulajdonság, szerencse, kártya, tárgylista látható és működik
 - [x] Mentés/betöltés több slottal (+ automentés), újratöltés után is
-- [x] Minden csomóponthoz van illusztráció *(20/20, a production buildben is)*
+- [x] Minden csomóponthoz van illusztráció _(20/20, a production buildben is)_
 - [x] Magyar nyelvű tartalom, jóváhagyott
-- [x] Unit + RTL + e2e tesztek zöldek *(141 unit/RTL teszt + 9 e2e teszt zöld)*
+- [x] Unit + RTL + e2e tesztek zöldek _(141 unit/RTL teszt + 9 e2e teszt zöld)_
 
 ## Továbbfejlesztés (az MVP-n kívül, nem része a tervnek)
 
@@ -270,3 +270,5 @@ flowchart LR
   F8 --> F10
   F9 --> F10
 ```
+
+A kalandplatform és a ZIP-formátum szerzői szerződése az [AI-szerzői útmutatóban](docs/adventure-authoring.md) található.

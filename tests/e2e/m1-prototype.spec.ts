@@ -3,6 +3,11 @@ import { test, expect } from '@playwright/test';
 test.describe('F6.4 – M1 ötperces prototípus (≥ 2 eltérő befejezés)', () => {
   test('végigjátszás az E2 (Tűz a jégen) befejezésig', async ({ page }) => {
     await page.goto('/');
+    await page
+      .locator('article')
+      .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
+      .getByRole('button', { name: 'Kaland megnyitása' })
+      .click();
     await page.getByRole('button', { name: 'Új játék' }).click();
     await page.getByLabel(/Seed/i).fill('m1-e2');
     await page.getByRole('button', { name: /Vass Dóra/i }).click();
@@ -25,6 +30,11 @@ test.describe('F6.4 – M1 ötperces prototípus (≥ 2 eltérő befejezés)', (
 
   test('végigjátszás az E3 (Szállítmány) befejezésig', async ({ page }) => {
     await page.goto('/');
+    await page
+      .locator('article')
+      .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
+      .getByRole('button', { name: 'Kaland megnyitása' })
+      .click();
     await page.getByRole('button', { name: 'Új játék' }).click();
     await page.getByLabel(/Seed/i).fill('m1-e3');
     await page.getByRole('button', { name: 'Kaland indítása' }).click();

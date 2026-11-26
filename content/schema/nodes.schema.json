@@ -65,13 +65,7 @@
                                   },
                                   "stat": {
                                     "type": "string",
-                                    "enum": [
-                                      "reflex",
-                                      "technika",
-                                      "kitartas",
-                                      "szerencse",
-                                      "eletero"
-                                    ]
+                                    "pattern": "^[a-z][a-z0-9_]*$"
                                   },
                                   "delta": {
                                     "type": "integer",
@@ -160,7 +154,7 @@
                           "properties": {
                             "stat": {
                               "type": "string",
-                              "enum": ["reflex", "technika", "kitartas", "szerencse"]
+                              "pattern": "^[a-z][a-z0-9_]*$"
                             }
                           },
                           "required": ["stat"],
@@ -182,13 +176,7 @@
                                       },
                                       "stat": {
                                         "type": "string",
-                                        "enum": [
-                                          "reflex",
-                                          "technika",
-                                          "kitartas",
-                                          "szerencse",
-                                          "eletero"
-                                        ]
+                                        "pattern": "^[a-z][a-z0-9_]*$"
                                       },
                                       "delta": {
                                         "type": "integer",
@@ -274,13 +262,7 @@
                                       },
                                       "stat": {
                                         "type": "string",
-                                        "enum": [
-                                          "reflex",
-                                          "technika",
-                                          "kitartas",
-                                          "szerencse",
-                                          "eletero"
-                                        ]
+                                        "pattern": "^[a-z][a-z0-9_]*$"
                                       },
                                       "delta": {
                                         "type": "integer",
@@ -438,7 +420,7 @@
             },
             "stat": {
               "type": "string",
-              "enum": ["reflex", "technika", "kitartas", "szerencse", "eletero"]
+              "pattern": "^[a-z][a-z0-9_]*$"
             },
             "value": {
               "type": "integer",

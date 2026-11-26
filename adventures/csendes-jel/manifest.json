@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "id": "csendes-jel",
+  "title": { "hu": "Csendes Jel", "en": "Silent Signal" },
+  "description": {
+    "hu": "Négy hónapja néma egy kutatóállomás az Ébenholdon. A vészjel azonban még mindig szól.",
+    "en": "A research station on Ebony Moon has been silent for four months. Its distress beacon is still calling."
+  },
+  "genre": { "hu": "Sci-fi horror", "en": "Sci-fi horror" },
+  "difficulty": "normal",
+  "minutes": 20,
+  "defaultLocale": "hu",
+  "statLabels": {
+    "reflex": { "hu": "Reflex", "en": "Reflex" },
+    "technika": { "hu": "Technika", "en": "Technology" },
+    "kitartas": { "hu": "Kitartás", "en": "Endurance" },
+    "szerencse": { "hu": "Szerencse", "en": "Luck" }
+  },
+  "theme": {
+    "background": "#0b121b",
+    "surface": "#121c29",
+    "accent": "#5cc8ff",
+    "text": "#e6eef7",
+    "font": "system"
+  },
+  "characterMode": "both",
+  "cover": "images/n01_leszallas.jpg"
+}
