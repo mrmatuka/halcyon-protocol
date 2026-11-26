@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "object",
+      "properties": {
+        "hu": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["hu"],
+      "additionalProperties": false
+    },
+    "description": {
+      "type": "object",
+      "properties": {
+        "hu": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["hu"],
+      "additionalProperties": false
+    },
+    "genre": {
+      "type": "object",
+      "properties": {
+        "hu": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["hu"],
+      "additionalProperties": false
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "normal", "hard"]
+    },
+    "minutes": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "defaultLocale": {
+      "type": "string",
+      "enum": ["hu", "en"]
+    },
+    "statLabels": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "hu": {
+            "type": "string",
+            "minLength": 1
+          },
+          "en": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["hu"],
+        "additionalProperties": false
+      }
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+        },
+        "font": {
+          "type": "string",
+          "enum": ["system", "serif", "mono"]
+        }
+      },
+      "required": ["background", "surface", "accent", "text", "font"],
+      "additionalProperties": false
+    },
+    "characterMode": {
+      "type": "string",
+      "enum": ["preset", "custom", "both"]
+    },
+    "cover": {
+      "type": "string",
+      "pattern": "^images\\/[a-z0-9][a-z0-9_.-]*\\.(png|jpe?g|webp)$"
+    }
+  },
+  "required": [
+    "version",
+    "id",
+    "title",
+    "description",
+    "genre",
+    "difficulty",
+    "minutes",
+    "defaultLocale",
+    "statLabels",
+    "theme",
+    "characterMode"
+  ],
+  "additionalProperties": false
+}

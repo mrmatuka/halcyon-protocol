@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Csendes Jel",
-  "short_name": "Csendes Jel",
-  "description": "Magyar nyelvű, döntéseken alapuló sci-fi kalandjáték az Ébenholdon.",
+  "name": "Kalandkönyvtár",
+  "short_name": "Kalandkönyvtár",
+  "description": "Magyar és angol nyelvű, elágazó történetű szerepjátékok.",
   "lang": "hu",
   "start_url": "./",
   "scope": "./",

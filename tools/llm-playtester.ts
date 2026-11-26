@@ -11,9 +11,11 @@ import { createRng } from '../src/engine/rng';
  * Használat: npx tsx tools/llm-playtester.ts [heroId] [seed]
  */
 const content = {
-  heroes: heroesSchema.parse(JSON.parse(readFileSync('content/heroes.json', 'utf8'))),
-  items: itemsSchema.parse(JSON.parse(readFileSync('content/items.json', 'utf8'))),
-  story: storySchema.parse(JSON.parse(readFileSync('content/nodes.json', 'utf8'))),
+  heroes: heroesSchema.parse(
+    JSON.parse(readFileSync('adventures/csendes-jel/heroes.json', 'utf8')),
+  ),
+  items: itemsSchema.parse(JSON.parse(readFileSync('adventures/csendes-jel/items.json', 'utf8'))),
+  story: storySchema.parse(JSON.parse(readFileSync('adventures/csendes-jel/nodes.json', 'utf8'))),
 };
 
 const heroId = process.argv[2] ?? content.heroes[0].id;

@@ -1,10 +1,11 @@
+import { useLanguage } from '../../platform/language';
 import { useEffect } from 'react';
 import {
   AUTOSAVE_SLOT_ID,
   type SaveSlotSummary,
   type SlotId,
 } from '../../persistence/saveRepository';
-import { SLOT_LABELS } from '../labels';
+import { slotLabel } from '../labels';
 
 export interface SaveLoadModalProps {
   slots: SaveSlotSummary[];
@@ -16,9 +17,9 @@ export interface SaveLoadModalProps {
   onClose: () => void;
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, locale: string): string {
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('hu-HU');
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString(locale);
 }
 
 export function SaveLoadModal({
@@ -30,6 +31,7 @@ export function SaveLoadModal({
   onDelete,
   onClose,
 }: SaveLoadModalProps) {
+  const { locale, t } = useLanguage();
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -48,9 +50,9 @@ export function SaveLoadModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal__header">
-          <h2 id="save-modal-title">Mentés és betöltés</h2>
+          <h2 id="save-modal-title">{t('Mentés és betöltés', 'Save and load')}</h2>
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Bezárás
+            {t('Bezárás', 'Close')}
           </button>
         </div>
 
@@ -62,18 +64,18 @@ export function SaveLoadModal({
 
         <ul className="slot-list">
           {slots.map((slot) => {
-            const label = SLOT_LABELS[slot.slotId];
+            const label = slotLabel(slot.slotId, locale);
             const isManual = slot.slotId !== AUTOSAVE_SLOT_ID;
 
             return (
               <li key={slot.slotId} className="slot-item">
                 <div className="slot-item__info">
                   <strong>{label}</strong>
-                  {slot.status === 'empty' && <span className="muted">Üres</span>}
+                  {slot.status === 'empty' && <span className="muted">{t('Üres', 'Empty')}</span>}
                   {slot.status === 'ok' && (
                     <span>
                       {slot.metadata.heroName} – {slot.metadata.nodeTitle} ·{' '}
-                      {formatDate(slot.metadata.savedAt)}
+                      {formatDate(slot.metadata.savedAt, locale)}
                     </span>
                   )}
                   {slot.status === 'corrupted' && <span className="error-text">{slot.error}</span>}
@@ -83,30 +85,30 @@ export function SaveLoadModal({
                     <button
                       type="button"
                       className="btn btn--primary"
-                      aria-label={`Mentés: ${label}`}
+                      aria-label={`${t('Mentés:', 'Save:')} ${label}`}
                       onClick={() => onSave(slot.slotId)}
                     >
-                      Mentés
+                      {t('Mentés', 'Save')}
                     </button>
                   )}
                   {slot.status === 'ok' && (
                     <button
                       type="button"
                       className="btn btn--secondary"
-                      aria-label={`Betöltés: ${label}`}
+                      aria-label={`${t('Betöltés:', 'Load:')} ${label}`}
                       onClick={() => onLoad(slot.slotId)}
                     >
-                      Betöltés
+                      {t('Betöltés', 'Load')}
                     </button>
                   )}
                   {slot.status !== 'empty' && (
                     <button
                       type="button"
                       className="btn btn--danger"
-                      aria-label={`Törlés: ${label}`}
+                      aria-label={`${t('Törlés:', 'Delete:')} ${label}`}
                       onClick={() => onDelete(slot.slotId)}
                     >
-                      Törlés
+                      {t('Törlés', 'Delete')}
                     </button>
                   )}
                 </div>

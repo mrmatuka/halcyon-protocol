@@ -11,9 +11,9 @@ function loadJson(path: string): unknown {
 
 describe('F6.2 – Valódi történetgráf JSON validáció', () => {
   it('a heroes.json, items.json és nodes.json átmegy a zod sémákon és a hivatkozás-ellenőrzésen', () => {
-    const heroes = heroesSchema.parse(loadJson('content/heroes.json'));
-    const items = itemsSchema.parse(loadJson('content/items.json'));
-    const story = storySchema.parse(loadJson('content/nodes.json'));
+    const heroes = heroesSchema.parse(loadJson('adventures/csendes-jel/heroes.json'));
+    const items = itemsSchema.parse(loadJson('adventures/csendes-jel/items.json'));
+    const story = storySchema.parse(loadJson('adventures/csendes-jel/nodes.json'));
 
     expect(heroes).toHaveLength(3);
     expect(items.length).toBeGreaterThanOrEqual(2);
@@ -30,9 +30,9 @@ describe('F6.2 – Valódi történetgráf JSON validáció', () => {
 
   it('M1 prototípus-útvonal: legalább 2 eltérő nem-halál befejezés elérhető a motoron', () => {
     const content = {
-      heroes: heroesSchema.parse(loadJson('content/heroes.json')),
-      items: itemsSchema.parse(loadJson('content/items.json')),
-      story: storySchema.parse(loadJson('content/nodes.json')),
+      heroes: heroesSchema.parse(loadJson('adventures/csendes-jel/heroes.json')),
+      items: itemsSchema.parse(loadJson('adventures/csendes-jel/items.json')),
+      story: storySchema.parse(loadJson('adventures/csendes-jel/nodes.json')),
     };
 
     // Útvonal 1 -> E3 (Szállítmány)

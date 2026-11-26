@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { App } from '../../src/ui/App';
+import { Platform } from '../../src/platform/Platform';
 
 describe('smoke', () => {
   it('megjeleníti a címet', () => {
-    render(<App />);
-    expect(screen.getByRole('heading', { name: 'Csendes Jel' })).toBeInTheDocument();
+    render(<Platform />);
+    expect(screen.getByRole('heading', { name: 'Válassz kalandot' })).toBeInTheDocument();
   });
 });

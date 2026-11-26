@@ -2,6 +2,11 @@ import { test, expect, type Page } from '@playwright/test';
 
 async function startGame(page: Page, heroPattern: RegExp, seed: string) {
   await page.goto('/');
+  await page
+    .locator('article')
+    .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
+    .getByRole('button', { name: 'Kaland megnyitása' })
+    .click();
   await page.getByRole('button', { name: 'Új játék' }).click();
   await page.getByLabel(/Seed/i).fill(seed);
   await page.getByRole('button', { name: heroPattern }).click();
@@ -44,6 +49,11 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
 
     // Oldal teljes újratöltése
     await page.reload();
+    await page
+      .locator('article')
+      .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
+      .getByRole('button', { name: 'Kaland megnyitása' })
+      .click();
     await expect(page.getByRole('heading', { name: 'Csendes Jel' })).toBeVisible();
 
     await page.getByRole('button', { name: 'Betöltés' }).click();

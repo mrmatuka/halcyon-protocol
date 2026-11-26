@@ -22,7 +22,7 @@
           "properties": {
             "stat": {
               "type": "string",
-              "enum": ["reflex", "technika", "kitartas", "szerencse"]
+              "pattern": "^[a-z][a-z0-9_]*$"
             },
             "delta": {
               "type": "integer",

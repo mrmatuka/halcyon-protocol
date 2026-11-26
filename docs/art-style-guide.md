@@ -2,7 +2,7 @@
 
 ## Rögzített döntések (Q9, Q10)
 
-- **Generálás:** AI-képgenerátor, a játékba kerülő JPEG-fájlok helye: `public/images/<nodeId>.jpg`.
+- **Generálás:** AI-képgenerátor, a játékba kerülő JPEG-fájlok helye: `adventures/csendes-jel/images/<nodeId>.jpg`.
 - **Képméret:** 1376 px szélesség, 16:9-es célképarány a `SceneView` keretéhez. A korábbi képek 1376 × 768, a nyolc pótlás 1376 × 774 pixeles.
 - **Hangok / zene:** Nem része az MVP-nek.
 

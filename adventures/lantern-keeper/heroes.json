@@ -1,0 +1,15 @@
+[
+  {
+    "id": "mira",
+    "name": "Mira",
+    "role": "Lámpásőr",
+    "description": "A kikötő minden harangját felismeri a hangjáról.",
+    "stats": { "figyelem": 7, "batorsag": 8, "eletero": 6 },
+    "card": {
+      "id": "csend",
+      "name": "Mély csend",
+      "description": "Egy Figyelem-próbát újradobhatsz.",
+      "options": [{ "type": "reroll", "stats": ["figyelem"] }]
+    }
+  }
+]

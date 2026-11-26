@@ -62,7 +62,7 @@ export function canUseCardOnChoice(content: Content, state: GameState, choiceId:
   const available = getAvailableChoices(content, state);
   const choice = available.find((c) => c.id === choiceId);
   if (!choice || !('check' in choice)) return false;
-  const hero = getHero(content, state.heroId);
+  const hero = state.customHero ?? getHero(content, state.heroId);
   return findApplicableCardOption(hero, choice.check.stat, choice.id) !== null;
 }
 
@@ -81,7 +81,7 @@ export function useHealCard(content: Content, state: GameState): GameState {
   if (node.kind !== 'scene') {
     throw new Error('Képességkártya csak jelenetben használható.');
   }
-  const hero = getHero(content, state.heroId);
+  const hero = state.customHero ?? getHero(content, state.heroId);
   const healOpt = hero.card.options.find((o) => o.type === 'heal');
   if (!healOpt || healOpt.type !== 'heal') {
     throw new Error(`A(z) „${hero.card.name}" kártyának nincs gyógyító opciója.`);
@@ -124,7 +124,7 @@ export function applyChoice(
   let targetNodeId: string;
 
   if ('check' in choice) {
-    const hero = getHero(content, nextState.heroId);
+    const hero = nextState.customHero ?? getHero(content, nextState.heroId);
     const checkRes = performCheck({
       state: nextState,
       hero,
