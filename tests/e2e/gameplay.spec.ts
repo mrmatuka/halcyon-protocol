@@ -37,6 +37,7 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
 
     // Oldal teljes újratöltése
     await page.reload();
+    await page.getByRole('button', { name: 'Könyvkaland', exact: true }).click();
     await page
       .locator('article')
       .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
@@ -102,7 +103,9 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
     await page.getByRole('button', { name: /Parancsnoki kártyát/i }).click();
 
     // A tárgylistában megjelenik a Parancsnoki kártya
-    await expect(page.getByText('Parancsnoki kártya')).toBeVisible();
+    await page.getByRole('button', { name: 'Napló megnyitása' }).click();
+    await expect(page.getByText('Parancsnoki kártya', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Vissza', exact: true }).click();
 
     await page.getByRole('button', { name: /adótoronyba/i }).click();
     await page.getByRole('button', { name: /Dekódolod/i }).click();

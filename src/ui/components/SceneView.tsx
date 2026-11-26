@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { CheckResult } from '../../engine/checks';
 import type { Choice, StoryNode } from '../../engine/schema';
 import { fallbackStatLabel } from '../labels';
+import { ComicIcon } from './ComicIcon';
 import { DiceRollBanner } from './DiceRollBanner';
 
 type SceneNode = Extract<StoryNode, { kind: 'scene' }>;
@@ -42,10 +43,6 @@ export function SceneView({
 
   return (
     <article className="scene-card" aria-labelledby="scene-heading">
-      <h1 id="scene-heading" ref={headingRef} tabIndex={-1} className="scene-card__title">
-        {node.title}
-      </h1>
-
       <figure className="scene-card__illustration" data-testid="scene-illustration">
         {showImage ? (
           <img
@@ -62,6 +59,10 @@ export function SceneView({
           </div>
         )}
       </figure>
+
+      <h1 id="scene-heading" ref={headingRef} tabIndex={-1} className="scene-card__title">
+        {node.title}
+      </h1>
 
       {lastCheck && <DiceRollBanner result={lastCheck} statLabels={statLabels} />}
 
@@ -83,7 +84,8 @@ export function SceneView({
                 className="btn btn--choice"
                 onClick={() => onChoose(choice.id, false)}
               >
-                <span>{choice.text}</span>
+                <ComicIcon name={choice.id === 'toronyba' ? 'steps' : /vissza|return/.test(choice.id) ? 'turn' : 'next'} />
+                <span className="comic-choice-label">{choice.text}</span>
                 {isCheck && (
                   <span className="badge badge--check">
                     2d6 ≤{' '}
@@ -91,6 +93,7 @@ export function SceneView({
                       fallbackStatLabel(choice.check.stat, locale)}
                   </span>
                 )}
+                <ComicIcon name="next" />
               </button>
               {cardEligible && (
                 <button

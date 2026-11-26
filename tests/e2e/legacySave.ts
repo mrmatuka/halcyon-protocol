@@ -31,9 +31,5 @@ export async function continueLegacyRun(page: Page, heroId: string, seed: string
     if (localStorage.getItem(key) === null) localStorage.setItem(key, save);
   }, envelope);
   await page.goto('/');
-  await page
-    .locator('article')
-    .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
-    .getByRole('button', { name: 'Folytatás', exact: true })
-    .click();
+  await page.getByRole('button', { name: 'Folytatás', exact: true }).click();
 }
