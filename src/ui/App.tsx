@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { canUseCardOnChoice, getAvailableChoices } from '../engine/engine';
 import type { Content } from '../engine/validate';
-import type { GameState } from '../engine/schema';
+import { portraitUrl } from '../platform/portraits';
+import type { GameState, Hero } from '../engine/schema';
 import { LocalStorageSaveRepository } from '../persistence/localStorageSaveRepository';
 import {
   AUTOSAVE_SLOT_ID,
@@ -26,6 +27,7 @@ export interface AppProps {
   manifest?: AdventureManifest;
   onLibrary?: () => void;
   initialSlot?: SlotId;
+  portableHero?: Hero;
   resolveIllustration?: (nodeId: string) => { url: string; alt: string } | undefined;
 }
 
@@ -35,6 +37,7 @@ export function App({
   manifest,
   onLibrary,
   initialSlot,
+  portableHero,
   resolveIllustration,
 }: AppProps) {
   const { locale, t } = useLanguage();
@@ -155,6 +158,19 @@ export function App({
       {ui.screen === 'menu' && (
         <main className="menu-screen">
           <h1 className="menu-screen__title">{title}</h1>
+          {manifest && (
+            <p className="muted">
+              {localizedLabel(manifest.genre, locale)} ·{' '}
+              {
+                {
+                  easy: t('Könnyű', 'Easy'),
+                  normal: t('Normál', 'Normal'),
+                  hard: t('Nehéz', 'Hard'),
+                }[manifest.difficulty]
+              }{' '}
+              · {manifest.minutes} {t('perc', 'min')}
+            </p>
+          )}
           {loadError && (
             <p role="alert" className="error-text">
               {t('A mentést nem sikerült betölteni.', 'The save could not be loaded.')}
@@ -191,7 +207,7 @@ export function App({
       {ui.screen === 'heroSelect' && (
         <main className="hero-screen">
           <h1>{t('Válassz hőst', 'Choose a hero')}</h1>
-          {manifest?.characterMode === 'both' && (
+          {!portableHero && manifest?.characterMode === 'both' && (
             <div className="topbar__actions">
               <button
                 type="button"
@@ -214,19 +230,32 @@ export function App({
               </button>
             </div>
           )}
-          {manifest && mode === 'custom' && (
+          {!portableHero && manifest && mode === 'custom' && (
             <CharacterCreator
               heroes={content.heroes}
               manifest={manifest}
               onCreate={setCustomHero}
             />
           )}
-          {mode === 'custom' && customHero && (
+          {!portableHero && mode === 'custom' && customHero && (
             <p role="status">
               {customHero.name} {t('készen áll.', 'is ready.')}
             </p>
           )}
-          {mode === 'preset' && (
+          {portableHero && (
+            <section className="platform-fields assigned-hero">
+              <div className="profile-title">
+                <img className="profile-portrait" src={portraitUrl(portableHero.portrait)} alt="" />
+                <div>
+                  <strong>{portableHero.name}</strong>
+                  <p>
+                    {portableHero.role} · {t('Kijelölt karakter', 'Assigned character')}
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+          {!portableHero && mode === 'preset' && (
             <div className="hero-grid">
               {content.heroes.map((hero) => {
                 const selected = hero.id === ui.selectedHeroId;
@@ -285,13 +314,13 @@ export function App({
             <button
               type="button"
               className="btn btn--primary"
-              disabled={mode === 'custom' && !customHero}
+              disabled={!portableHero && mode === 'custom' && !customHero}
               onClick={() =>
                 dispatch({
                   type: 'START_GAME',
                   content,
                   fallbackSeed: Date.now(),
-                  customHero: mode === 'custom' ? customHero : undefined,
+                  customHero: portableHero ?? (mode === 'custom' ? customHero : undefined),
                   difficultyModifier: gameDifficulty,
                 })
               }

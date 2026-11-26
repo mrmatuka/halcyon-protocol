@@ -42,6 +42,7 @@ test('a vizuális szerkesztő és a ZIP ugyanazt a hordozható formátumot haszn
   baseURL,
 }) => {
   await page.goto('/');
+  await page.getByRole('button', { name: 'Történetszerkesztő', exact: true }).click();
   await page.getByRole('button', { name: 'Új kaland szerkesztése' }).click();
   await page.getByLabel('Kalandazonosító').fill('kapu-teszt');
   await page.getByLabel('Cím (HU)').fill('A titkos kapu');
@@ -64,7 +65,10 @@ test('a vizuális szerkesztő és a ZIP ugyanazt a hordozható formátumot haszn
   try {
     const imported = await other.newPage();
     await imported.goto('/');
+    await imported.getByRole('button', { name: 'Történetszerkesztő', exact: true }).click();
     await imported.getByLabel('ZIP importálása').setInputFiles(zipPath!);
+    await expect(imported.getByText('A kaland bekerült a helyi könyvtárba.')).toBeVisible();
+    await imported.getByRole('button', { name: 'Könyvespolc', exact: true }).click();
     const card = imported
       .locator('article')
       .filter({ has: imported.getByRole('heading', { name: 'A titkos kapu' }) });
@@ -78,4 +82,45 @@ test('a vizuális szerkesztő és a ZIP ugyanazt a hordozható formátumot haszn
   } finally {
     await other.close();
   }
+});
+
+test('egy közös karakter mindkét kalandot indítja, a hozzárendelés felülírja és a mentés megtartja a hőst', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const card = (title: string) =>
+    page
+      .locator('article')
+      .filter({ has: page.getByRole('heading', { name: title, exact: true }) });
+  await page.getByRole('button', { name: 'Karakterek', exact: true }).click();
+  await page.getByRole('button', { name: 'Új karakter' }).click();
+  await page.getByLabel('Név', { exact: true }).fill('Nara');
+  await page.getByLabel('Saját portré feltöltése').setInputFiles('public/icons/icon-192.png');
+  await expect(page.locator('form img')).toHaveAttribute('src', /^data:image\/jpeg/);
+  await page.getByRole('button', { name: 'Karakter mentése' }).click();
+  await expect(page.getByRole('heading', { name: 'Nara' })).toBeVisible();
+
+  for (const title of ['Csendes Jel', 'A ködlámpás őre']) {
+    await page.getByRole('button', { name: 'Könyvespolc', exact: true }).click();
+    await card(title).getByRole('button', { name: 'Kaland megnyitása' }).click();
+    await page.getByRole('button', { name: 'Új játék' }).click();
+    await expect(page.getByText('Nara', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Kész hősök' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Kaland indítása' }).click();
+    await expect(page.getByRole('region', { name: 'Karakterlap' })).toContainText('Nara');
+  }
+  await page.getByRole('button', { name: 'Karakterek', exact: true }).click();
+  await page.getByRole('button', { name: 'Új karakter' }).click();
+  await page.getByRole('button', { name: 'Véletlen karakter' }).click();
+  await page.getByLabel('Név', { exact: true }).fill('Orin');
+  await page.getByRole('button', { name: 'Karakter mentése' }).click();
+  await page.getByLabel('Csendes Jel', { exact: false }).selectOption({ label: 'Orin' });
+  await page.reload();
+  await card('Csendes Jel').getByRole('button', { name: 'Folytatás' }).click();
+  await expect(page.getByRole('region', { name: 'Karakterlap' })).toContainText('Nara');
+  await page.getByRole('button', { name: 'Főmenü', exact: true }).click();
+  await page.getByRole('button', { name: 'Új játék' }).click();
+  await expect(page.getByText('Orin', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Kaland indítása' }).click();
+  await expect(page.getByRole('region', { name: 'Karakterlap' })).toContainText('Orin');
 });

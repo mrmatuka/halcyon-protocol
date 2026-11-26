@@ -121,6 +121,11 @@
         },
         "required": ["id", "name", "description", "options"],
         "additionalProperties": false
+      },
+      "portrait": {
+        "type": "string",
+        "maxLength": 100000,
+        "pattern": "^(?:preset:(?:scout|scholar|guardian|mediator)-[12]|data:image\\/jpeg;base64,[a-z0-9+/=]+)$"
       }
     },
     "required": ["id", "name", "role", "description", "stats", "card"],

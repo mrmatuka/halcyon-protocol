@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { App } from '../ui/App';
+import { ProfileLibrary } from './ProfileLibrary';
+import {
+  adaptProfile,
+  assignedProfile,
+  readProfiles,
+  writeProfiles,
+  type Profiles,
+} from './profiles';
 import type { SlotId } from '../persistence/saveRepository';
 import { localizedContent, localizedLabel, type Adventure, type Locale } from './adventure';
 import { builtInCatalog, importedCatalogEntry, type CatalogEntry } from './catalog';
@@ -33,11 +41,9 @@ function themedStyle(theme: Adventure['manifest']['theme']): CSSProperties {
 function AdventureCard({
   adventure,
   onPlay,
-  onEdit,
 }: {
   adventure: CatalogEntry;
   onPlay: (slot?: SlotId) => void;
-  onEdit: () => void;
 }) {
   const { manifest, coverUrl } = adventure;
   const { locale, t } = useLanguage();
@@ -62,29 +68,38 @@ function AdventureCard({
     normal: t('Normál', 'Normal'),
     hard: t('Nehéz', 'Hard'),
   };
+  const title = localizedLabel(manifest.title, locale);
   return (
-    <article className="adventure-card" style={themedStyle(manifest.theme)}>
-      {coverUrl && <img className="adventure-cover" src={coverUrl} alt="" loading="lazy" />}
-      <div className="adventure-card__body">
-        <p className="adventure-card__meta">
-          {localizedLabel(manifest.genre, locale)} · {difficulty[manifest.difficulty]} ·{' '}
-          {manifest.minutes} {t('perc', 'min')}
-        </p>
-        <h2>{localizedLabel(manifest.title, locale)}</h2>
-        <p>{localizedLabel(manifest.description, locale)}</p>
-        <div className="topbar__actions">
-          <button type="button" className="btn btn--primary" onClick={() => onPlay()}>
-            {t('Kaland megnyitása', 'Open adventure')}
-          </button>
-          {latest && (
-            <button type="button" className="btn btn--secondary" onClick={() => onPlay(latest)}>
-              {t('Folytatás', 'Continue')}
-            </button>
+    <article className="shelf-book" style={themedStyle(manifest.theme)}>
+      <div className="book-frame">
+        <button
+          type="button"
+          className="book-cover"
+          aria-label={t('Kaland megnyitása', 'Open adventure')}
+          aria-describedby={`book-${manifest.id}`}
+          onClick={() => onPlay()}
+        >
+          {coverUrl ? (
+            <img src={coverUrl} alt="" loading="lazy" />
+          ) : (
+            <span className="book-emblem" aria-hidden="true">
+              {title.slice(0, 1)}
+            </span>
           )}
-          <button type="button" className="btn btn--secondary" onClick={onEdit}>
-            {t('Szerkesztés', 'Edit')}
+        </button>
+        <h2 id={`book-${manifest.id}`} className="book-cover__title">
+          {title}
+        </h2>
+      </div>
+      <div className="shelf-book__caption">
+        <p>
+          {localizedLabel(manifest.genre, locale)} · {difficulty[manifest.difficulty]}
+        </p>
+        {latest && (
+          <button type="button" className="shelf-continue" onClick={() => onPlay(latest)}>
+            {t('Folytatás', 'Continue')}
           </button>
-        </div>
+        )}
       </div>
     </article>
   );
@@ -94,6 +109,14 @@ export function Platform() {
   const [locale, setLocale] = useState<Locale>(() =>
     localStorage.getItem(localeKey) === 'en' ? 'en' : 'hu',
   );
+  const [section, setSection] = useState<'shelf' | 'characters' | 'studio'>('shelf');
+  const [library, setLibrary] = useState<Profiles>(() => {
+    try {
+      return readProfiles();
+    } catch {
+      return { version: 1, profiles: [], defaultId: null, assignments: {} };
+    }
+  });
   const [imported, setImported] = useState<Adventure[]>([]);
   const [active, setActive] = useState<{ adventure: Adventure; slot?: SlotId }>();
   const [editing, setEditing] = useState<{ adventure: Adventure; builtIn: boolean } | 'new'>();
@@ -114,6 +137,22 @@ export function Platform() {
   );
   const repo = useMemo(() => active && adventureSaves(active.adventure.manifest.id), [active]);
   const isHu = locale === 'hu';
+  const profile = adventure && assignedProfile(library, adventure.manifest.id);
+  const portableHero = useMemo(
+    () =>
+      profile && adventure && content
+        ? adaptProfile(profile, adventure.manifest, content, locale)
+        : undefined,
+    [profile, adventure, content, locale],
+  );
+
+  function navigate(next: typeof section) {
+    setSection(next);
+    setActive(undefined);
+    setEditing(undefined);
+    setNotice('');
+    setError('');
+  }
   useEffect(() => {
     let active = true;
     void Promise.resolve()
@@ -171,16 +210,28 @@ export function Platform() {
     <Language.Provider value={locale}>
       <div className="platform" style={adventure && themedStyle(adventure.manifest.theme)}>
         <header className="platform-bar">
-          <button
-            type="button"
-            className="platform-home"
-            onClick={() => {
-              setActive(undefined);
-              setEditing(undefined);
-            }}
-          >
+          <button type="button" className="platform-home" onClick={() => navigate('shelf')}>
             {isHu ? 'Kalandkönyvtár' : 'Adventure Library'}
           </button>
+          <nav className="platform-nav" aria-label={isHu ? 'Fő navigáció' : 'Main navigation'}>
+            {(
+              [
+                ['shelf', 'Könyvespolc', 'Bookshelf'],
+                ['characters', 'Karakterek', 'Characters'],
+                ['studio', 'Történetszerkesztő', 'Story editor'],
+              ] as const
+            ).map(([key, hu, en]) => (
+              <button
+                key={key}
+                type="button"
+                aria-current={section === key ? 'page' : undefined}
+                disabled={busy}
+                onClick={() => navigate(key)}
+              >
+                {isHu ? hu : en}
+              </button>
+            ))}
+          </nav>
           <label>
             {isHu ? 'Nyelv' : 'Language'}{' '}
             <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>
@@ -196,6 +247,7 @@ export function Platform() {
             manifest={adventure.manifest}
             saveRepository={repo}
             initialSlot={active?.slot}
+            portableHero={portableHero}
             onLibrary={() => setActive(undefined)}
             resolveIllustration={(nodeId) => {
               const image = adventure.illustrations[nodeId];
@@ -211,7 +263,7 @@ export function Platform() {
             }}
           />
         )}
-        {!adventure && editing && (
+        {!adventure && section === 'studio' && editing && (
           <AdventureEditor
             key={editing === 'new' ? 'new' : editing.adventure.manifest.id}
             adventure={editing === 'new' ? undefined : editing.adventure}
@@ -220,10 +272,46 @@ export function Platform() {
             onClose={() => setEditing(undefined)}
           />
         )}
-        {!adventure && !editing && (
+        {!adventure && section === 'characters' && (
+          <ProfileLibrary
+            library={library}
+            adventures={adventures}
+            onChange={(next) => {
+              writeProfiles(next);
+              setLibrary(next);
+            }}
+          />
+        )}
+        {!adventure && section === 'shelf' && (
+          <main className="app-shell bookshelf">
+            <div className="bookshelf-heading">
+              <h1>{isHu ? 'Könyvespolc' : 'Bookshelf'}</h1>
+              <p>{isHu ? 'Válassz kalandot' : 'Choose an adventure'}</p>
+            </div>
+            {busy && <p role="status">{isHu ? 'Kaland betöltése…' : 'Loading adventure…'}</p>}
+            {error && (
+              <p role="alert" className="error-text">
+                {error}
+              </p>
+            )}
+            <div className="shelf-grid">
+              {ready &&
+                adventures.map((entry) => (
+                  <AdventureCard
+                    key={entry.manifest.id}
+                    adventure={entry}
+                    onPlay={(slot) => {
+                      if (!busy) void openAdventure(entry, 'play', slot);
+                    }}
+                  />
+                ))}
+            </div>
+          </main>
+        )}
+        {!adventure && section === 'studio' && !editing && (
           <main className="app-shell">
             <div className="library-header">
-              <h1>{isHu ? 'Válassz kalandot' : 'Choose an adventure'}</h1>
+              <h1>{isHu ? 'Történetszerkesztő' : 'Story editor'}</h1>
               <div className="topbar__actions">
                 <button
                   type="button"
@@ -283,19 +371,31 @@ export function Platform() {
                 {error}
               </p>
             )}
-            <div className="adventure-grid">
+            <div className="studio-list">
               {ready &&
                 adventures.map((entry) => (
-                  <AdventureCard
-                    key={entry.manifest.id}
-                    adventure={entry}
-                    onPlay={(slot) => {
-                      if (!busy) void openAdventure(entry, 'play', slot);
-                    }}
-                    onEdit={() => {
-                      if (!busy) void openAdventure(entry, 'edit');
-                    }}
-                  />
+                  <article className="studio-row" key={entry.manifest.id}>
+                    <div>
+                      <h2>{localizedLabel(entry.manifest.title, locale)}</h2>
+                      <p className="muted">
+                        {entry.builtIn
+                          ? isHu
+                            ? 'Beépített · másolatként szerkeszthető'
+                            : 'Built in · edit a copy'
+                          : isHu
+                            ? 'Helyi kaland'
+                            : 'Local adventure'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn--secondary"
+                      disabled={busy}
+                      onClick={() => void openAdventure(entry, 'edit')}
+                    >
+                      {isHu ? 'Szerkesztés' : 'Edit'}
+                    </button>
+                  </article>
                 ))}
             </div>
           </main>

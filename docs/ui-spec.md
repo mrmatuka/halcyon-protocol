@@ -36,3 +36,11 @@
 - Szemantikus landmarkok (`header`, `main`, `aside`), egyetlen `h1` képernyőnként.
 - `aria-live="polite"` a kockadobás eredményéhez és a mentési visszajelzésekhez.
 - Fókuszkezelés: csomópontváltáskor a jelenet címsora fókuszba kerül (`tabIndex={-1}`); a modális ablak `Escape`-re bezárul.
+
+## Könyvespolc, karaktertár és szerkesztő
+
+- A Könyvespolc nézet a kalandok borítóit 2:3 keretben mutatja. Az új borítót álló képként érdemes felvinni. Kép nélküli kalandnak tipográfiai borítója van. A szerkesztés és a ZIP-import a Történetszerkesztő menüben érhető el.
+- A Karakterek menüben a Felderítő, Tudós, Őrző és Közvetítő kasztból lehet választani. A kaszt fő tulajdonsága 8, a többi 6, egy egyéni adottság egy értékhez +1-et ad. A kézi és véletlen módban egyaránt összesen 4 pont osztható el, tulajdonságonként legfeljebb 10-es végértékig. A portré választható a kaszt képei közül, vagy feltölthető.
+- Az első saját karakter alapértelmezett lesz. A játék az adott kalandhoz rendelt karaktert használja, ennek híján a közös alapértelmezettet. A karaktertár nélkül a meglévő kalandspecifikus karakterválasztás érhető el.
+- A `characterStatMap` opcionálisan a kaland tulajdonságait közös értékhez rendeli (`agility`, `knowledge`, `resolve`, `presence`). A játékszabály a kaland alapértékéhez adja a közös tulajdonság 7-től vett eltérését. Ismert régi tulajdonságoknak van alapértelmezett megfeleltetésük. A megfeleltetés nélküli érték a kaland alapértékén marad.
+- A közös karakterek és hozzárendelések a böngészőben tárolódnak. A futó kaland mentése saját karakterpillanatképet őriz, beleértve a portrét és a kasztképességet. A tárgyak, életerő és az elhasznált képesség a futó kaland állásához tartoznak.

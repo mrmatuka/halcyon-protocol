@@ -1,3 +1,4 @@
+import { portraitUrl } from '../../platform/portraits';
 import { useLanguage } from '../../platform/language';
 import type { GameState, Hero } from '../../engine/schema';
 import { fallbackStatLabel } from '../labels';
@@ -26,6 +27,9 @@ export function CharacterSheet({ hero, state, onUseHealCard, statLabels }: Chara
     <section className="panel" aria-label={t('Karakterlap', 'Character sheet')}>
       <h2 className="panel__title">{t('Karakterlap', 'Character sheet')}</h2>
       <div className="hero-meta">
+        {hero.portrait && (
+          <img src={portraitUrl(hero.portrait)} className="profile-portrait" alt="" />
+        )}
         <strong className="hero-meta__name">{hero.name}</strong>
         <span className="hero-meta__role">{hero.role}</span>
       </div>

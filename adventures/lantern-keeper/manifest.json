@@ -1,19 +1,31 @@
 {
   "version": 1,
   "id": "lantern-keeper",
-  "title": { "hu": "A ködlámpás őre", "en": "The Lantern Keeper" },
+  "title": {
+    "hu": "A ködlámpás őre",
+    "en": "The Lantern Keeper"
+  },
   "description": {
     "hu": "Egyetlen lámpás vezeti haza a halászokat. Ma este a köd visszaszól.",
     "en": "A single lantern guides the fishing boats home. Tonight the fog answers back."
   },
-  "genre": { "hu": "Misztikus fantasy", "en": "Mystery fantasy" },
+  "genre": {
+    "hu": "Misztikus fantasy",
+    "en": "Mystery fantasy"
+  },
   "difficulty": "easy",
   "minutes": 4,
   "defaultLocale": "hu",
   "characterMode": "both",
   "statLabels": {
-    "figyelem": { "hu": "Figyelem", "en": "Awareness" },
-    "batorsag": { "hu": "Bátorság", "en": "Courage" }
+    "figyelem": {
+      "hu": "Figyelem",
+      "en": "Awareness"
+    },
+    "batorsag": {
+      "hu": "Bátorság",
+      "en": "Courage"
+    }
   },
   "theme": {
     "background": "#171a14",
@@ -21,5 +33,6 @@
     "accent": "#efce81",
     "text": "#faf1d6",
     "font": "serif"
-  }
+  },
+  "cover": "images/cover.webp"
 }
