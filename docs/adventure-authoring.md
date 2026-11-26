@@ -1,35 +1,271 @@
-# Kalandcsomag-szerzői útmutató AI-nak
+# AI-agent instrukció – Kalandkönyvtár
 
-A feladat egy eredeti, játszható, elágazó kalandcsomag szerzői elkészítése a közös 2d6-os motorhoz. A szerző először adja meg a műfajt, a hangnemet, a célközönséget, a játékidőt, a kívánt nehézséget és a tartalmi határokat. Lényegi hiányzó döntés esetén kérdezz rá. A mindenkori működő mintát az `adventures/lantern-keeper/` és az `adventures/csendes-jel/` adja.
+Az a feladatod, hogy a felhasználóval együtt eredeti, elágazó, játszható kalandot tervezz, írj, illusztrálj és ellenőrizz a Kalandkönyvtárhoz. Az együttműködés kérdés–válasz körökből áll. A munkaállapot fájlokban él, így egy másik agent ugyanonnan folytathatja. Ez az eljárás rövid, például 20 jelenetes kalandokhoz és hosszabb, akár 100 vagy 200 jelenetes kampányokhoz is használható. A terjedelmet kalandonként a felhasználó választja ki.
 
-## Kimenet
+A módszertan alapja a [PLAN.md](../PLAN.md). A forráskód és a sémák határozzák meg, mit tud a kiadott játék. Először olvasd el ezt a fájlt, a [sémákat](../content/schema/) és egy működő csomagot. A [Ködlámpás őre](../adventures/lantern-keeper/) rövid szerkezeti példa, a [Csendes Jel](../adventures/csendes-jel/) összetettebb példa állapotjelzőkkel, tárgyakkal, kártyákkal és képekkel. Ha csak a letöltött instrukció áll rendelkezésedre, a példákat és sémákat a [repóban](https://github.com/mrmatuka/halcyon-protocol) találod.
 
-Készíts egy ZIP-et az alábbi fájlokkal közvetlenül az archívum gyökerében. UTF-8 JSON-t adj, tömörített külső mappa és futtatható kód nélkül. Ugyanez a fájlszerkezet kerülhet az `adventures/<id>/` könyvtárba, ha a kalandot a platformmal együtt kell kiadni.
+## Kérdés–válasz munkamenet
 
-| Fájl                 | Tartalom                                                                                                                                                                                                                                                                                                                          |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `manifest.json`      | `version: 1`, egyedi kisbetűs kötőjeles `id`, `title`, `description`, `genre`, `difficulty` (easy/normal/hard), pozitív egész `minutes`, `defaultLocale` (hu/en), `statLabels`, `theme`, `characterMode` (preset/custom/both). A nyelvi címkék alakja `{"hu":"…","en":"…"}`. Opcionális a `cover` mező, pl. `"images/cover.jpg"`. |
-| `heroes.json`        | Legalább egy hős vagy archetípus, kezdőértékekkel és egy képességkártyával. Minden szereplőnek legyen pozitív `eletero` értéke és minden manifestbeli tulajdonsághoz kezdőértéke.                                                                                                                                                 |
-| `items.json`         | Tárgyak listája. Tárgy nélküli történetnél az érték `[]`.                                                                                                                                                                                                                                                                         |
-| `nodes.json`         | `startNodeId`, `deathEndingId`, `nodes`. A jelenet (`kind: "scene"`) ad választásokat, a befejezés (`kind: "ending"`) típusa `victory` vagy `death`.                                                                                                                                                                              |
-| `translations.json`  | A másik nyelv szövegei azonosítók szerint. A kulcsok alább szerepelnek.                                                                                                                                                                                                                                                           |
-| `illustrations.json` | Opcionális lista, elemként `nodeId`, `file` és `alt`; pl. `{"nodeId":"kapu","file":"kapu.jpg","alt":"Egy kőkapu"}`.                                                                                                                                                                                                               |
-| `images/`            | Opcionális PNG, JPEG és WebP fájlok. Adj leíró alt-szöveget. Az archívum és a kibontott tartalom felső határa 32 MB.                                                                                                                                                                                                              |
+1. Ha már van szerzői munkamappa, alkalmazd a folytatási eljárást. Új kalandnál először az alapötletre, a műfajra, a hangnemre, a célközönségre és a kívánt játékidőre kérdezz rá. Adj 2–3 indokolt terjedelemjavaslatot az S2 és a K1 kérdéshez, majd kérdezd meg, hány jelenetet szeretne. A felhasználó a javaslatoktól eltérő számot is megadhat. A részletes gráftervezést és jelenetírást csak a jelenetszám jóváhagyása után indítsd el. Ha a felhasználó már egyértelműen megadta a jelenetszámot, rögzítsd. Szükség esetén adj 2–3 eltérő premisszát is.
+2. Egyszerre legfeljebb három összefüggő kérdést tegyél fel. Mindegyik kapjon azonosítót, döntési lehetőségeket és rövid leírást arról, mit változtat a válasz. Az előzőleg egyértelműen megadott választ rögzítsd. A feltételes és a delegált döntéseket is jelöld.
+3. A megválaszolt kérdéseket azonnal írd a döntési naplóba. Az „ahogy javaslod” az adott kérdéshez már bemutatott ajánlás elfogadását jelenti. Az egymásnak ellentmondó válaszokat tisztázd a kapcsolódó tartalom módosítása előtt.
+4. A fő jóváhagyási pontok a premissza és világ, a teljes gráf és szabályok, a hangnem- és képminta, valamint az átadás. A jóváhagyott irányon belül dolgozz önállóan a fejezeteken és kötegeken. Minden köteg ellenőrzőpontot kap.
+5. Bármelyik fázisban állj meg az érintett munkával, ha valódi felhasználói döntésre van szükség, vagy nem világos, melyik értelmezést kell követned. Írd le a kérdést, a lehetőségeket és a javaslatodat, majd várd meg a választ. Közben végezd a független munkát. A felhasználó előre delegálhat egy döntést. A már rögzített döntést csak új tény vagy ellentmondás esetén kérdezd meg újra.
+6. Minden kör végén rögzítsd a kész részeket, a megnyitott döntéseket és a következő konkrét lépést. Az elfogadott tényt, a javaslatot és az ellenőrzésre váró állítást külön státuszban tartsd.
 
-A `theme` mezőben adj meg hatjegyű hex színt `background`, `surface`, `accent` és `text` kulcshoz, illetve `system`, `serif` vagy `mono` értéket `font`-ként. A szöveg és háttér kontrasztját ellenőrizd.
+### A PLAN.md Q1–Q12 kérdései
 
-## Közös szabályok
+A rögzített platformdöntéseknél kérj megerősítést vagy eltérési igényt. Ha egy eltérés motor-, felület- vagy infrastruktúra-fejlesztést igényel, dokumentáld külön és jelezd a következményét a csomag elkészítése előtt.
 
-- A kalandazonosító lehet kötőjeles. A belső azonosítók kisbetűvel kezdődnek, és kisbetűt, számot, aláhúzást tartalmazhatnak. A szöveg fordításakor és javításakor az azonosítók maradjanak stabilak a korábbi mentések miatt.
-- Egyszerű választásnál `target` van. Próbánál `check: { "stat": "…" }` szerepel, külön `success` és `failure` célokkal. A dobás sikeres, ha a 2d6 összege legfeljebb a tulajdonság és a módosítók összege. Könnyű módban a célérték +2, nehézben −2.
-- Az `eletero` nulla értékénél a motor a kijelölt halál-befejezésre ugrik. A `szerencse` opcionális, de ilyen nevű tulajdonság próba után egyet fogy. A többi tulajdonság kalandonként tetszőleges elnevezésű.
-- A `condition` támogathat tárgyat, flaget, minimum tulajdonságot és ezek logikai kombinációját. Hatások adhatnak vagy elvehetnek tárgyat, változtathatnak tulajdonságot, illetve állíthatnak flaget. Az egzakt mezőkhöz használd a repó `content/schema/` sémáit és a működő mintákat.
-- Írj érdemi döntéseket és legalább egy teljes, végigjátszható útvonalat. Minden szándékolt jelenet legyen elérhető, és ne legyen kijárat nélküli ciklus vagy olyan jelenet, ahol az adott útvonalon minden választás rejtett.
-- A fordítás tartalmazza a teljes történetet és a választásokat. Kulcsok: `node.<id>.title`, `node.<id>.text`, `choice.<id>`, `hero.<id>.name|role|description`, `card.<id>.name|description`, `item.<id>.name|description`, `image.<nodeId>.alt`. Tulajdonnevek fordítása opcionális.
+| ID  | Kérdés a felhasználónak                                                                                                                                                                         | Alap vagy döntési szempont                                                                                                         |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Q1  | Milyen témát, világot, hangulatot, korosztályt és hangnemet szeretnél?                                                                                                                          | Tisztázd a műfajt, a narrációt és az érzékeny tartalmak határait.                                                                  |
+| Q2  | Mely tulajdonságok legyenek, mire szolgáljanak, és kell-e fogyó Szerencse?                                                                                                                      | A tulajdonságok kalandonként definiálhatók. A `szerencse` azonosító próbánként egy pontot fogyaszt.                                |
+| Q3  | Előre elkészített hős, dobással vagy pontelosztással létrehozott hős, esetleg több mód kell? Hány hős/archetípus és milyen szerepek legyenek?                                                   | A platform kész hőst és archetípusos pontelosztást kezel. A dobásos karakteralkotás külön funkcióigény.                            |
+| Q4  | Mi történjen nulla életerőnél? Legyen-e újrapróbálás, és számítson-e a vereség befejezésnek?                                                                                                    | A motor a kijelölt `deathEndingId`-ra ugrik. Tervezd külön a narratív befejezést és a jelentésben számolt finálékat.               |
+| Q5  | Mit jelentsenek a képességkártyák? Milyen szerepet kapjanak, és maradjon-e későbbre a gyűjthető kártyarendszer?                                                                                 | A jelenlegi séma hősönként egy kártyát vár, `autoSuccess`, `reroll` vagy `heal` opciókkal.                                         |
+| Q6  | Legyen tényleges harcrendszer, vagy a konfliktusokat a közös próbákkal modellezzük?                                                                                                             | A csomag a 2d6-os motort használja. Önálló harcrendszer platformbővítés.                                                           |
+| Q7  | Maradhat a repó npm, Vite, React, TypeScript és `useReducer` stackje?                                                                                                                           | A kalandcsomag beillesztéséhez ezeket a döntéseket örököld.                                                                        |
+| Q8  | Hány kézi mentést és milyen automentést szeretnél? Elég a helyi, kalandonként elkülönített tárolás?                                                                                             | A platform jelenleg három kézi mentést és egy automentést ad, a böngészőben.                                                       |
+| Q9  | Mely modellek jelennek meg a felhasználó Antigravity és ChatGPT/Codex választójában? Milyen előfizetési keretet és képeszközt használhatunk? Jelezd, ha szerzői AI-lépést CI-be szeretne tenni. | A jelenlegi munkamenet a bejelentkezett, előfizetéses kliensekre épül. A szerzői AI használata a buildtől és a játéktól független. |
+| Q10 | Milyen képformátumot, képméretet, képarányt és illusztrációs sűrűséget kérsz? Kell hang vagy zene?                                                                                              | Alap: 16:9-es jelenetképek, 1376 px körüli szélesség, tömörített JPEG/WebP. Hang és zene jelenleg külön átadható szerzői anyag.    |
+| Q11 | Kell-e mobil és asztali nézet, milyen böngészőkre ellenőrizzünk?                                                                                                                                | Alap: mobil és asztali Chromium. További célböngészőt külön tesztelj.                                                              |
+| Q12 | Helyi ZIP-import, közös katalógus, vagy nyilvános kiadás legyen a cél? Hol legyen a statikus oldal?                                                                                             | A meglévő oldal GitHub Pages. A helyi import a böngészőben marad. A publikus katalógushoz repóba kerül a csomag.                   |
 
-## Leadás előtt
+### A Csendes Jel S1–S6 kérdései és a hosszú kaland döntései
 
-1. Ellenőrizd minden hivatkozás, választás, kártya, tárgy és nyelvi kulcs egyezését.
-2. Játszd végig a kezdéstől legalább két eltérő döntéssorozattal. Rövid kalandnál próbáld végig minden befejezést.
-3. Futtasd a `npm run validate:adventure -- adventures/<id>` parancsot, ha helyben dolgozol. Importáld a ZIP-et a platform könyvtárába. Nyisd meg a vizuális szerkesztőt, és futtasd az **Ellenőrzés** műveletet.
-4. Add át a ZIP-et, az egybekezdéses összefoglalót, a befejezésekhez vezető utak rövid leírását és az elvégzett ellenőrzéseket.
+| ID  | Kérdés a felhasználónak                                                                                                                                                                                                                           |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1  | Elfogadod a munkacímet, a helyek és szereplők neveit, valamint a megszólításokat?                                                                                                                                                                 |
+| S2  | Hány egyedi jelenetet szeretnél a teljes gráfban? Adj indokolt terjedelemjavaslatokat, például 20, 100 vagy 200 jelenetet. Külön egyeztesd a jellemző útvonal hosszát és a jelenetenkénti 2–5 döntés kiosztását. A befejezéseket külön számoljuk. |
+| S3  | Milyen tárgyi, helyszíni és állapotfüggő próbamódosítókat engedjünk? Mekkora kockázatot vállaljon a játékos egy normál vagy nehéz kalandnál?                                                                                                      |
+| S4  | Hány Szerencse-próba legyen, milyen gyakran fogyhat a Szerencse, és hogyan hathat a fináléra?                                                                                                                                                     |
+| S5  | Milyen kezdőérték, életerő, sebzés és sikerarány legyen az egyes szerepeknél? Hány állítható nehézségi módra tervezzünk?                                                                                                                          |
+| S6  | Mi fér bele az erőszak, horror, szexualitás és nyelvezet terén? Milyen tartalmi jelzés legyen a kaland adatlapján, ha szükséges?                                                                                                                  |
+| K1  | Mennyire legyen szövevényes az adott terjedelemben a történet? Egyeztesd az elkülönülő útvonalakat, a visszatérő mellékszálakat, az állapotfüggő döntéseket és a befejezéseket.                                                                   |
+| K2  | Teljes magyar és angol kiadás kell? Melyik nyelv legyen a szerzői eredeti, és mely neveket fordítsuk le?                                                                                                                                          |
+| K3  | A kötelező könyvborítón túl milyen illusztrációkat kérsz? Jelenetképek, portrék, tárgyképek, térkép és külön szerzői gráf jöhet szóba.                                                                                                            |
+| K4  | A fő mérföldköveken kérj jóváhagyást. Kérdezd meg, ha van külön delegált döntés vagy további egyeztetési igény. A fejezetek önállóan készülnek az elfogadott irányban, a közben felmerülő döntéseket és bizonytalanságokat külön tisztázd.        |
+| K5  | Melyik legyen a kaland fő műfaja, és mely további műfajok vagy játékmenetcímkék írják le legjobban? A zárt listából adj javaslatot a premissza jóváhagyásakor.                                                                                    |
+
+## Állapotkövetés és agentváltás
+
+A szerzői munkamappa alapértelmezett helye `authoring/<kaland-id>/`. A játszható csomag külön könyvtárban készül, alapértelmezetten `adventures/<kaland-id>/` alatt. A szerzői munkamappa kész, átmásolható átadási egység, amelyet a kalandcsomag ZIP-jétől külön kezelj.
+
+| Fájl                        | Mit rögzíts benne                                                                                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `state.json`                | Verzió, fázis, állapot, döntés- és fejezetazonosítók, bemeneti revízió, következő művelet, függő kérdések és futtatott ellenőrzések.                                               |
+| `decisions.md`              | Kérdésazonosító, aktuális válasz, döntés indoka, jóváhagyó vagy delegálás, felülírt döntés, érintett fájlok.                                                                       |
+| `design.md`                 | Premissza, világ, idővonal, kánon, karakterek és motivációk, szabályok, nyelvi szójegyzék, valamint a lezárt vagy nyitott mellékszálak.                                            |
+| `catalog-labels.json`       | A kaland stabil katalóguscímkéi, a lenti géppel olvasható formátumban.                                                                                                             |
+| `graph.json`                | A jóváhagyott szerzői gráf fejezetenként, stabil azonosítókkal. Minden élhez cél, feltétel, hatás és adott esetben a siker/kudarc ág tartozik. A futásidejű export a `nodes.json`. |
+| `chapters/`                 | Fejezetenkénti szöveg és fordítás. Minden rész kapjon revíziót, belépési feltételeket, kilépési állapotokat és hivatkozást a gráf csomópontjaira.                                  |
+| `assets.md`                 | Stílusreferenciák, képazonosító, fájlnév, jelenet, prompt, tényleges modell, HU/EN alt-szöveg, méret és jóváhagyási állapot.                                                       |
+| `checks.md` és `handoff.md` | Lefutott parancsok és eredmények, tesztútvonalak, ismert hibák, jóváhagyások, a következő agent induló olvasási sorrendje és az első nyitott művelet.                              |
+
+A `state.json` minimális, másolható minta. A `sceneCount` addig `null`, amíg a felhasználó jóvá nem hagyott egy pozitív egész jelenetszámot.
+
+```json
+{
+  "stateVersion": 1,
+  "adventureId": "pelda-kaland",
+  "frameworkRevision": null,
+  "checkpoint": 1,
+  "phase": "02",
+  "designTargets": {
+    "sceneCount": null,
+    "minChoicesPerScene": 2,
+    "maxChoicesPerScene": 5,
+    "choiceCountMode": "narrative",
+    "choiceCountSeed": null
+  },
+  "status": "awaiting_input",
+  "completed": ["01"],
+  "pendingQuestions": ["S2", "K1"],
+  "nextAction": "Adj terjedelem- és elágazásjavaslatokat, majd kérd a jelenetszám jóváhagyását.",
+  "workItems": [
+    {
+      "id": "ch01",
+      "status": "awaiting_input",
+      "dependsOn": ["S2", "K1"],
+      "paths": ["chapters/ch01.md"],
+      "model": null,
+      "lastCheck": null
+    }
+  ],
+  "artifacts": [
+    { "path": "decisions.md", "sha256": null },
+    { "path": "design.md", "sha256": null }
+  ],
+  "checks": []
+}
+```
+
+- Engedélyezett státuszok: `in_progress`, `awaiting_input`, `awaiting_review`, `blocked`, `done`. Munkatétel például egy fejezet, fordítás vagy kép. A tételeknél rögzítsd az azonosítót, függőségeket, érintett fájlokat és az utolsó ellenőrzés eredményét. A modell nevét és szolgáltatóját az elkészült tételnél rögzítsd. Minden kész fájlhoz mérj SHA-256-ot, ha van hozzá eszköz. A nem mérhető ellenőrzőösszeg, az ismeretlen modell és az ismeretlen framework-revízió értéke `null`.
+- Minden jóváhagyás, fejezetköteg, fordítási köteg, képköteg és megszakítás előtt írj ellenőrzőpontot. Előbb a tartalmat és a naplókat írd ki, olvasd vissza a módosított fájlokat, majd utolsóként frissítsd a `state.json`-t atomi cserével, ahol van fájlrendszer. Repozitóriumban használd a munkabranch Git-revízióját is a visszakereshetőséghez.
+- Folytatáskor olvasd be sorrendben a `state.json`-t, `handoff.md`-t, `decisions.md`-t és az érintett fejezetet, gráfot vagy képjegyzéket. Ellenőrizd a késznek jelölt tételek fájljait és SHA-256 értékeit, a revíziót és a nyitott döntéseket. Függő tétel fájlja hiányozhat, ezt a státusz alapján értékeld. Foglald össze egy mondatban a megállási pontot, majd végezd a `nextAction` műveletet.
+- Félbemaradt írás vagy eltérő revízió esetén hasonlítsd össze a fájlokat az utolsó teljes ellenőrzőponttal. A módosított, még nem jóváhagyott részt jelöld felülvizsgálandónak. A jóváhagyott részeket csak megváltozott döntés vagy igazolt hiba esetén nyisd újra, indoklással.
+- Ha egy döntés változik, jelöld újraellenőrzendőnek az érintett gráféleket, fejezetszöveget, fordításokat, képeket és tesztútvonalakat. Az újraellenőrzésig a korábbi zöld teszt az előző revízióra vonatkozik.
+- Ha az agent nem tud fájlt írni, minden köteg végén adja vissza menthető formában az állapotfájlt és a módosított dokumentumokat. Következő munkamenetben ezek legyenek a bemenetek.
+
+## Fázisok, modellek és elfogadás
+
+### Előfizetéses modellválasztás
+
+A munkafolyamat **API-kulcs nélkül**, Google-fiókkal bejelentkezett **Antigravity CLI/IDE**, illetve ChatGPT-fiókkal bejelentkezett **Codex CLI vagy ChatGPT** használatára készült. A modellválasztón ténylegesen megjelenő opciók és a rendelkezésre álló keret döntenek. A szolgáltatók katalógusai és a fiók választói eltérhetnek. Tájékozódási dátum: **2026. november 26.**
+
+| Kliens                   | A munkához használt modellcsaládok és ellenőrzés                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Antigravity CLI vagy IDE | Gemini 4 Carbon a nehéz tervezéshez, Neon a napi munkához, Hydrogen a jól körülírt kötegekhez. Claude Sonnet 5.5 (Thinking) a szöveghez, Claude Opus 5.5 (Thinking) a történeti tervezéshez, ha megjelennek az előfizetésedben. A CLI-ben ellenőrizd a `/model` listát. A Claude-ajánlások Antigravityn belüli használatra szólnak.                                                               |
+| Codex CLI                | ChatGPT-fiókkal jelentkezz be. Ellenőrizd a modelleket a `/model` paranccsal. Választható esetben a GPT-6.2 Astra mély elemzésre, GPT-6.2 Sol a fájlok szerkesztésére és validálására, GPT-6.1 Terra a vizuális ellenőrzésre, GPT-6 Luna rövid, ismétlődő feladatokra használható. Ha a 6.2-es modell nem jelenik meg, válassz azonos szerepre elérhető 6.1 Solt vagy Gemini/Claude alternatívát. |
+| ChatGPT                  | A webes vagy asztali modellválasztó szerint dolgozz, a képekhez használd a ChatGPT Images felületét. A képet mentsd ki, majd a munkamappában rögzítsd az eredetét és a jóváhagyását. Az Antigravity képeszköze a dokumentáció szerint Nano Banana 2-t használ.                                                                                                                                    |
+
+A fázistáblázatban az OpenAI szövegmodellek Codexre vagy az azt kínáló ChatGPT felületre, a Claude és Gemini szövegmodellek Antigravityre vonatkoznak. Ha az első modell nincs a fiók választójában vagy elfogyott a kerete, használd az elérhető helyettesítőt. Mindkét útnál rögzítsd a tényleges klienst, modellt és gondolkodási módot, ha az látható. Ismeretlen modellverziót ne következtess ki a terméknévből. A választás indoka legyen a feladat és a kipróbált minta. A ChatGPT Images és Antigravity képkészítéshez az előfizetéses eszközt használd, és töltsd át a kész fájlt a repó munkamappájába, ha a kliens máshol mentette.
+
+| Fázis | Feladat és elfogadási feltétel                                                                                                                                                                                                | Első ajánlás                                                   | Helyettesítő                                                          |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| 00    | Folytatás vagy új mappa inicializálása. Olvasd be a sémát, az állapotot és a korábbi döntéseket. Írj érvényes ellenőrzőpontot.                                                                                                | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+| 01    | Kérdezés, premisszák és célközönség. Mutass 2–3 eltérő megközelítést, rögzítsd a Q1-et, S6-ot és a katalóguscímkéket (K5). Ajánlj jelenetszámokat, zárd le az S2-t és egyeztesd a kívánt elágazási mélységet (K1).            | Claude Sonnet 5.5                                              | Gemini 4 Neon                                                         |
+| 02    | Világ, idővonal, főszereplők, mellékszereplők, karakteralkotás, tét és játékszabályok. Egyeztesd a fennmaradó Q/S/K kérdéseket. A világ és szabályok jóváhagyottak.                                                           | Claude Opus 5.5                                                | GPT-6.2 Astra                                                         |
+| 03    | Teljes gráf, fejezetek, kitérők, tárgyak, flagek, döntések következményei és finálék. Számold ki a gráfmutatókat, és adj tesztútvonalat a főbb végkimenetelekhez.                                                             | GPT-6.2 Astra                                                  | Gemini 4 Carbon                                                       |
+| 04    | Hangnemminta. Ugyanarra a jelenetre és párbeszédre kérj két változatot. A felhasználó válasszon magyar hangot, nézőpontot és stílust.                                                                                         | Claude Sonnet 5.5                                              | GPT-6.1 Terra                                                         |
+| 05    | Szövegírás fejezetenként, jelenet és döntésszöveg stabil ID szerint. Írd ki a fejezethatárok állapotát és zárd a köteget ellenőrzőponttal.                                                                                    | Claude Sonnet 5.5                                              | Claude Opus 5.5 vagy GPT-6.2 Sol                                      |
+| 06    | HU/EN fordítás és szerkesztés. Használd a szójegyzéket, ellenőrizd ugyanazon ID és következmény meglétét. Próbálj ki mindkét nyelven egy teljes útvonalat.                                                                    | Gemini 4 Neon                                                  | GPT-6.2 Sol                                                           |
+| 07    | JSON-konverzió, karakterek, kártyák, tárgyak, téma és katalóguscímkék. A fájlokat a séma szerint állítsd össze, majd futtasd a validátort.                                                                                    | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+| 08    | Vizuális stíluskalauz, képlista és promptok. Mutass címjavaslatokat és egy könyvborító-mintát. Ha lesznek jelenetképek, adj azokhoz is mintát. Pontos térképet és gráfot a jóváhagyott adatokból rajzolj, például Mermaidben. | Claude Sonnet 5.5                                              | GPT-6.2 Sol                                                           |
+| 09    | A kötelező könyvborító és a kért jelenetképek, portrék, egyéb vizuális anyagok elkészítése. A vizuális mintát hagyd jóvá, majd készíts kisebb képkötegeket.                                                                   | ChatGPT Images 2.6                                             | Antigravity képeszköz (Nano Banana 2)                                 |
+| 10    | Vizuális ellenőrzés. Ellenőrizd a borítócím helyesírását és olvashatóságát, a karakter- és tárgyazonosságot, a vágást, a vizuális spoilereket és az alt-szöveget. A pixelméretet és fájlméretet eszközzel mérd.               | GPT-6.1 Terra                                                  | Gemini 4 Neon                                                         |
+| 11    | Független narratív audit. Keresd a rossz információsorrendet, állapotellentmondást, indokolatlan karakterváltást és hibás következményt. Csak hivatkozható megállapítást rögzíts.                                             | Gemini 4 Carbon, ha a szerző Anthropic/OpenAI modellt használt | GPT-6.2 Astra vagy Claude Opus 5.5, a szerzőtől eltérő szolgáltatótól |
+| 12    | Determinisztikus validálás, szimuláció, ritka ágak és nehézség hangolása. Keresd a blokkolt játékállapotokat, dokumentáld a magokat és az útvonalakat.                                                                        | GPT-6.2 Sol; összetett hibánál GPT-6.2 Astra                   | Claude Sonnet 5.5 vagy Gemini 4 Carbon                                |
+| 13    | Tesztjátékos-körök eltérő játékstílussal. A botokat azonos magokkal hasonlítsd össze, a szubjektív visszajelzést a futási adatok mellé írd.                                                                                   | Gemini 4 Hydrogen                                              | GPT-6 Luna, ha választható                                            |
+| 14    | ZIP, böngészős import és játékpróba, HU/EN váltás, mentés/visszatöltés, mobil és asztali nézet. Add át a csomagot és az átadási állapotot.                                                                                    | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+
+Szerzői kezdéskor ellenőrizd, hogy a választott modell és eszköz ténylegesen elérhető-e. Ha a képgenerátor felülete nem enged verziót választani, a használt terméknevet rögzítsd, a modellverziót hagyd ismeretlennek. A szöveg és a vizuális stílus elején próbálj ki 2–3 rövid mintát. Ha bizonytalan a modellválasztás, futtasd ugyanazt a mintát két elérhető modellel, és mutasd meg a felhasználónak az eltérést. A modell cserélhető két köteg között. Az új agent előbb ugyanazt a kánont és jóváhagyott hangnemmintát olvassa. Független auditor hiányában jelöld ezt a jelentésben.
+
+Modellforrások: [Antigravity modellválasztó és képeszköz](https://antigravity.google/docs/models?app=antigravity), [Codex ChatGPT-előfizetéssel](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan), [ChatGPT Work és Codex modellek](https://learn.chatgpt.com/docs/models), [ChatGPT Images](https://help.openai.com/hu-hu/articles/11084440-images-in-chatgpt).
+
+## Hosszú és összetett kaland felépítése
+
+- **A kért körszám a jóváhagyott jelenetszám.** Ennyi különböző `kind: "scene"` csomópont legyen a teljes gráfban. A `kind: "ending"` csomópontokat külön számold. Egy végigjátszás hossza külön mérőszám, mert a játékos az ágaknak csak egy részét járja be.
+- **A terjedelemjavaslatot kösd a kalandhoz.** Például 20 jelenet egy tömör, újrajátszható történethez, 100 egy több útvonalas kalandhoz vagy 200 egy több fejezetes, egymásra épülő mellékszálakkal működő kampányhoz. Ezek példák. Minden javaslatnál add meg, milyen fő útvonalat és mellékszálakat adna, milyen hosszú lenne egy jellemző végigjátszás, valamint mekkora írási, fordítási és tesztelési munkát jelentene. Indokold meg a saját ajánlásodat.
+- **Minden jelenetben legyen 2–5 érdemi döntés.** A minimum és maximum a mentett tervezési paraméterek. Alapértékük `2` és `5`. Ha a felhasználó szűkíti a tartományt, ellenőrizd a `2 ≤ minimum ≤ maximum ≤ 5` feltételt. A tágabb tartomány külön felhasználói döntés. Minden jelenet exportált `choices` listája feleljen meg a tartománynak. Egy próbához tartozó siker és kudarc ugyanannak a döntésnek két kimenete. A befejezésekhez nem tartoznak döntések.
+- **A darabszám alapból a jelenethez igazodjon.** `narrative` módban az agent a helyzethez illő darabszámot választ a tartományból. `seeded` módban dokumentált, determinisztikus sorsolás rendel céldarabszámot a stabil jelenetazonosítóhoz. Kiinduló módszerként képezd a `seed:sceneId` UTF-8 szöveg SHA-256 összegét, értelmezd az első nyolc hex számjegyet előjel nélküli egészként, majd számítsd ki: `minimum + érték % (maximum - minimum + 1)`. Az elfogadott seedet, a módszert és a jelenetenkénti eredményt rögzítsd. A mag lehet szöveges, a megállapítás után változatlan. A sorsolás a gráf tervezésekor történik, ezért a futó játék mindig ugyanazt a jóváhagyott gráfot használja. Ha a kihúzott darabszámhoz nincs elég érdemi opció, jelezd a problémát és kérj tervezési döntést.
+- **A rejtett feltételek mellett is legyen választás.** A tervezés során garantálj legalább a megadott minimumnyi elérhető opciót minden elérhető, játszható jelenetállapotban. Ehhez használhatsz alapvetően látható választásokat vagy igazoltan egymást lefedő feltételeket. Teszteld a hiányzó tárgyat, az ellenkező flaget és a kimerült erőforrást is. Az állapotgaranciát külön ellenőrizd az exportált döntések számától.
+
+- **A bejárható hossz legyen mérhető.** Külön rögzítsd a gráf egyedi jeleneteinek számát, a legrövidebb szándékolt végigjátszást, a jellemző és hosszú útvonal döntésszámát, a befejezések számát és a becsült időt. Egy száz jelenetes gráfból az egyes útvonalak ennél rövidebbek lehetnek. Az egymást követő csomópontok újralátogatását csak az útvonalhosszba számold, az egyedi jelenetek számába egyszer.
+- **Előbb az egész gráf, aztán a fejezetszöveg.** Adj stabil azonosítókat minden jelenetnek és döntésnek. Száz jelenet környékén induló javaslatként használj 5–10 fejezetet, kisebb szövegkötegekkel. A fejezethatáron írd le az áthozott tárgyakat, ismert információkat, szövetségeket, sérüléseket és nyitott szálakat. A fejezetek a szerzői fájlokban élnek, a futásidejű gráf egyetlen `nodes.json`.
+- **A választások következzenek a helyzetből.** Egy átvezetéshez is tervezz legalább két érdemi lehetőséget. Fontos csomópontnál használd a tartomány felső részét, például tárgyalást, kerülőt, utánajárást, erőforrás feláldozását vagy kockázatos próbát. Minden választáshoz jegyezd fel, mi látszik előre, mi a közvetlen következmény, és később hol tér vissza a hatása.
+- **Az összefutó ágak őrizzék meg a különbségüket.** A feltétel és hatás táblában írd le, melyik jelenet ad egy információt vagy tárgyat, melyik használja fel, és van-e másik forrása. Bonyolult nyomozásnál rögzítsd külön, mit tud a világ, a játékos és az egyes szereplők. A finálékhoz készíts előfeltétel- és útvonaltáblát.
+- **A hurkoknak legyen kijáratuk.** Vizsgáld meg a végtelen újrapróbálást, ismételt jutalmakat, felhalmozódó hatásokat és a nyomok megszerzési sorrendjét. Legyen teszt olyan állapotra is, amikor hiányzik egy opcionális tárgy vagy információ.
+- **Tervezz méretkerettel.** Egy 100 jelenetes kalandhoz nem szükséges 100 külön kép. Minden kalandhoz készíts saját borítót. Egyeztesd a további fejezetnyitók és kulcsjelenet-képek számát. A ZIP plafonja miatt mérd a teljes csomagot a képgenerálás elejétől. Ha teljes képsorozat kell, előbb próbálj tömörített WebP/JPEG mintát és kérj döntést a közös katalógus vagy az importálható ZIP előnyéről.
+
+### A történet szövevényességének becslése
+
+Az ajánlat előtt becsüld meg ezeket az adatokat. A teljes gráf elkészülte után számold újra a tényleges értékeket, és mutasd meg az eltérést.
+
+| Mutató                          | Számítás és értelmezés                                                                                                                                                                                                                                                       |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Terjedelem, `N`                 | A kezdőpontból bejárható egyedi jelenetek száma, a befejezések nélkül. Ellenőrizd külön, hogy az exportált jelenetek összlétszáma megegyezik-e a jóváhagyott céllal, és jelezd az elérhetetlen jeleneteket.                                                                  |
+| Elágazó jelenetek, `B` és `B/N` | Egy jelenet akkor számít ide, ha legalább két különböző, érdemben elérhető célcsomópontra vezet. A cél lehet jelenet vagy befejezés. Az ismételt célazonosítót jelenetenként egyszer számold. Az arány mutatja, a jelenetek mekkora része ágazik el.                         |
+| Elágazási többlet, `D` és `D/N` | Minden jelenetnél számold ki a különböző elérhető célok számát (`d`). Összegezd a `max(0, d − 1)` értékeket. A `D` az egyetlen alapfolytatáson felüli szerkezeti lehetőségek száma, a `D/N` ezek sűrűsége. A próbák eltérő céljai ugyanebbe a deduplikált halmazba kerülnek. |
+| Állapoton múló jelenetek, `H`   | Számold meg azokat a jeleneteket, amelyekben az eltérő választás, tárgy, flag vagy próba későbbi elérhetőséget, feltételt vagy befejezést változtat. Ide az azonos célra jutó, de különböző tartós hatású döntések is beszámítanak.                                          |
+| Útvonalak és finálék            | Jelentsd a rövid, jellemző és hosszú végigjátszás döntésszámát, a szándékolt befejezéseket és a fő összefutásokat. A gráfban látható lehetséges ágakat és a ténylegesen végigjátszott ágakat jelöld külön.                                                                   |
+
+A riportban add meg a nyers értékeket és az indokolt összképet. Például ha 20 jelenetből 12 ágazik el, a `B/N` 60%. Ha összesen 16 többletcél van, a `D/N` 0,8. Egy hosszabb, túlnyomórészt lineáris történet több jelenetet igényelhet, miközben ennek a rövidebb kalandnak sűrűbb az elágazása. Az egymásba futó ágaknál és a hurkoknál a mutatókból ne következtess pontos teljes útvonalszámra.
+
+## Zárt katalóguscímkék
+
+A katalóguscímkék minden kaland kötelező szerzői metaadatai. Válassz pontosan egy fő műfajt, legfeljebb két további műfajt és egy–három meghatározó játékmenetcímkét. A fő műfaj fejezze ki a világot vagy történettípust, a játékmenetcímke pedig azt, amit a játékosnak rendszeresen csinálnia kell. A Logikai címkét olyan kaland kapja, ahol a következtetés vagy feladványok megoldása érdemi része a játéknak.
+
+A lista zárt. Az ID-t és a HU/EN feliratot pontosan innen vedd. A katalóguscímkét nyelvváltáskor az ID alapján jelenítsd meg. Kerüld az egyedi címkéket, a rövidítéseket, az alternatív helyesírást és a címkék ismétlését. Ha a történet több kategóriába is illik, a legjellemzőbbeket válaszd. A lista bővítése külön, központi döntés.
+
+### Műfajok
+
+| Stabil ID          | Magyar             | English          |
+| ------------------ | ------------------ | ---------------- |
+| `sci-fi`           | Sci-fi             | Sci-fi           |
+| `fantasy`          | Fantasy            | Fantasy          |
+| `horror`           | Horror             | Horror           |
+| `mystery`          | Rejtély            | Mystery          |
+| `thriller`         | Thriller           | Thriller         |
+| `adventure`        | Kaland             | Adventure        |
+| `historical`       | Történelmi         | Historical       |
+| `crime`            | Krimi              | Crime            |
+| `post-apocalyptic` | Posztapokaliptikus | Post-apocalyptic |
+| `dystopia`         | Disztópia          | Dystopian        |
+| `supernatural`     | Természetfeletti   | Supernatural     |
+| `mythology`        | Mitológiai         | Mythological     |
+| `comedy`           | Vígjáték           | Comedy           |
+| `drama`            | Dráma              | Drama            |
+| `romance`          | Romantikus         | Romance          |
+| `abstract`         | Absztrakt          | Abstract         |
+
+### Játékmenetcímkék
+
+| Stabil ID             | Magyar                | English             |
+| --------------------- | --------------------- | ------------------- |
+| `logic`               | Logikai               | Logic               |
+| `investigation`       | Nyomozás              | Investigation       |
+| `exploration`         | Felfedezés            | Exploration         |
+| `survival`            | Túlélés               | Survival            |
+| `stealth`             | Lopakodás             | Stealth             |
+| `negotiation`         | Tárgyalás             | Negotiation         |
+| `resource-management` | Erőforrás-gazdálkodás | Resource management |
+| `moral-dilemmas`      | Erkölcsi dilemmák     | Moral dilemmas      |
+| `character-driven`    | Karakterközpontú      | Character-driven    |
+| `action`              | Akció                 | Action              |
+| `time-pressure`       | Időnyomás             | Time pressure       |
+| `strategy`            | Stratégiai            | Strategy            |
+
+A jóváhagyott címkéket mentsd a szerzői munkamappa `catalog-labels.json` fájljába. A fájl az előírt azonosítókat tárolja, így egy későbbi katalógusszűrő pontos ID alapján kereshet. A `primaryGenre` egészítse ki az adatlapot a jelenlegi `manifest.json` fájl `genre.hu` és `genre.en` mezőiben, a listából vett változatlan feliratokkal. A többi címke a szerzői átadás részeként marad elérhető. A jelenlegi játékcsomag sémája egy megjelenített műfajt fogad, a többcímkés megjelenítés és keresés külön platformfunkció.
+
+```json
+{
+  "version": 1,
+  "adventureId": "pelda-kaland",
+  "primaryGenre": "sci-fi",
+  "secondaryGenres": ["horror"],
+  "gameplayTags": ["logic", "investigation"]
+}
+```
+
+Átadás előtt ellenőrizd, hogy minden ID a megfelelő csoportban szerepel, a listák egyediek, a fő műfaj nem szerepel másodlagosként, a játékazonosító egyezik a manifesttel, és a fő műfaj kétnyelvű felirata pontos. A `catalog-labels.json` a szerzői munkamappában szerepeljen, a futásidejű ZIP csak a játékcsomag formátumában felsorolt fájlokat tartalmazza.
+
+## Kötelező könyvborító a kalandkönyvtárhoz
+
+Minden kalandhoz tervezz saját címet, és generálj hozzá könyvszerű borítóképet. Ez jelenik meg a történetválasztó könyvtárban. Rövid minikalandnál is legyen borító. Ha egy kalandhoz nem készülnek jelenetillusztrációk, a borító akkor is kötelező.
+
+1. **Cím.** Javasolj 3 rövid, emlékezetes címet, és magyarázd el egy-egy mondatban, hogyan kapcsolódnak a premisszához. A cím tükrözze a hangulatot és utaljon egy sajátos helyszínre, tárgyra vagy konfliktusra. A címjavaslatot a munkacím jóváhagyásakor mutasd meg, és rögzítsd a választást. Kétnyelvű kalandhoz egyeztesd a magyar és angol címet. A kiválasztott címek kerüljenek a `manifest.json` megfelelő `title.hu` és `title.en` mezőjébe.
+2. **Könyvszerű kép.** A látvány úgy hasson, mint a történet saját könyvének első borítója. Legyen egy kiemelt motívuma, felismerhető műfaji hangulata és jól olvasható címe. Használj a kalandra jellemző alakot, helyet, emblémát vagy tárgyat. A kép jelezze a történet tétjét, és őrizze meg a fordulatokat. A könyvszerű hatást borítóelrendezéssel vagy egy könyv látványával is megteremtheted.
+3. **Könyvtári változat.** Az álló könyvborító az elsődleges vizuális terv. A könyvtár jelenlegi képkivágása **16:7**, ezért készíts hozzá széles változatot is, például 1600 × 700 px méretben. A címet és a főmotívumot tartsd a biztonságos képtérben. Egy megoldás az álló könyv teljes borítójának megjelenítése széles, a történethez illő háttéren. A könyvcímnek kártyaméretben is olvashatónak kell maradnia. A `cover` mező a széles változatra mutasson, például `images/cover.webp`.
+4. **Tipográfia és nyelv.** A jóváhagyott címet pontosan add a képhez. Ha a képgenerátor elírja vagy torzítja a címet, készíts képalapot, és olvasható tipográfiával tedd rá a pontos feliratot. A platform jelenleg egy borítófájlt használ mindkét nyelven. A borítóra kerülő címalakot egyeztesd, és a könyvtár saját címsora a nyelvváltó szerint a megfelelő címet mutassa.
+5. **Ellenőrzés és átadás.** Mentsd el a vizuális mintát, a végleges útvonalat, a modellt és a jóváhagyott címet az `assets.md` fájlba. Import vagy kiadás előtt ellenőrizd az összekötést, a fájl megnyithatóságát és azt, hogy a borító, a rajta lévő cím és az adatlap címe megjelenik a könyvtári kártyán mobilon és asztalon. Ha nincs elérhető képgenerátor vagy elfogyott a keret, rögzítsd a függő borítófeladatot. Borítóval együtt teljes az átadás.
+
+## A kalandcsomag formátuma
+
+UTF-8 JSON-fájlokat adj a ZIP gyökerében, a képeket az `images/` mappában. Ugyanez a szerkezet használható az `adventures/<id>/` könyvtárban. A csomag csak adatot és az engedélyezett képformátumokat tartalmazza.
+
+| Fájl                 | Kötelező tartalom                                                                                                                                                                                                                                                                                                                                                                                                     |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `manifest.json`      | `version: 1`, kisbetűs kötőjeles `id`, `title`, `description`, `genre`, `difficulty` (`easy`, `normal`, `hard`), pozitív egész `minutes`, `defaultLocale` (`hu` vagy `en`), `statLabels`, `theme` és `characterMode` (`preset`, `custom`, `both`). A címkék alakja `{"hu":"…","en":"…"}`, a magyar mező kötelező, az angol megadható. Az agent által készített kalandban legyen `cover`, például `images/cover.webp`. |
+| `heroes.json`        | Legalább egy hős vagy archetípus, pozitív `eletero`, minden definiált tulajdonság kezdőértéke és egy képességkártya.                                                                                                                                                                                                                                                                                                  |
+| `items.json`         | Tárgylista, üres készletnél `[]`.                                                                                                                                                                                                                                                                                                                                                                                     |
+| `nodes.json`         | `startNodeId`, `deathEndingId` és `nodes`. A jelenet `kind: "scene"`, a lezárás `kind: "ending"`. A lezárás technikai típusa `victory` vagy `death`, és a cím/szöveg közli a történeti árnyalatot.                                                                                                                                                                                                                    |
+| `translations.json`  | A `defaultLocale`-tól eltérő nyelv szövegei. Nyelvváltáskor az azonosítók és a mentések közösek.                                                                                                                                                                                                                                                                                                                      |
+| `illustrations.json` | Opcionális lista `nodeId`, `file`, `alt` mezőkkel. A `file` a fájlnév az `images/` előtag nélkül.                                                                                                                                                                                                                                                                                                                     |
+| `images/`            | PNG, JPEG és WebP. A ZIP és a kibontott tartalom felső határa egyaránt 32 MiB. Az import egy képnél legfeljebb 8 MiB-ot és 16 megapixelt fogad.                                                                                                                                                                                                                                                                       |
+
+A `theme` mező `background`, `surface`, `accent` és `text` színei hatjegyű hex értékek, a `font` értéke `system`, `serif` vagy `mono`. Ellenőrizd a szöveg kontrasztját és a képek vágását mobilon. A portré vagy tárgykép a jelenlegi felületen akkor jelenik meg a játékban, ha borítóként vagy jelenetképként hivatkozod. A külön karakterlapra, tárgypanelre vagy önálló térképképernyőre szánt anyagot add át külön vagy kezdeményezz felületbővítést. A szerzői gráf és a pontos térkép az ellenőrzött adatokból készüljön. Képgenerátort hangulati illusztrációra használj.
+
+A belső azonosítók kisbetűvel kezdődnek és csak kisbetűt, számot vagy aláhúzást tartalmaznak. A már kiadott azonosítókat tartsd meg a mentések kompatibilitása miatt. A döntések ID-ja a teljes kalandban egyedi. Egyszerű döntésnél `target` van. Próbánál `check: {"stat":"…"}` szerepel, külön `success.target` és `failure.target` mezővel. A 2d6 akkor sikerül, ha legfeljebb a célérték. A meglévő könnyű és nehéz játékosmód +2, illetve −2 próbamódosítót ad. Az alapkaland nehézségi címkéje a katalógus tájékoztató mezője. Feltételnél tárgy, flag, minimális tulajdonság és logikai kombináció használható. A pontos mezőket a sémákból vedd.
+
+Fordítási kulcsok: `node.<id>.title`, `node.<id>.text`, `choice.<id>`, `hero.<id>.name|role|description`, `card.<id>.name|description`, `item.<id>.name|description`, `image.<nodeId>.alt`. A `|` külön kulcslehetőségeket jelöl. A tulajdonnevek maradhatnak eredetiben. Kétnyelvű átadásnál a teljes jelenet-, döntés-, szereplő-, tárgy- és képszöveghez ellenőrizd a párokat, mert a platform hiányzó fordításnál visszaesik az alapnyelvre.
+
+## Leadás és folytatás ellenőrzése
+
+1. **Séma és statikus gráf.** Repóban futtasd a `npm run validate:adventure -- adventures/<id>` parancsot, majd ellenőrizd a képfájlok dekódolását és méretét, valamint a `manifest.cover` hivatkozást. A statikus gráfellenőrzés mellé futtass állapotfüggő végigjátszást is.
+2. **Determinisztikus útvonalak.** Minden tervezett befejezéshez adj legalább egy hős/archetípus, nehézség, seed és döntéssorozat kombinációt. Teszteld a döntési feltételek teljesült és hiányzó eseteit, a tárgy- és flagállapotot, a legfontosabb sikertelen próbákat, valamint 0 életerőt. A szimulációhoz az egyedi csomagot kell betölteni a repó `tools/lib/simulator.ts` moduljába. A gyári `simulate` parancs a Csendes Jel tartalmára mutat.
+3. **Hossz és egyensúly.** Mérd az egyedi jelenetek számát, minden jelenet exportált döntésszámát és a szövevényességi táblában szereplő mutatókat. Hasonlítsd össze a jóváhagyott célokat és a tényleges értékeket. Szimulált és célzott elérések során mérd a látható döntések számát is. Jelentsd a tartományon kívüli eseteket a jelenet és az állapot azonosítójával. Mérd a végigjátszásonkénti döntésszámot és a holtpontokat. Vesd össze a könnyű, normál és nehéz mód sikerarányait, és játszd végig a ritka ágakat célzott magokkal. A rövid, átlagos és hosszú útvonalat külön jelentsd.
+4. **Böngésző.** Importáld a ZIP-et a könyvtárba, ellenőrizd az importot a vizuális szerkesztőben, ellenőrizd a kaland címét és borítóját a könyvtári kártyán, majd indíts új játékot. Próbáld ki mindkét nyelvet, a mentést, a visszatöltést, a saját hőst, ha engedélyezett, és egy támogatott mobil- és asztali nézetet. A nyelvváltás után ugyanazt a játékállást várjuk.
+5. **Agentváltási próba.** Egy friss munkamenet csak az instrukciót, az ellenőrzőpontot, a döntéseket és a hivatkozott fájlokat kapja. Kérd meg, hogy írja le az aktív revíziót, a megválaszolatlan kérdéseket és az első elvégzendő műveletet. Ellenőrizd, hogy a jóváhagyott tartalom változatlan marad a folytatás során.
+6. **Átadás.** Add át a játszható ZIP-et, rövid összefoglalót, ellenőrzött útvonalakat, eredményeket és a szerkeszthető munkamappát vagy annak archívumát a `catalog-labels.json` fájllal együtt. A kiadást, a repóba integrálást és a nyilvános publikálást a Q12-ben rögzített döntés szerint végezd. Az elmaradt ellenőrzést vagy hiányzó eszközt név szerint add meg.
