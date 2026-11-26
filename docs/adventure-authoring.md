@@ -46,6 +46,7 @@ A rögzített platformdöntéseknél kérj megerősítést vagy eltérési igén
 | K2  | Teljes magyar és angol kiadás kell? Melyik nyelv legyen a szerzői eredeti, és mely neveket fordítsuk le?                                                                                                                                          |
 | K3  | Milyen illusztrációkat adjunk át? Borító, jelenetképek, portrék, tárgyképek, térkép, illetve külön szerzői gráf jöhet szóba.                                                                                                                      |
 | K4  | A fő mérföldköveken kérj jóváhagyást. Kérdezd meg, ha van külön delegált döntés vagy további egyeztetési igény. A fejezetek önállóan készülnek az elfogadott irányban, a közben felmerülő döntéseket és bizonytalanságokat külön tisztázd.        |
+| K5  | Melyik legyen a kaland fő műfaja, és mely további műfajok vagy játékmenetcímkék írják le legjobban? A zárt listából adj javaslatot a premissza jóváhagyásakor.                                                                                    |
 
 ## Állapotkövetés és agentváltás
 
@@ -56,6 +57,7 @@ A szerzői munkamappa alapértelmezett helye `authoring/<kaland-id>/`. A játszh
 | `state.json`                | Verzió, fázis, állapot, döntés- és fejezetazonosítók, bemeneti revízió, következő művelet, függő kérdések és futtatott ellenőrzések.                                               |
 | `decisions.md`              | Kérdésazonosító, aktuális válasz, döntés indoka, jóváhagyó vagy delegálás, felülírt döntés, érintett fájlok.                                                                       |
 | `design.md`                 | Premissza, világ, idővonal, kánon, karakterek és motivációk, szabályok, nyelvi szójegyzék, valamint a lezárt vagy nyitott mellékszálak.                                            |
+| `catalog-labels.json`       | A kaland stabil katalóguscímkéi, a lenti géppel olvasható formátumban.                                                                                                             |
 | `graph.json`                | A jóváhagyott szerzői gráf fejezetenként, stabil azonosítókkal. Minden élhez cél, feltétel, hatás és adott esetben a siker/kudarc ág tartozik. A futásidejű export a `nodes.json`. |
 | `chapters/`                 | Fejezetenkénti szöveg és fordítás. Minden rész kapjon revíziót, belépési feltételeket, kilépési állapotokat és hivatkozást a gráf csomópontjaira.                                  |
 | `assets.md`                 | Stílusreferenciák, képazonosító, fájlnév, jelenet, prompt, tényleges modell, HU/EN alt-szöveg, méret és jóváhagyási állapot.                                                       |
@@ -120,23 +122,23 @@ A munkafolyamat **API-kulcs nélkül**, Google-fiókkal bejelentkezett **Antigra
 
 A fázistáblázatban az OpenAI szövegmodellek Codexre vagy az azt kínáló ChatGPT felületre, a Claude és Gemini szövegmodellek Antigravityre vonatkoznak. Ha az első modell nincs a fiók választójában vagy elfogyott a kerete, használd az elérhető helyettesítőt. Mindkét útnál rögzítsd a tényleges klienst, modellt és gondolkodási módot, ha az látható. Ismeretlen modellverziót ne következtess ki a terméknévből. A választás indoka legyen a feladat és a kipróbált minta. A ChatGPT Images és Antigravity képkészítéshez az előfizetéses eszközt használd, és töltsd át a kész fájlt a repó munkamappájába, ha a kliens máshol mentette.
 
-| Fázis | Feladat és elfogadási feltétel                                                                                                                                                           | Első ajánlás                                                   | Helyettesítő                                                          |
-| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
-| 00    | Folytatás vagy új mappa inicializálása. Olvasd be a sémát, az állapotot és a korábbi döntéseket. Írj érvényes ellenőrzőpontot.                                                           | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
-| 01    | Kérdezés, premisszák és célközönség. Mutass 2–3 eltérő megközelítést, rögzítsd a Q1-et és S6-ot. Ajánlj jelenetszámokat, zárd le az S2-t és egyeztesd a kívánt elágazási mélységet (K1). | Claude Sonnet 5.5                                              | Gemini 4 Neon                                                         |
-| 02    | Világ, idővonal, főszereplők, mellékszereplők, karakteralkotás, tét és játékszabályok. Egyeztesd a fennmaradó Q/S/K kérdéseket. A világ és szabályok jóváhagyottak.                      | Claude Opus 5.5                                                | GPT-6.2 Astra                                                         |
-| 03    | Teljes gráf, fejezetek, kitérők, tárgyak, flagek, döntések következményei és finálék. Számold ki a gráfmutatókat, és adj tesztútvonalat a főbb végkimenetelekhez.                        | GPT-6.2 Astra                                                  | Gemini 4 Carbon                                                       |
-| 04    | Hangnemminta. Ugyanarra a jelenetre és párbeszédre kérj két változatot. A felhasználó válasszon magyar hangot, nézőpontot és stílust.                                                    | Claude Sonnet 5.5                                              | GPT-6.1 Terra                                                         |
-| 05    | Szövegírás fejezetenként, jelenet és döntésszöveg stabil ID szerint. Írd ki a fejezethatárok állapotát és zárd a köteget ellenőrzőponttal.                                               | Claude Sonnet 5.5                                              | Claude Opus 5.5 vagy GPT-6.2 Sol                                      |
-| 06    | HU/EN fordítás és szerkesztés. Használd a szójegyzéket, ellenőrizd ugyanazon ID és következmény meglétét. Próbálj ki mindkét nyelven egy teljes útvonalat.                               | Gemini 4 Neon                                                  | GPT-6.2 Sol                                                           |
-| 07    | JSON-konverzió, karakterek, kártyák, tárgyak és téma. A fájlokat a séma szerint állítsd össze, majd futtasd a validátort.                                                                | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
-| 08    | Vizuális stíluskalauz, képlista és promptok. Adj egy borító- és egy jelenetmintát. Pontos térképet és gráfot a jóváhagyott adatokból rajzolj, például Mermaidben.                        | Claude Sonnet 5.5                                              | GPT-6.2 Sol                                                           |
-| 09    | Borító, jelenetképek, portrék és opcionális vizuális anyagok elkészítése. A vizuális mintát hagyd jóvá, majd készíts kisebb képkötegeket.                                                | ChatGPT Images 2.6                                             | Antigravity képeszköz (Nano Banana 2)                                 |
-| 10    | Vizuális ellenőrzés. Ellenőrizd a karakter- és tárgyazonosságot, a vágást, a vizuális spoilereket és az alt-szöveget. A pixelméretet és fájlméretet eszközzel mérd.                      | GPT-6.1 Terra                                                  | Gemini 4 Neon                                                         |
-| 11    | Független narratív audit. Keresd a rossz információsorrendet, állapotellentmondást, indokolatlan karakterváltást és hibás következményt. Csak hivatkozható megállapítást rögzíts.        | Gemini 4 Carbon, ha a szerző Anthropic/OpenAI modellt használt | GPT-6.2 Astra vagy Claude Opus 5.5, a szerzőtől eltérő szolgáltatótól |
-| 12    | Determinisztikus validálás, szimuláció, ritka ágak és nehézség hangolása. Keresd a blokkolt játékállapotokat, dokumentáld a magokat és az útvonalakat.                                   | GPT-6.2 Sol; összetett hibánál GPT-6.2 Astra                   | Claude Sonnet 5.5 vagy Gemini 4 Carbon                                |
-| 13    | Tesztjátékos-körök eltérő játékstílussal. A botokat azonos magokkal hasonlítsd össze, a szubjektív visszajelzést a futási adatok mellé írd.                                              | Gemini 4 Hydrogen                                              | GPT-6 Luna, ha választható                                            |
-| 14    | ZIP, böngészős import és játékpróba, HU/EN váltás, mentés/visszatöltés, mobil és asztali nézet. Add át a csomagot és az átadási állapotot.                                               | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+| Fázis | Feladat és elfogadási feltétel                                                                                                                                                                                     | Első ajánlás                                                   | Helyettesítő                                                          |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| 00    | Folytatás vagy új mappa inicializálása. Olvasd be a sémát, az állapotot és a korábbi döntéseket. Írj érvényes ellenőrzőpontot.                                                                                     | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+| 01    | Kérdezés, premisszák és célközönség. Mutass 2–3 eltérő megközelítést, rögzítsd a Q1-et, S6-ot és a katalóguscímkéket (K5). Ajánlj jelenetszámokat, zárd le az S2-t és egyeztesd a kívánt elágazási mélységet (K1). | Claude Sonnet 5.5                                              | Gemini 4 Neon                                                         |
+| 02    | Világ, idővonal, főszereplők, mellékszereplők, karakteralkotás, tét és játékszabályok. Egyeztesd a fennmaradó Q/S/K kérdéseket. A világ és szabályok jóváhagyottak.                                                | Claude Opus 5.5                                                | GPT-6.2 Astra                                                         |
+| 03    | Teljes gráf, fejezetek, kitérők, tárgyak, flagek, döntések következményei és finálék. Számold ki a gráfmutatókat, és adj tesztútvonalat a főbb végkimenetelekhez.                                                  | GPT-6.2 Astra                                                  | Gemini 4 Carbon                                                       |
+| 04    | Hangnemminta. Ugyanarra a jelenetre és párbeszédre kérj két változatot. A felhasználó válasszon magyar hangot, nézőpontot és stílust.                                                                              | Claude Sonnet 5.5                                              | GPT-6.1 Terra                                                         |
+| 05    | Szövegírás fejezetenként, jelenet és döntésszöveg stabil ID szerint. Írd ki a fejezethatárok állapotát és zárd a köteget ellenőrzőponttal.                                                                         | Claude Sonnet 5.5                                              | Claude Opus 5.5 vagy GPT-6.2 Sol                                      |
+| 06    | HU/EN fordítás és szerkesztés. Használd a szójegyzéket, ellenőrizd ugyanazon ID és következmény meglétét. Próbálj ki mindkét nyelven egy teljes útvonalat.                                                         | Gemini 4 Neon                                                  | GPT-6.2 Sol                                                           |
+| 07    | JSON-konverzió, karakterek, kártyák, tárgyak, téma és katalóguscímkék. A fájlokat a séma szerint állítsd össze, majd futtasd a validátort.                                                                         | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
+| 08    | Vizuális stíluskalauz, képlista és promptok. Adj egy borító- és egy jelenetmintát. Pontos térképet és gráfot a jóváhagyott adatokból rajzolj, például Mermaidben.                                                  | Claude Sonnet 5.5                                              | GPT-6.2 Sol                                                           |
+| 09    | Borító, jelenetképek, portrék és opcionális vizuális anyagok elkészítése. A vizuális mintát hagyd jóvá, majd készíts kisebb képkötegeket.                                                                          | ChatGPT Images 2.6                                             | Antigravity képeszköz (Nano Banana 2)                                 |
+| 10    | Vizuális ellenőrzés. Ellenőrizd a karakter- és tárgyazonosságot, a vágást, a vizuális spoilereket és az alt-szöveget. A pixelméretet és fájlméretet eszközzel mérd.                                                | GPT-6.1 Terra                                                  | Gemini 4 Neon                                                         |
+| 11    | Független narratív audit. Keresd a rossz információsorrendet, állapotellentmondást, indokolatlan karakterváltást és hibás következményt. Csak hivatkozható megállapítást rögzíts.                                  | Gemini 4 Carbon, ha a szerző Anthropic/OpenAI modellt használt | GPT-6.2 Astra vagy Claude Opus 5.5, a szerzőtől eltérő szolgáltatótól |
+| 12    | Determinisztikus validálás, szimuláció, ritka ágak és nehézség hangolása. Keresd a blokkolt játékállapotokat, dokumentáld a magokat és az útvonalakat.                                                             | GPT-6.2 Sol; összetett hibánál GPT-6.2 Astra                   | Claude Sonnet 5.5 vagy Gemini 4 Carbon                                |
+| 13    | Tesztjátékos-körök eltérő játékstílussal. A botokat azonos magokkal hasonlítsd össze, a szubjektív visszajelzést a futási adatok mellé írd.                                                                        | Gemini 4 Hydrogen                                              | GPT-6 Luna, ha választható                                            |
+| 14    | ZIP, böngészős import és játékpróba, HU/EN váltás, mentés/visszatöltés, mobil és asztali nézet. Add át a csomagot és az átadási állapotot.                                                                         | GPT-6.2 Sol                                                    | Claude Sonnet 5.5                                                     |
 
 Szerzői kezdéskor ellenőrizd, hogy a választott modell és eszköz ténylegesen elérhető-e. Ha a képgenerátor felülete nem enged verziót választani, a használt terméknevet rögzítsd, a modellverziót hagyd ismeretlennek. A szöveg és a vizuális stílus elején próbálj ki 2–3 rövid mintát. Ha bizonytalan a modellválasztás, futtasd ugyanazt a mintát két elérhető modellel, és mutasd meg a felhasználónak az eltérést. A modell cserélhető két köteg között. Az új agent előbb ugyanazt a kánont és jóváhagyott hangnemmintát olvassa. Független auditor hiányában jelöld ezt a jelentésben.
 
@@ -171,6 +173,64 @@ Az ajánlat előtt becsüld meg ezeket az adatokat. A teljes gráf elkészülte 
 
 A riportban add meg a nyers értékeket és az indokolt összképet. Például ha 20 jelenetből 12 ágazik el, a `B/N` 60%. Ha összesen 16 többletcél van, a `D/N` 0,8. Egy hosszabb, túlnyomórészt lineáris történet több jelenetet igényelhet, miközben ennek a rövidebb kalandnak sűrűbb az elágazása. Az egymásba futó ágaknál és a hurkoknál a mutatókból ne következtess pontos teljes útvonalszámra.
 
+## Zárt katalóguscímkék
+
+A katalóguscímkék minden kaland kötelező szerzői metaadatai. Válassz pontosan egy fő műfajt, legfeljebb két további műfajt és egy–három meghatározó játékmenetcímkét. A fő műfaj fejezze ki a világot vagy történettípust, a játékmenetcímke pedig azt, amit a játékosnak rendszeresen csinálnia kell. A Logikai címkét olyan kaland kapja, ahol a következtetés vagy feladványok megoldása érdemi része a játéknak.
+
+A lista zárt. Az ID-t és a HU/EN feliratot pontosan innen vedd. A katalóguscímkét nyelvváltáskor az ID alapján jelenítsd meg. Kerüld az egyedi címkéket, a rövidítéseket, az alternatív helyesírást és a címkék ismétlését. Ha a történet több kategóriába is illik, a legjellemzőbbeket válaszd. A lista bővítése külön, központi döntés.
+
+### Műfajok
+
+| Stabil ID          | Magyar             | English          |
+| ------------------ | ------------------ | ---------------- |
+| `sci-fi`           | Sci-fi             | Sci-fi           |
+| `fantasy`          | Fantasy            | Fantasy          |
+| `horror`           | Horror             | Horror           |
+| `mystery`          | Rejtély            | Mystery          |
+| `thriller`         | Thriller           | Thriller         |
+| `adventure`        | Kaland             | Adventure        |
+| `historical`       | Történelmi         | Historical       |
+| `crime`            | Krimi              | Crime            |
+| `post-apocalyptic` | Posztapokaliptikus | Post-apocalyptic |
+| `dystopia`         | Disztópia          | Dystopian        |
+| `supernatural`     | Természetfeletti   | Supernatural     |
+| `mythology`        | Mitológiai         | Mythological     |
+| `comedy`           | Vígjáték           | Comedy           |
+| `drama`            | Dráma              | Drama            |
+| `romance`          | Romantikus         | Romance          |
+| `abstract`         | Absztrakt          | Abstract         |
+
+### Játékmenetcímkék
+
+| Stabil ID             | Magyar                | English             |
+| --------------------- | --------------------- | ------------------- |
+| `logic`               | Logikai               | Logic               |
+| `investigation`       | Nyomozás              | Investigation       |
+| `exploration`         | Felfedezés            | Exploration         |
+| `survival`            | Túlélés               | Survival            |
+| `stealth`             | Lopakodás             | Stealth             |
+| `negotiation`         | Tárgyalás             | Negotiation         |
+| `resource-management` | Erőforrás-gazdálkodás | Resource management |
+| `moral-dilemmas`      | Erkölcsi dilemmák     | Moral dilemmas      |
+| `character-driven`    | Karakterközpontú      | Character-driven    |
+| `action`              | Akció                 | Action              |
+| `time-pressure`       | Időnyomás             | Time pressure       |
+| `strategy`            | Stratégiai            | Strategy            |
+
+A jóváhagyott címkéket mentsd a szerzői munkamappa `catalog-labels.json` fájljába. A fájl az előírt azonosítókat tárolja, így egy későbbi katalógusszűrő pontos ID alapján kereshet. A `primaryGenre` egészítse ki az adatlapot a jelenlegi `manifest.json` fájl `genre.hu` és `genre.en` mezőiben, a listából vett változatlan feliratokkal. A többi címke a szerzői átadás részeként marad elérhető. A jelenlegi játékcsomag sémája egy megjelenített műfajt fogad, a többcímkés megjelenítés és keresés külön platformfunkció.
+
+```json
+{
+  "version": 1,
+  "adventureId": "pelda-kaland",
+  "primaryGenre": "sci-fi",
+  "secondaryGenres": ["horror"],
+  "gameplayTags": ["logic", "investigation"]
+}
+```
+
+Átadás előtt ellenőrizd, hogy minden ID a megfelelő csoportban szerepel, a listák egyediek, a fő műfaj nem szerepel másodlagosként, a játékazonosító egyezik a manifesttel, és a fő műfaj kétnyelvű felirata pontos. A `catalog-labels.json` a szerzői munkamappában szerepeljen, a futásidejű ZIP csak a játékcsomag formátumában felsorolt fájlokat tartalmazza.
+
 ## A kalandcsomag formátuma
 
 UTF-8 JSON-fájlokat adj a ZIP gyökerében, a képeket az `images/` mappában. Ugyanez a szerkezet használható az `adventures/<id>/` könyvtárban. A csomag csak adatot és az engedélyezett képformátumokat tartalmazza.
@@ -198,4 +258,4 @@ Fordítási kulcsok: `node.<id>.title`, `node.<id>.text`, `choice.<id>`, `hero.<
 3. **Hossz és egyensúly.** Mérd az egyedi jelenetek számát, minden jelenet exportált döntésszámát és a szövevényességi táblában szereplő mutatókat. Hasonlítsd össze a jóváhagyott célokat és a tényleges értékeket. Szimulált és célzott elérések során mérd a látható döntések számát is. Jelentsd a tartományon kívüli eseteket a jelenet és az állapot azonosítójával. Mérd a végigjátszásonkénti döntésszámot és a holtpontokat. Vesd össze a könnyű, normál és nehéz mód sikerarányait, és játszd végig a ritka ágakat célzott magokkal. A rövid, átlagos és hosszú útvonalat külön jelentsd.
 4. **Böngésző.** Importáld a ZIP-et a könyvtárba, ellenőrizd az importot a vizuális szerkesztőben, indíts új játékot. Próbáld ki mindkét nyelvet, a mentést, a visszatöltést, a saját hőst, ha engedélyezett, és egy támogatott mobil- és asztali nézetet. A nyelvváltás után ugyanazt a játékállást várjuk.
 5. **Agentváltási próba.** Egy friss munkamenet csak az instrukciót, az ellenőrzőpontot, a döntéseket és a hivatkozott fájlokat kapja. Kérd meg, hogy írja le az aktív revíziót, a megválaszolatlan kérdéseket és az első elvégzendő műveletet. Ellenőrizd, hogy a jóváhagyott tartalom változatlan marad a folytatás során.
-6. **Átadás.** Add át a játszható ZIP-et, rövid összefoglalót, ellenőrzött útvonalakat, eredményeket és a szerkeszthető munkamappát vagy annak archívumát. A kiadást, a repóba integrálást és a nyilvános publikálást a Q12-ben rögzített döntés szerint végezd. Az elmaradt ellenőrzést vagy hiányzó eszközt név szerint add meg.
+6. **Átadás.** Add át a játszható ZIP-et, rövid összefoglalót, ellenőrzött útvonalakat, eredményeket és a szerkeszthető munkamappát vagy annak archívumát a `catalog-labels.json` fájllal együtt. A kiadást, a repóba integrálást és a nyilvános publikálást a Q12-ben rögzített döntés szerint végezd. Az elmaradt ellenőrzést vagy hiányzó eszközt név szerint add meg.
