@@ -14,6 +14,7 @@ import type { SlotId } from '../persistence/saveRepository';
 import { localizedContent, localizedLabel, type Adventure, type Locale } from './adventure';
 import { builtInCatalog, importedCatalogEntry, type CatalogEntry } from './catalog';
 import { AdventureEditor } from './AdventureEditor';
+import { HelpGuide } from './HelpGuide';
 import { brandName } from './brand';
 import { Language, useLanguage } from './language';
 import { listImportedAdventures, importAdventure, saveImportedAdventure } from './packages';
@@ -96,6 +97,7 @@ export function Platform() {
   );
   const [section, setSection] = useState<'home' | 'shelf' | 'characters' | 'studio'>('home');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [journalOpen, setJournalOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -335,8 +337,17 @@ export function Platform() {
             <button type="button" className="btn btn--secondary" onClick={() => navigate('studio')}>
               {isHu ? 'Történetszerkesztő' : 'Story editor'}
             </button>
+            <button
+              type="button"
+              className="btn btn--secondary"
+              aria-haspopup="dialog"
+              onClick={() => setHelpOpen(true)}
+            >
+              {isHu ? 'Súgó' : 'Help'}
+            </button>
           </section>
         )}
+        {helpOpen && <HelpGuide onClose={() => setHelpOpen(false)} />}
         {temporaryStorage && (
           <p role="status" className="app-shell player-storage-notice">
             {isHu
