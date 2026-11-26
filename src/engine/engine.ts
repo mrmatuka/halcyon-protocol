@@ -34,6 +34,7 @@ export function createInitialState(content: Content, heroId: string): GameState 
   return {
     heroId: hero.id,
     nodeId: startNode.id,
+    route: { nodeIds: [startNode.id], partial: false },
     stats: { ...hero.stats },
     maxHp: hero.stats.eletero,
     items: [],
@@ -167,8 +168,15 @@ export function applyChoice(
     };
   }
 
+  const route = state.route ?? { nodeIds: [state.nodeId], partial: true };
   return {
-    state: nextState,
+    state: {
+      ...nextState,
+      route:
+        nextState.nodeId === state.nodeId
+          ? route
+          : { ...route, nodeIds: [...route.nodeIds, nextState.nodeId] },
+    },
     rng: nextRng,
     checkResult,
   };
