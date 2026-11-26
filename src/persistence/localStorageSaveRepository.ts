@@ -1,3 +1,4 @@
+import { playerStorage, type KeyValueStorage } from './playerStorage';
 import { z } from 'zod';
 import type { RngState } from '../engine/rng';
 import type { GameState } from '../engine/schema';
@@ -42,12 +43,12 @@ function isQuotaError(err: unknown): boolean {
 }
 
 export class LocalStorageSaveRepository implements SaveRepository {
-  private readonly storage: Storage;
+  private readonly storage: KeyValueStorage;
   private readonly keyPrefix: string;
   private readonly now: () => string;
 
   constructor(
-    storage: Storage = globalThis.localStorage,
+    storage: KeyValueStorage = playerStorage,
     options?: LocalStorageSaveRepositoryOptions,
   ) {
     this.storage = storage;

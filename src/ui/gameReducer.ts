@@ -8,7 +8,6 @@ export type Screen = 'menu' | 'heroSelect' | 'playing';
 
 export interface UiState {
   screen: Screen;
-  selectedHeroId: string;
   seedInput: string;
   gameState: GameState | null;
   rng: RngState;
@@ -19,13 +18,12 @@ export interface UiState {
 export type UiAction =
   | { type: 'GO_MENU' }
   | { type: 'GO_HERO_SELECT' }
-  | { type: 'SELECT_HERO'; heroId: string }
   | { type: 'SET_SEED_INPUT'; seed: string }
   | {
       type: 'START_GAME';
       content: Content;
       fallbackSeed: number;
-      customHero?: Content['heroes'][number];
+      customHero: Content['heroes'][number];
       difficultyModifier?: number;
     }
   | { type: 'CHOOSE'; content: Content; choiceId: string; useCard?: boolean }
@@ -33,10 +31,9 @@ export type UiAction =
   | { type: 'LOAD_GAME'; gameState: GameState; rng: RngState }
   | { type: 'CLEAR_ERROR' };
 
-export function createInitialUiState(content: Content): UiState {
+export function createInitialUiState(): UiState {
   return {
     screen: 'menu',
-    selectedHeroId: content.heroes[0]?.id ?? '',
     seedInput: '',
     gameState: null,
     rng: createRng(1),
@@ -51,17 +48,15 @@ export function gameReducer(state: UiState, action: UiAction): UiState {
       return { ...state, screen: 'menu', error: null };
     case 'GO_HERO_SELECT':
       return { ...state, screen: 'heroSelect', error: null };
-    case 'SELECT_HERO':
-      return { ...state, selectedHeroId: action.heroId };
     case 'SET_SEED_INPUT':
       return { ...state, seedInput: action.seed };
     case 'START_GAME': {
-      const heroId = action.customHero?.id ?? (state.selectedHeroId || action.content.heroes[0].id);
-      const content = action.customHero
-        ? { ...action.content, heroes: [action.customHero] }
-        : action.content;
-      const gameState = createInitialState(content, heroId);
-      if (action.customHero) gameState.customHero = action.customHero;
+      const { customHero } = action;
+      const gameState = createInitialState(
+        { ...action.content, heroes: [customHero] },
+        customHero.id,
+      );
+      gameState.customHero = customHero;
       if (action.difficultyModifier) gameState.difficultyModifier = action.difficultyModifier;
       const seedValue =
         state.seedInput.trim() !== '' ? state.seedInput.trim() : action.fallbackSeed;

@@ -1,28 +1,16 @@
-import { test, expect, type Page } from '@playwright/test';
-
-async function startGame(page: Page, heroPattern: RegExp, seed: string) {
-  await page.goto('/');
-  await page
-    .locator('article')
-    .filter({ has: page.getByRole('heading', { name: 'Csendes Jel', exact: true }) })
-    .getByRole('button', { name: 'Kaland megnyitása' })
-    .click();
-  await page.getByRole('button', { name: 'Új játék' }).click();
-  await page.getByLabel(/Seed/i).fill(seed);
-  await page.getByRole('button', { name: heroPattern }).click();
-  await page.getByRole('button', { name: 'Kaland indítása' }).click();
-}
+import { continueLegacyRun } from './legacySave';
+import { test, expect } from '@playwright/test';
 
 test.describe('F9 – Teljes End-to-End tesztek', () => {
-  test('F9.1 – Új játék indítása és első döntés', async ({ page }) => {
-    await startGame(page, /Vass Dóra/i, 'e2e-start');
+  test('F9.1 – Régi mentés betöltése és első döntés', async ({ page }) => {
+    await continueLegacyRun(page, 'vass_dora', 'e2e-start');
     await expect(page.getByRole('heading', { name: 'Leszállás az Ébenholdon' })).toBeVisible();
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await expect(page.getByRole('heading', { name: 'Főzsilip' })).toBeVisible();
   });
 
   test('F9.2 – Seedelt teljes végigjátszás: E1 (Néma menekülés)', async ({ page }) => {
-    await startGame(page, /Vass Dóra/i, 'e2e-e1');
+    await continueLegacyRun(page, 'vass_dora', 'e2e-e1');
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await page.getByRole('button', { name: /lakókörlet felé/i }).click();
     await page.getByRole('button', { name: /Parancsnoki kártyát/i }).click();
@@ -38,7 +26,7 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
   });
 
   test('F9.3 – Mentés, oldal újratöltése, betöltés és folytatás', async ({ page }) => {
-    await startGame(page, /Dr\. Imre Lili/i, 'e2e-save-reload');
+    await continueLegacyRun(page, 'imre_lili', 'e2e-save-reload');
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await page.getByRole('button', { name: /lakókörlet felé/i }).click();
     await expect(page.getByRole('heading', { name: 'Lakókörlet' })).toBeVisible();
@@ -66,7 +54,7 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
   });
 
   test('F9.4 – Több mentési slot függetlensége', async ({ page }) => {
-    await startGame(page, /Vass Dóra/i, 'e2e-slots');
+    await continueLegacyRun(page, 'vass_dora', 'e2e-slots');
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await expect(page.getByRole('heading', { name: 'Főzsilip' })).toBeVisible();
 
@@ -93,7 +81,7 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
   });
 
   test('F9.5 – Kockadobás megjelenítése és eredmény-visszajelzés', async ({ page }) => {
-    await startGame(page, /Kő Bence/i, 'e2e-dice');
+    await continueLegacyRun(page, 'ko_bence', 'e2e-dice');
     await page.getByRole('button', { name: /szervizaknába/i }).click();
     await expect(page.getByRole('heading', { name: 'Szervizakna' })).toBeVisible();
 
@@ -108,7 +96,7 @@ test.describe('F9 – Teljes End-to-End tesztek', () => {
   test('F9.6 – Tárgy megszerzése új választást nyit meg (Parancsnoki kártya -> Reaktor túlterhelés)', async ({
     page,
   }) => {
-    await startGame(page, /Vass Dóra/i, 'e2e-item-unlock');
+    await continueLegacyRun(page, 'vass_dora', 'e2e-item-unlock');
     await page.getByRole('button', { name: /főbejáraton/i }).click();
     await page.getByRole('button', { name: /lakókörlet felé/i }).click();
     await page.getByRole('button', { name: /Parancsnoki kártyát/i }).click();
