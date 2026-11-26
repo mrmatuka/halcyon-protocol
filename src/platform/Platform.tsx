@@ -13,6 +13,7 @@ import type { SlotId } from '../persistence/saveRepository';
 import { localizedContent, localizedLabel, type Adventure, type Locale } from './adventure';
 import { builtInCatalog, importedCatalogEntry, type CatalogEntry } from './catalog';
 import { AdventureEditor } from './AdventureEditor';
+import { brandName } from './brand';
 import { Language, useLanguage } from './language';
 import { listImportedAdventures, importAdventure, saveImportedAdventure } from './packages';
 import { adventureSaves, migrateSilentSignalSaves } from './saves';
@@ -181,7 +182,16 @@ export function Platform() {
   useEffect(() => {
     playerStorage.setItem(localeKey, locale);
     document.documentElement.lang = locale;
-    document.title = locale === 'hu' ? 'Kalandkönyvtár' : 'Adventure Library';
+    document.title = brandName[locale];
+    document
+      .querySelectorAll('meta[name="application-name"], meta[name="apple-mobile-web-app-title"]')
+      .forEach((meta) => meta.setAttribute('content', brandName[locale]));
+    document
+      .querySelector('link[rel="manifest"]')
+      ?.setAttribute(
+        'href',
+        `${import.meta.env.BASE_URL}${locale === 'hu' ? 'manifest.webmanifest' : 'manifest.en.webmanifest'}`,
+      );
   }, [locale]);
 
   async function storeAdventure(entry: Adventure) {
@@ -217,7 +227,13 @@ export function Platform() {
       <div className="platform" style={adventure && themedStyle(adventure.manifest.theme)}>
         <header className="platform-bar">
           <button type="button" className="platform-home" onClick={() => navigate('shelf')}>
-            {isHu ? 'Kalandkönyvtár' : 'Adventure Library'}
+            <img
+              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=shelf`}
+              alt=""
+              width="40"
+              height="40"
+            />
+            <span>{brandName[locale]}</span>
           </button>
           <nav className="platform-nav" aria-label={isHu ? 'Fő navigáció' : 'Main navigation'}>
             {(
@@ -309,7 +325,6 @@ export function Platform() {
           <main className="app-shell bookshelf">
             <div className="bookshelf-heading">
               <h1>{isHu ? 'Könyvespolc' : 'Bookshelf'}</h1>
-              <p>{isHu ? 'Válassz kalandot' : 'Choose an adventure'}</p>
             </div>
             {busy && <p role="status">{isHu ? 'Kaland betöltése…' : 'Loading adventure…'}</p>}
             {error && (

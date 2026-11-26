@@ -18,6 +18,7 @@ import { SceneView } from './components/SceneView';
 import { createInitialUiState, gameReducer } from './gameReducer';
 import { slotLabel } from './labels';
 import { localizedLabel, type AdventureManifest } from '../platform/adventure';
+import { brandName } from '../platform/brand';
 import { useLanguage } from '../platform/language';
 
 export interface AppProps {
@@ -42,9 +43,7 @@ export function App({
   resolveIllustration,
 }: AppProps) {
   const { locale, t } = useLanguage();
-  const title = manifest
-    ? localizedLabel(manifest.title, locale)
-    : t('Kalandkönyvtár', 'Adventure Library');
+  const title = manifest ? localizedLabel(manifest.title, locale) : brandName[locale];
   const statLabels =
     manifest &&
     Object.fromEntries(
@@ -54,6 +53,7 @@ export function App({
   const repo = useMemo(() => saveRepository ?? new LocalStorageSaveRepository(), [saveRepository]);
   const [ui, dispatch] = useReducer(gameReducer, undefined, createInitialUiState);
   const [modalOpen, setModalOpen] = useState(false);
+  const [characterSheetOpen, setCharacterSheetOpen] = useState(false);
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [initialContent] = useState(content);
   const [loadError, setLoadError] = useState(false);
@@ -201,7 +201,7 @@ export function App({
             </button>
             {onLibrary && (
               <button type="button" className="btn btn--secondary" onClick={onLibrary}>
-                {t('Kalandkönyvtár', 'Adventure library')}
+                {t('Vissza a könyvespolcra', 'Back to bookshelf')}
               </button>
             )}
           </div>
@@ -300,7 +300,31 @@ export function App({
           )}
 
           <div className="game-layout">
-            <main>
+            <button
+              type="button"
+              className="btn btn--secondary character-toggle"
+              aria-controls="reader-character"
+              aria-expanded={characterSheetOpen}
+              onClick={() => setCharacterSheetOpen((open) => !open)}
+            >
+              {t('Karakterlap', 'Character sheet')}
+            </button>
+            <aside
+              id="reader-character"
+              className="sidebar"
+              data-expanded={characterSheetOpen}
+              aria-label={t('Karakter adatok', 'Character information')}
+            >
+              <CharacterSheet
+                hero={currentHero}
+                statLabels={statLabels}
+                state={ui.gameState}
+                onUseHealCard={() => dispatch({ type: 'USE_HEAL_CARD', content })}
+              />
+              <InventoryPanel itemIds={ui.gameState.items} allItems={content.items} />
+            </aside>
+
+            <main className="reading-column">
               {currentNode.kind === 'scene' ? (
                 <SceneView
                   node={currentNode}
@@ -329,16 +353,6 @@ export function App({
                 />
               )}
             </main>
-
-            <aside className="sidebar" aria-label={t('Karakter adatok', 'Character information')}>
-              <CharacterSheet
-                hero={currentHero}
-                statLabels={statLabels}
-                state={ui.gameState}
-                onUseHealCard={() => dispatch({ type: 'USE_HEAL_CARD', content })}
-              />
-              <InventoryPanel itemIds={ui.gameState.items} allItems={content.items} />
-            </aside>
           </div>
         </>
       )}

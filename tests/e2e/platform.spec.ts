@@ -18,7 +18,7 @@ test('saját hős, angol nyelvváltás, nehézség és független automentések'
   await page.getByRole('button', { name: /főbejáraton/i }).click();
   await expect(page.getByRole('heading', { name: 'Főzsilip', exact: true })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Kalandkönyvtár' }).click();
+  await page.getByRole('button', { name: 'Kalandpolc' }).click();
   await card('A ködlámpás őre').getByRole('button', { name: 'Kaland megnyitása' }).click();
   await page.getByRole('button', { name: 'Új játék' }).click();
   await page.getByLabel('Játékmód').selectOption('2');
@@ -33,7 +33,7 @@ test('saját hős, angol nyelvváltás, nehézség és független automentések'
   await page.reload();
   await card('Silent Signal').getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Main Airlock' })).toBeVisible();
-  await page.getByRole('button', { name: 'Adventure Library' }).click();
+  await page.getByRole('button', { name: 'Adventure Shelf' }).click();
   await card('The Lantern Keeper').getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByText('Alma', { exact: true })).toBeVisible();
 });
@@ -202,4 +202,73 @@ test('letiltott localStorage mellett a profil és a mentés átmenetileg működ
   await page.reload();
   await book.getByRole('button', { name: 'Kaland megnyitása' }).click();
   await expect(page.getByRole('button', { name: 'Saját karakter létrehozása' })).toBeVisible();
+});
+
+test('a mobil polc és olvasó elfér, a karakterlap nyitható, és az arculat nyelvet vált', async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/');
+  const brand = page.getByRole('button', { name: 'Kalandpolc', exact: true });
+  await expect(brand).toBeVisible();
+  await expect(brand.locator('img')).toHaveJSProperty('complete', true);
+  await expect(page).toHaveTitle('Kalandpolc');
+
+  const shelf = page.getByRole('main');
+  const books = shelf.getByRole('article');
+  await expect(books).toHaveCount(2);
+  const positions = await books.evaluateAll((cards) =>
+    cards.map((card) => card.getBoundingClientRect().top),
+  );
+  expect(positions[0]).toBe(positions[1]);
+  expect(await shelf.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+
+  await page.getByLabel('Nyelv').selectOption('en');
+  await expect(page.getByRole('button', { name: 'Adventure Shelf', exact: true })).toBeVisible();
+  await expect(page).toHaveTitle('Adventure Shelf');
+  await expect(page.locator('meta[name="application-name"]')).toHaveAttribute(
+    'content',
+    'Adventure Shelf',
+  );
+
+  const manifest = page.locator('link[rel="manifest"]');
+  await expect(manifest).toHaveAttribute('href', '/manifest.en.webmanifest');
+  const hu = await (await request.get('/manifest.webmanifest')).json();
+  const en = await (await request.get('/manifest.en.webmanifest')).json();
+  expect(en).toMatchObject({ id: hu.id, start_url: hu.start_url, scope: hu.scope, lang: 'en' });
+  expect(en.name).toBe('Adventure Shelf');
+
+  await books
+    .filter({ hasText: 'Silent Signal' })
+    .getByRole('button', { name: 'Open adventure' })
+    .click();
+  await page.getByRole('button', { name: 'Create your character' }).click();
+  await page.getByLabel('Name', { exact: true }).fill('Alma');
+  await page.getByRole('button', { name: 'Save character' }).click();
+  await page.getByRole('button', { name: 'New game' }).click();
+  await page.getByRole('button', { name: 'Start adventure' }).click();
+
+  const toggle = page.getByRole('button', { name: 'Character sheet', exact: true });
+  const sidebar = page.getByRole('complementary', {
+    name: 'Character information',
+    includeHidden: true,
+  });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(sidebar).toBeHidden();
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(sidebar).toContainText('Alma');
+  await toggle.click();
+  await expect(sidebar).toBeHidden();
+
+  const reader = page.getByRole('main');
+  await expect(reader.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(reader.getByTestId('scene-illustration').locator('img')).toBeVisible();
+  await expect(reader.getByRole('region', { name: 'Choices' })).toBeVisible();
+  expect(await reader.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect(sidebar).toBeVisible();
+  await expect(toggle).toBeHidden();
 });
