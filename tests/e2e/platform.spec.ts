@@ -1,5 +1,48 @@
 import { test, expect } from '@playwright/test';
 
+test('a karaktergenerátor megtartja a kiosztott pontokat és visszatér a kalandhoz', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Könyvkaland', exact: true }).click();
+  await page
+    .getByRole('article')
+    .filter({ hasText: 'Csendes Jel' })
+    .getByRole('button', { name: 'Kaland megnyitása' })
+    .click();
+
+  const create = page.getByRole('button', { name: 'Saját karakter létrehozása' });
+  await create.click();
+  await page.getByLabel('Név', { exact: true }).fill('Elvetett karakter');
+  await page.getByRole('button', { name: 'Mégse', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Csendes Jel', exact: true })).toBeVisible();
+
+  await create.click();
+  const name = page.getByLabel('Név', { exact: true });
+  await expect(name).toHaveValue('');
+  await name.fill('Eszter');
+  const knowledge = page.getByRole('spinbutton', { name: /^Tudás/ });
+  const resolve = page.getByRole('spinbutton', { name: /^Elszántság/ });
+  await knowledge.fill('3');
+  await resolve.fill('1');
+  await page.getByRole('combobox', { name: 'Egyéni adottság', exact: true }).selectOption('curious');
+  await expect(knowledge).toHaveValue('3');
+  await expect(resolve).toHaveValue('1');
+  await page.getByRole('combobox', { name: 'Kaszt', exact: true }).selectOption('scholar');
+  await expect(knowledge).toHaveValue('1');
+  await expect(resolve).toHaveValue('1');
+  await expect(page.getByText('Elosztható pontok: 2')).toBeVisible();
+  await resolve.fill('3');
+  await page.getByRole('button', { name: 'Karakter mentése' }).click();
+
+  await page.getByRole('button', { name: 'Új játék', exact: true }).click();
+  await expect(page.getByText('Eszter', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Kaland indítása' }).click();
+  await page.getByRole('button', { name: 'Napló megnyitása' }).click();
+  await expect(page.getByRole('region', { name: 'Karakterlap' })).toContainText('Eszter');
+});
+
 test('saját hős, angol nyelvváltás, nehézség és független automentések', async ({ page }) => {
   await page.goto('/');
   const card = (title: string) =>

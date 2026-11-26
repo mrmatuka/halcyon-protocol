@@ -399,11 +399,11 @@ export function Platform() {
               onChange={(next) => {
                 writeProfiles(next);
                 setLibrary(next);
-                if (createFor && assignedProfile(next, createFor.manifest.id)) {
-                  setSection('shelf');
-                  setActive({ adventure: createFor });
-                  setCreateFor(undefined);
-                }
+              }}
+              onCloseCreator={() => {
+                if (!createFor) return;
+                navigate('shelf');
+                setActive({ adventure: createFor });
               }}
             />
           </div>

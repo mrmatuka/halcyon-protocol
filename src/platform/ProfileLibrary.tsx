@@ -17,6 +17,7 @@ import {
   spentPoints,
   traitIds,
   traits,
+  type Attribute,
   type Profile,
   type Profiles,
 } from './profiles';
@@ -38,16 +39,30 @@ function blankProfile(): Profile {
   };
 }
 
+function allocationCap(profile: Profile, stat: Attribute): number {
+  return attributeCap - attributeValue({ ...profile, points: blankPoints }, stat);
+}
+
+function capAllocatedPoints(profile: Profile): Profile {
+  const points = { ...profile.points };
+  for (const stat of attributes) {
+    points[stat] = Math.min(points[stat], allocationCap(profile, stat));
+  }
+  return { ...profile, points };
+}
+
 export function ProfileLibrary({
   library,
   adventures,
   onChange,
   createOnOpen = false,
+  onCloseCreator,
 }: {
   library: Profiles;
   adventures: CatalogEntry[];
   onChange: (next: Profiles) => void;
   createOnOpen?: boolean;
+  onCloseCreator?: () => void;
 }) {
   const { locale, t } = useLanguage();
   const [draft, setDraft] = useState<Profile | undefined>(() =>
@@ -85,8 +100,14 @@ export function ProfileLibrary({
           : [...library.profiles, character],
         defaultId: library.defaultId ?? character.id,
       },
-      () => setDraft(undefined),
+      closeCreator,
     );
+  }
+
+  function closeCreator() {
+    setDraft(undefined);
+    setError('');
+    onCloseCreator?.();
   }
 
   return (
@@ -156,14 +177,15 @@ export function ProfileLibrary({
                 value={draft.classId}
                 onChange={(e) => {
                   const classId = e.target.value as Profile['classId'];
-                  setDraft({
-                    ...draft,
-                    classId,
-                    points: { ...blankPoints },
-                    portrait: draft.portrait.startsWith('preset:')
-                      ? `preset:${classId}-1`
-                      : draft.portrait,
-                  });
+                  setDraft(
+                    capAllocatedPoints({
+                      ...draft,
+                      classId,
+                      portrait: draft.portrait.startsWith('preset:')
+                        ? `preset:${classId}-1`
+                        : draft.portrait,
+                    }),
+                  );
                 }}
               >
                 {classIds.map((id) => (
@@ -178,11 +200,9 @@ export function ProfileLibrary({
               <select
                 value={draft.traitId}
                 onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    traitId: e.target.value as Profile['traitId'],
-                    points: { ...blankPoints },
-                  })
+                  setDraft(
+                    capAllocatedPoints({ ...draft, traitId: e.target.value as Profile['traitId'] }),
+                  )
                 }
               >
                 {traitIds.map((id) => (
@@ -213,7 +233,7 @@ export function ProfileLibrary({
           <div className="profile-attributes">
             {attributes.map((stat) => {
               const max = Math.min(
-                attributeCap - attributeValue({ ...draft, points: blankPoints }, stat),
+                allocationCap(draft, stat),
                 draft.points[stat] + pointBudget - spentPoints(draft.points),
               );
               return (
@@ -294,11 +314,7 @@ export function ProfileLibrary({
             >
               {t('Karakter mentése', 'Save character')}
             </button>
-            <button
-              className="btn btn--secondary"
-              type="button"
-              onClick={() => setDraft(undefined)}
-            >
+            <button className="btn btn--secondary" type="button" onClick={closeCreator}>
               {t('Mégse', 'Cancel')}
             </button>
           </div>
