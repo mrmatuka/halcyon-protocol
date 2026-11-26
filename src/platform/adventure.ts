@@ -25,6 +25,9 @@ export const adventureManifestSchema = z.strictObject({
     text: hex,
     font: z.enum(['system', 'serif', 'mono']),
   }),
+  characterStatMap: z
+    .record(idSchema, z.enum(['agility', 'knowledge', 'resolve', 'presence']))
+    .optional(),
   characterMode: z.enum(['preset', 'custom', 'both']),
   cover: imagePath.optional(),
 });
@@ -67,6 +70,10 @@ export function parseAdventure(
   };
   if (!content.heroes.length)
     throw new Error('At least one hero or character archetype is required.');
+  for (const id of Object.keys(manifest.characterStatMap ?? {})) {
+    if (id === 'eletero' || !Object.hasOwn(manifest.statLabels, id))
+      throw new Error(`Unknown or unmappable character stat: ${id}`);
+  }
   const errors = validateContent(content, Object.keys(manifest.statLabels));
   if (errors.length)
     throw new Error(errors.map(({ path, message }) => `${path}: ${message}`).join('\n'));

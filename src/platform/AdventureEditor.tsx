@@ -1,3 +1,4 @@
+import { attributes, attributeLabels, type Attribute } from './profiles';
 import { useState, type ReactNode } from 'react';
 import type { Choice, StoryNode } from '../engine/schema';
 import {
@@ -324,6 +325,31 @@ export function AdventureEditor({
               <option value="custom">{t('Saját karakter', 'Custom character')}</option>
             </select>
           </Field>
+          {Object.entries(manifest.statLabels)
+            .filter(([id]) => id !== 'eletero')
+            .map(([id, label]) => (
+              <Field key={id} label={`${t('Közös tulajdonság', 'Shared attribute')}: ${label.hu}`}>
+                <select
+                  value={manifest.characterStatMap?.[id] ?? ''}
+                  onChange={(event) => {
+                    const mapping = { ...manifest.characterStatMap };
+                    const attribute = event.target.value as Attribute | '';
+                    if (attribute) mapping[id] = attribute;
+                    else delete mapping[id];
+                    updateManifest({
+                      characterStatMap: Object.keys(mapping).length ? mapping : undefined,
+                    });
+                  }}
+                >
+                  <option value="">{t('Automatikus', 'Automatic')}</option>
+                  {attributes.map((stat) => (
+                    <option key={stat} value={stat}>
+                      {t(attributeLabels[stat].hu, attributeLabels[stat].en)}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            ))}
           {(['background', 'surface', 'accent', 'text'] as const).map((key) => (
             <Field
               key={key}

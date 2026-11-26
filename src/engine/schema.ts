@@ -79,6 +79,13 @@ export const cardSchema = z.strictObject({
 });
 export type Card = z.infer<typeof cardSchema>;
 
+export const heroPortraitSchema = z
+  .string()
+  .max(100_000)
+  .regex(
+    /^(?:preset:(?:scout|scholar|guardian|mediator)-[12]|data:image\/jpeg;base64,[a-z0-9+/=]+)$/i,
+  );
+
 export const heroSchema = z.strictObject({
   id: idSchema,
   name: nonEmpty,
@@ -89,6 +96,7 @@ export const heroSchema = z.strictObject({
     path: ['eletero'],
   }),
   card: cardSchema,
+  portrait: heroPortraitSchema.optional(),
 });
 export type Hero = z.infer<typeof heroSchema>;
 export const heroesSchema = z.array(heroSchema);

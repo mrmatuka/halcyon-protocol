@@ -117,6 +117,17 @@
       "required": ["background", "surface", "accent", "text", "font"],
       "additionalProperties": false
     },
+    "characterStatMap": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["agility", "knowledge", "resolve", "presence"]
+      }
+    },
     "characterMode": {
       "type": "string",
       "enum": ["preset", "custom", "both"]
