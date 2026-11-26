@@ -394,7 +394,7 @@ export function Platform() {
             <p className="comic-journal-label">{isHu ? 'Napló' : 'Journal'}</p>
             <ProfileLibrary
               library={library}
-              createOnOpen={Boolean(createFor)}
+              createForAdventureId={createFor?.manifest.id}
               adventures={adventures}
               onChange={(next) => {
                 writeProfiles(next);
