@@ -1,3 +1,5 @@
+import comicLanternCover from './comic-lantern.webp';
+import comicSignalCover from './comic-signal.webp';
 import {
   adventureManifestSchema,
   parseAdventure,
@@ -26,6 +28,10 @@ export interface CatalogEntry {
 }
 
 export function builtInCatalog(): CatalogEntry[] {
+  const comicCovers: Record<string, string> = {
+    'lantern-keeper': comicLanternCover,
+    'csendes-jel': comicSignalCover,
+  };
   return Object.entries(manifests)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([path, data]) => {
@@ -37,7 +43,7 @@ export function builtInCatalog(): CatalogEntry[] {
       return {
         manifest,
         builtIn: true,
-        coverUrl: manifest.cover && assets[directory + manifest.cover],
+        coverUrl: comicCovers[manifest.id] ?? (manifest.cover && assets[directory + manifest.cover]),
         load: () => {
           loaded ??= loadAdventure(directory, manifest).catch((error: unknown) => {
             loaded = undefined;

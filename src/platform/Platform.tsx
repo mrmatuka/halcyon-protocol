@@ -1,6 +1,7 @@
 import { playerStorage } from '../persistence/playerStorage';
-import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { App } from '../ui/App';
+import { ComicIcon } from '../ui/components/ComicIcon';
 import { ProfileLibrary } from './ProfileLibrary';
 import {
   adaptProfile,
@@ -18,53 +19,35 @@ import { Language, useLanguage } from './language';
 import { listImportedAdventures, importAdventure, saveImportedAdventure } from './packages';
 import { adventureSaves, migrateSilentSignalSaves } from './saves';
 import authoringGuide from '../../docs/adventure-authoring.md?url';
+import comicShore from './comic-shore.webp';
 import './platform.css';
+import './comic.css';
 
 const builtIn = builtInCatalog();
 const localeKey = 'kalandjatek:locale';
 
-function themedStyle(theme: Adventure['manifest']['theme']): CSSProperties {
-  return {
-    '--bg': theme.background,
-    '--surface': theme.surface,
-    '--accent': theme.accent,
-    '--text': theme.text,
-    '--accent-strong': theme.accent,
-    '--surface-elevated': `color-mix(in srgb, ${theme.surface}, ${theme.text} 8%)`,
-    '--border': `color-mix(in srgb, ${theme.surface}, ${theme.accent} 25%)`,
-    fontFamily: {
-      serif: 'Georgia, serif',
-      mono: 'ui-monospace, monospace',
-      system: 'system-ui, sans-serif',
-    }[theme.font],
-  } as CSSProperties;
+async function latestSave(entry: CatalogEntry) {
+  try {
+    const slots = await adventureSaves(entry.manifest.id).listSlots();
+    return slots
+      .filter((slot) => slot.status === 'ok')
+      .sort((a, b) => b.metadata.savedAt.localeCompare(a.metadata.savedAt))[0];
+  } catch {
+    return undefined;
+  }
 }
 
 function AdventureCard({
   adventure,
   onPlay,
+  latest,
 }: {
   adventure: CatalogEntry;
+  latest?: SlotId;
   onPlay: (slot?: SlotId) => void;
 }) {
   const { manifest, coverUrl } = adventure;
   const { locale, t } = useLanguage();
-  const [latest, setLatest] = useState<SlotId>();
-  useEffect(() => {
-    let active = true;
-    void adventureSaves(manifest.id)
-      .listSlots()
-      .then((slots) => {
-        const last = slots
-          .filter((slot) => slot.status === 'ok')
-          .sort((a, b) => b.metadata.savedAt.localeCompare(a.metadata.savedAt))[0];
-        if (active) setLatest(last?.slotId);
-      })
-      .catch(() => undefined);
-    return () => {
-      active = false;
-    };
-  }, [manifest.id]);
   const difficulty = {
     easy: t('Könnyű', 'Easy'),
     normal: t('Normál', 'Normal'),
@@ -72,7 +55,7 @@ function AdventureCard({
   };
   const title = localizedLabel(manifest.title, locale);
   return (
-    <article className="shelf-book" style={themedStyle(manifest.theme)}>
+    <article className="shelf-book">
       <div className="book-frame">
         <button
           type="button"
@@ -111,7 +94,18 @@ export function Platform() {
   const [locale, setLocale] = useState<Locale>(() =>
     playerStorage.getItem(localeKey) === 'en' ? 'en' : 'hu',
   );
-  const [section, setSection] = useState<'shelf' | 'characters' | 'studio'>('shelf');
+  const [section, setSection] = useState<'home' | 'shelf' | 'characters' | 'studio'>('home');
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [journalOpen, setJournalOpen] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [genre, setGenre] = useState('');
+  const [saved, setSaved] = useState<{
+    adventureId: string;
+    slot: SlotId;
+    savedAt: string;
+  }[]>([]);
   const [library, setLibrary] = useState<Profiles>(() => {
     try {
       return readProfiles();
@@ -127,12 +121,15 @@ export function Platform() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
-  const adventures = [
-    ...builtIn,
-    ...imported
-      .filter((entry) => !builtIn.some((built) => built.manifest.id === entry.manifest.id))
-      .map(importedCatalogEntry),
-  ];
+  const adventures = useMemo(
+    () => [
+      ...builtIn,
+      ...imported
+        .filter((entry) => !builtIn.some((built) => built.manifest.id === entry.manifest.id))
+        .map(importedCatalogEntry),
+    ],
+    [imported],
+  );
   const adventure = active?.adventure;
   const content = useMemo(
     () => adventure && localizedContent(adventure, locale),
@@ -140,6 +137,25 @@ export function Platform() {
   );
   const repo = useMemo(() => active && adventureSaves(active.adventure.manifest.id), [active]);
   const isHu = locale === 'hu';
+  const genres = [...new Map(adventures.map(({ manifest }) => [manifest.genre.hu, manifest.genre])).values()];
+  const spotlight = adventures.find(({ manifest }) => manifest.id === 'lantern-keeper')
+    ?? adventures[0];
+  const featured = adventures.find(({ manifest }) => manifest.id === saved[0]?.adventureId)
+    ?? spotlight;
+  const normalizedSearch = search.trim().toLocaleLowerCase(locale);
+  const visibleAdventures = [...adventures].sort((a, b) =>
+    Number(b === spotlight) - Number(a === spotlight),
+  ).filter(({ manifest }) =>
+    (!genre || manifest.genre.hu === genre) &&
+    (!normalizedSearch || [manifest.title, manifest.genre].some((label) =>
+      localizedLabel(label, locale).toLocaleLowerCase(locale).includes(normalizedSearch),
+    )),
+  );
+  const activeTab = settingsOpen || section === 'studio'
+    ? 'settings'
+    : journalOpen || section === 'characters'
+      ? 'journal'
+      : adventure ? 'shelf' : section;
   const temporaryStorage = useSyncExternalStore(playerStorage.subscribe, playerStorage.isTemporary);
   const [editorStorageError, setEditorStorageError] = useState('');
   const profile = adventure && assignedProfile(library, adventure.manifest.id);
@@ -153,6 +169,9 @@ export function Platform() {
 
   function navigate(next: typeof section) {
     setSection(next);
+    setSettingsOpen(false);
+    setJournalOpen(false);
+    setPlaying(false);
     setCreateFor(undefined);
     setActive(undefined);
     setEditing(undefined);
@@ -179,6 +198,29 @@ export function Platform() {
       active = false;
     };
   }, []);
+  useEffect(() => {
+    if (active || !ready) return;
+    let current = true;
+    void Promise.all(adventures.map(async (entry) => {
+      const slot = await latestSave(entry);
+      return slot && {
+        adventureId: entry.manifest.id,
+        slot: slot.slotId,
+        savedAt: slot.metadata.savedAt,
+      };
+    })).then((slots) => {
+      if (current) {
+        setSaved(slots.filter((slot) => slot !== undefined)
+          .sort((a, b) => b.savedAt.localeCompare(a.savedAt)));
+      }
+    });
+    return () => { current = false; };
+  }, [active, adventures, ready]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [section, adventure, journalOpen]);
+
   useEffect(() => {
     playerStorage.setItem(localeKey, locale);
     document.documentElement.lang = locale;
@@ -213,8 +255,12 @@ export function Platform() {
     setError('');
     try {
       const adventure = await entry.load();
-      if (action === 'play') setActive({ adventure, slot });
-      else setEditing({ adventure, builtIn: entry.builtIn });
+      if (action === 'play') {
+        setSettingsOpen(false);
+        setJournalOpen(false);
+        setPlaying(false);
+        setActive({ adventure, slot });
+      } else setEditing({ adventure, builtIn: entry.builtIn });
     } catch (err) {
       setError(String(err));
     } finally {
@@ -224,44 +270,73 @@ export function Platform() {
 
   return (
     <Language.Provider value={locale}>
-      <div className="platform" style={adventure && themedStyle(adventure.manifest.theme)}>
-        <header className="platform-bar">
-          <button type="button" className="platform-home" onClick={() => navigate('shelf')}>
-            <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=shelf`}
-              alt=""
-              width="40"
-              height="40"
-            />
-            <span>{brandName[locale]}</span>
-          </button>
-          <nav className="platform-nav" aria-label={isHu ? 'Fő navigáció' : 'Main navigation'}>
-            {(
-              [
-                ['shelf', 'Könyvespolc', 'Bookshelf'],
-                ['characters', 'Karakterek', 'Characters'],
-                ['studio', 'Történetszerkesztő', 'Story editor'],
-              ] as const
-            ).map(([key, hu, en]) => (
-              <button
-                key={key}
-                type="button"
-                aria-current={section === key ? 'page' : undefined}
-                disabled={busy}
-                onClick={() => navigate(key)}
-              >
-                {isHu ? hu : en}
-              </button>
-            ))}
-          </nav>
-          <label>
-            {isHu ? 'Nyelv' : 'Language'}{' '}
-            <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>
-              <option value="hu">Magyar</option>
-              <option value="en">English</option>
-            </select>
-          </label>
-        </header>
+      <div className="platform comic-platform">
+        {!playing && (
+          <header className="platform-bar">
+            <button type="button" className="platform-home" disabled={busy} onClick={() => navigate('home')}>
+              <ComicIcon name="book" />
+              <span>{brandName[locale]}</span>
+            </button>
+            <button
+              type="button"
+              className="comic-icon-button"
+              aria-label={isHu ? 'Keresés' : 'Search'}
+              aria-expanded={searchOpen && section === 'shelf' && !adventure}
+              disabled={busy}
+              onClick={() => {
+                if (section === 'shelf' && !adventure) {
+                  setSearchOpen(!searchOpen);
+                  if (searchOpen) setSearch('');
+                }
+                else {
+                  navigate('shelf');
+                  setSearchOpen(true);
+                }
+              }}
+            >
+              <ComicIcon name="search" />
+            </button>
+          </header>
+        )}
+        <nav className="platform-nav" aria-label={isHu ? 'Fő navigáció' : 'Main navigation'}>
+          {([
+            ['home', 'home', 'Főmenü', 'Main menu', () => navigate('home')],
+            ['shelf', 'book', 'Könyvkaland', 'Book Adventures', () => navigate('shelf')],
+            ['journal', 'journal', 'Napló', 'Journal', () => {
+              if (playing) {
+                setSettingsOpen(false);
+                setJournalOpen(true);
+              } else navigate('characters');
+            }],
+            ['settings', 'settings', 'Beállítások', 'Settings', () => setSettingsOpen(!settingsOpen)],
+          ] as const).map(([key, icon, hu, en, onClick]) => (
+            <button
+              key={key}
+              type="button"
+              aria-current={activeTab === key ? 'page' : undefined}
+              aria-expanded={key === 'settings' ? settingsOpen : undefined}
+              disabled={busy}
+              onClick={onClick}
+            >
+              <ComicIcon name={icon} />
+              <span>{isHu ? hu : en}</span>
+            </button>
+          ))}
+        </nav>
+        {settingsOpen && (
+          <section className="comic-settings" aria-label={isHu ? 'Beállítások' : 'Settings'}>
+            <label>
+              {isHu ? 'Nyelv' : 'Language'}{' '}
+              <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>
+                <option value="hu">Magyar</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <button type="button" className="btn btn--secondary" onClick={() => navigate('studio')}>
+              {isHu ? 'Történetszerkesztő' : 'Story editor'}
+            </button>
+          </section>
+        )}
         {temporaryStorage && (
           <p role="status" className="app-shell player-storage-notice">
             {isHu
@@ -281,9 +356,18 @@ export function Platform() {
               navigate('characters');
               setCreateFor(adventure);
             }}
-            onLibrary={() => setActive(undefined)}
+            onLibrary={() => navigate('shelf')}
+            journalOpen={journalOpen}
+            onJournalChange={setJournalOpen}
+            onPlayingChange={setPlaying}
             resolveIllustration={(nodeId) => {
               const image = adventure.illustrations[nodeId];
+              if (!image && adventure.manifest.id === 'lantern-keeper' && nodeId === content.story.startNodeId) {
+                return {
+                  url: comicShore,
+                  alt: isHu ? 'Lámpás a ködös mólón, a távolban világítótoronnyal.' : 'A lantern on the misty pier with a lighthouse in the distance.',
+                };
+              }
               return (
                 image && {
                   url: adventure.images[image.path],
@@ -306,25 +390,71 @@ export function Platform() {
           />
         )}
         {!adventure && section === 'characters' && (
-          <ProfileLibrary
-            library={library}
-            createOnOpen={Boolean(createFor)}
-            adventures={adventures}
-            onChange={(next) => {
-              writeProfiles(next);
-              setLibrary(next);
-              if (createFor && assignedProfile(next, createFor.manifest.id)) {
-                setSection('shelf');
-                setActive({ adventure: createFor });
-                setCreateFor(undefined);
-              }
-            }}
-          />
+          <div className="comic-library-journal">
+            <p className="comic-journal-label">{isHu ? 'Napló' : 'Journal'}</p>
+            <ProfileLibrary
+              library={library}
+              createOnOpen={Boolean(createFor)}
+              adventures={adventures}
+              onChange={(next) => {
+                writeProfiles(next);
+                setLibrary(next);
+                if (createFor && assignedProfile(next, createFor.manifest.id)) {
+                  setSection('shelf');
+                  setActive({ adventure: createFor });
+                  setCreateFor(undefined);
+                }
+              }}
+            />
+          </div>
+        )}
+        {!adventure && section === 'home' && (
+          <main className="app-shell comic-home" aria-label={isHu ? 'Főmenü' : 'Main menu'}>
+            {featured && (
+              <div className="comic-feature">
+                {featured.coverUrl && <img className="comic-feature__art" src={featured.coverUrl} alt="" />}
+                <h1>{localizedLabel(featured.manifest.title, locale)}</h1>
+                <div className="comic-feature__actions">
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    disabled={busy || !ready || !saved[0]}
+                    onClick={() => void openAdventure(featured, 'play', saved[0]?.slot)}
+                  >
+                    <ComicIcon name="play" />
+                    {isHu ? 'Folytatás' : 'Continue'}
+                  </button>
+                  <button type="button" className="btn btn--secondary" disabled={busy} onClick={() => navigate('shelf')}>
+                    <ComicIcon name="book" />
+                    {isHu ? 'Új kaland' : 'New adventure'}
+                  </button>
+                </div>
+              </div>
+            )}
+            {busy && <p role="status">{isHu ? 'Kaland betöltése…' : 'Loading adventure…'}</p>}
+            {error && <p role="alert" className="error-text">{error}</p>}
+          </main>
         )}
         {!adventure && section === 'shelf' && (
           <main className="app-shell bookshelf">
             <div className="bookshelf-heading">
-              <h1>{isHu ? 'Könyvespolc' : 'Bookshelf'}</h1>
+              <h1>{isHu ? 'Könyvkaland' : 'Book Adventures'}</h1>
+              {searchOpen && (
+                <label className="comic-search">
+                  {isHu ? 'Keresés a kalandok között' : 'Search adventures'}
+                  <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} />
+                </label>
+              )}
+              <div className="comic-filters" role="group" aria-label={isHu ? 'Műfajok' : 'Genres'}>
+                <button type="button" aria-pressed={!genre} onClick={() => setGenre('')}>
+                  {isHu ? 'Mind' : 'All'}
+                </button>
+                {genres.map((label) => (
+                  <button key={label.hu} type="button" aria-pressed={genre === label.hu} onClick={() => setGenre(label.hu)}>
+                    {localizedLabel(label, locale)}
+                  </button>
+                ))}
+              </div>
             </div>
             {busy && <p role="status">{isHu ? 'Kaland betöltése…' : 'Loading adventure…'}</p>}
             {error && (
@@ -334,16 +464,20 @@ export function Platform() {
             )}
             <div className="shelf-grid">
               {ready &&
-                adventures.map((entry) => (
+                visibleAdventures.map((entry) => (
                   <AdventureCard
                     key={entry.manifest.id}
                     adventure={entry}
+                    latest={saved.find((slot) => slot.adventureId === entry.manifest.id)?.slot}
                     onPlay={(slot) => {
                       if (!busy) void openAdventure(entry, 'play', slot);
                     }}
                   />
                 ))}
             </div>
+            {ready && !visibleAdventures.length && (
+              <p>{isHu ? 'Nincs találat.' : 'No adventures found.'}</p>
+            )}
           </main>
         )}
         {!adventure && section === 'studio' && !editing && (

@@ -55,7 +55,9 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
     // Választás -> Zárlat (Hőpatron bekerül a tárgylistába)
     await user.click(screen.getByRole('button', { name: /Bemész/i }));
     expect(screen.getByRole('heading', { name: 'Zárlat' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Napló megnyitása' }));
     expect(screen.getByText('Hőpatron')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Vissza' }));
 
     // Próba -> Befejezés (E1)
     await user.click(screen.getByRole('button', { name: /Futsz/i }));
@@ -83,7 +85,7 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
 
     // Bezárás, főmenü, majd betöltés
     await user.keyboard('{Escape}');
-    await user.click(screen.getByRole('button', { name: 'Főmenü' }));
+    await user.click(screen.getByRole('button', { name: 'Vissza' }));
     await user.click(screen.getByRole('button', { name: 'Betöltés' }));
     await user.click(screen.getByRole('button', { name: /Betöltés.*1\. mentés/i }));
 

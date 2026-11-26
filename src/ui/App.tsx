@@ -10,6 +10,7 @@ import {
   type SaveSlotSummary,
   type SlotId,
 } from '../persistence/saveRepository';
+import { ComicIcon } from './components/ComicIcon';
 import { CharacterSheet } from './components/CharacterSheet';
 import { EndingView } from './components/EndingView';
 import { InventoryPanel } from './components/InventoryPanel';
@@ -29,6 +30,9 @@ export interface AppProps {
   initialSlot?: SlotId;
   portableHero?: Hero;
   onCreateCharacter?: () => void;
+  journalOpen?: boolean;
+  onJournalChange?: (open: boolean) => void;
+  onPlayingChange?: (playing: boolean) => void;
   resolveIllustration?: (nodeId: string) => { url: string; alt: string } | undefined;
 }
 
@@ -40,6 +44,9 @@ export function App({
   initialSlot,
   portableHero,
   onCreateCharacter,
+  journalOpen,
+  onJournalChange,
+  onPlayingChange,
   resolveIllustration,
 }: AppProps) {
   const { locale, t } = useLanguage();
@@ -53,7 +60,10 @@ export function App({
   const repo = useMemo(() => saveRepository ?? new LocalStorageSaveRepository(), [saveRepository]);
   const [ui, dispatch] = useReducer(gameReducer, undefined, createInitialUiState);
   const [modalOpen, setModalOpen] = useState(false);
-  const [characterSheetOpen, setCharacterSheetOpen] = useState(false);
+  const [localJournalOpen, setLocalJournalOpen] = useState(false);
+  const [journalTab, setJournalTab] = useState<'people' | 'bag' | 'book'>('people');
+  const showJournal = journalOpen ?? localJournalOpen;
+  const setJournalOpen = onJournalChange ?? setLocalJournalOpen;
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [initialContent] = useState(content);
   const [loadError, setLoadError] = useState(false);
@@ -99,6 +109,11 @@ export function App({
     : undefined;
 
   const image = currentNode ? resolveIllustration?.(currentNode.id) : undefined;
+  const playing = ui.screen === 'playing';
+
+  useEffect(() => {
+    onPlayingChange?.(playing);
+  }, [onPlayingChange, playing]);
 
   // Automentés minden állapotváltozás után játék közben
   useEffect(() => {
@@ -153,7 +168,7 @@ export function App({
   };
 
   return (
-    <div className="app-shell">
+    <div className={playing ? 'app-shell comic-reader' : 'app-shell comic-adventure'}>
       {ui.screen === 'menu' && (
         <main className="menu-screen">
           <h1 className="menu-screen__title">{title}</h1>
@@ -201,7 +216,7 @@ export function App({
             </button>
             {onLibrary && (
               <button type="button" className="btn btn--secondary" onClick={onLibrary}>
-                {t('Vissza a könyvespolcra', 'Back to bookshelf')}
+                {t('Vissza a Könyvkalandhoz', 'Back to Book Adventures')}
               </button>
             )}
           </div>
@@ -277,20 +292,30 @@ export function App({
 
       {ui.screen === 'playing' && ui.gameState && currentHero && currentNode && (
         <>
-          <header className="topbar">
-            <span className="topbar__brand">{title}</span>
-            <div className="topbar__actions">
-              <button type="button" className="btn btn--secondary" onClick={openModal}>
-                {t('Mentés / Betöltés', 'Save / load')}
-              </button>
+          <header className="comic-reader-header">
+            <button
+              type="button"
+              className="comic-icon-button"
+              aria-label={t('Vissza', 'Back')}
+              onClick={() => {
+                if (showJournal) setJournalOpen(false);
+                else dispatch({ type: 'GO_MENU' });
+              }}
+            >
+              <ComicIcon name="back" />
+            </button>
+            <span>{showJournal ? t('Napló', 'Journal') : title}</span>
+            {!showJournal && (
               <button
                 type="button"
-                className="btn btn--secondary"
-                onClick={() => dispatch({ type: 'GO_MENU' })}
+                className="comic-icon-button comic-reader-journal"
+                aria-label={t('Napló megnyitása', 'Open journal')}
+                onClick={() => setJournalOpen(true)}
               >
-                {t('Főmenü', 'Main menu')}
+                <ComicIcon name="book" />
+                <small>{t('Napló', 'Journal')}</small>
               </button>
-            </div>
+            )}
           </header>
 
           {ui.error && (
@@ -299,61 +324,81 @@ export function App({
             </p>
           )}
 
-          <div className="game-layout">
-            <button
-              type="button"
-              className="btn btn--secondary character-toggle"
-              aria-controls="reader-character"
-              aria-expanded={characterSheetOpen}
-              onClick={() => setCharacterSheetOpen((open) => !open)}
-            >
-              {t('Karakterlap', 'Character sheet')}
-            </button>
-            <aside
-              id="reader-character"
-              className="sidebar"
-              data-expanded={characterSheetOpen}
-              aria-label={t('Karakter adatok', 'Character information')}
-            >
-              <CharacterSheet
-                hero={currentHero}
-                statLabels={statLabels}
-                state={ui.gameState}
-                onUseHealCard={() => dispatch({ type: 'USE_HEAL_CARD', content })}
-              />
-              <InventoryPanel itemIds={ui.gameState.items} allItems={content.items} />
-            </aside>
-
-            <main className="reading-column">
-              {currentNode.kind === 'scene' ? (
-                <SceneView
-                  node={currentNode}
-                  choices={getAvailableChoices(content, ui.gameState)}
-                  canUseCard={(choiceId) => canUseCardOnChoice(content, ui.gameState!, choiceId)}
-                  cardName={currentHero.card.name}
-                  statLabels={statLabels}
-                  lastCheck={ui.lastCheck}
-                  imageUrl={image?.url}
-                  imageAlt={image?.alt}
-                  onChoose={(choiceId, useCard) =>
-                    dispatch({ type: 'CHOOSE', content, choiceId, useCard })
-                  }
-                />
-              ) : (
-                <EndingView
-                  node={currentNode}
-                  statLabels={statLabels}
-                  lastCheck={ui.lastCheck}
-                  imageUrl={image?.url}
-                  imageAlt={image?.alt}
-                  onRestart={() =>
-                    portableHero ? dispatch({ type: 'GO_HERO_SELECT' }) : onCreateCharacter?.()
-                  }
-                  onMenu={() => dispatch({ type: 'GO_MENU' })}
-                />
+          {showJournal ? (
+            <main className="comic-journal" aria-label={t('Napló', 'Journal')}>
+              <div className="comic-journal-tabs" role="group" aria-label={t('Naplónézet', 'Journal view')}>
+                {([
+                  ['people', 'Társak', 'Companions'],
+                  ['bag', 'Eszközök', 'Equipment'],
+                  ['book', 'Jegyzetek', 'Notes'],
+                ] as const).map(([tab, hu, en]) => (
+                  <button key={tab} type="button" aria-pressed={journalTab === tab} onClick={() => setJournalTab(tab)}>
+                    <ComicIcon name={tab} />
+                    {t(hu, en)}
+                  </button>
+                ))}
+              </div>
+              {journalTab === 'people' && (
+                <div className="comic-journal-people">
+                  <h2>{t('Társak', 'Companions')}</h2>
+                  <CharacterSheet
+                    hero={currentHero}
+                    statLabels={statLabels}
+                    state={ui.gameState}
+                    onUseHealCard={() => dispatch({ type: 'USE_HEAL_CARD', content })}
+                  />
+                </div>
+              )}
+              {journalTab !== 'book' && (
+                <InventoryPanel itemIds={ui.gameState.items} allItems={content.items} />
+              )}
+              <section className="comic-journal-location" aria-label={t('Kaland állapota', 'Adventure status')}>
+                {image && <img src={image.url} alt="" />}
+                <div>
+                  <strong>{title}</strong>
+                  <p>{t('Jelenlegi helyszín', 'Current location')} · {currentNode.title}</p>
+                </div>
+              </section>
+              {journalTab === 'book' && (
+                <button type="button" className="btn btn--secondary" onClick={openModal}>
+                  {t('Mentés / Betöltés', 'Save / load')}
+                </button>
               )}
             </main>
-          </div>
+          ) : (
+            <main className="reading-column">
+                {currentNode.kind === 'scene' ? (
+                  <SceneView
+                    node={currentNode}
+                    choices={getAvailableChoices(content, ui.gameState)}
+                    canUseCard={(choiceId) => canUseCardOnChoice(content, ui.gameState!, choiceId)}
+                    cardName={currentHero.card.name}
+                    statLabels={statLabels}
+                    lastCheck={ui.lastCheck}
+                    imageUrl={image?.url}
+                    imageAlt={image?.alt}
+                    onChoose={(choiceId, useCard) =>
+                      dispatch({ type: 'CHOOSE', content, choiceId, useCard })
+                    }
+                  />
+                ) : (
+                  <EndingView
+                    node={currentNode}
+                    statLabels={statLabels}
+                    lastCheck={ui.lastCheck}
+                    imageUrl={image?.url}
+                    imageAlt={image?.alt}
+                    onRestart={() =>
+                      portableHero ? dispatch({ type: 'GO_HERO_SELECT' }) : onCreateCharacter?.()
+                    }
+                    onMenu={() => dispatch({ type: 'GO_MENU' })}
+                  />
+                )}
+              <button type="button" className="btn btn--secondary comic-save" onClick={openModal}>
+                {t('Mentés / Betöltés', 'Save / load')}
+              </button>
+            </main>
+          )}
         </>
       )}
 
