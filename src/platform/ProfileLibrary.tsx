@@ -42,13 +42,17 @@ export function ProfileLibrary({
   library,
   adventures,
   onChange,
+  createOnOpen = false,
 }: {
   library: Profiles;
   adventures: CatalogEntry[];
   onChange: (next: Profiles) => void;
+  createOnOpen?: boolean;
 }) {
   const { locale, t } = useLanguage();
-  const [draft, setDraft] = useState<Profile>();
+  const [draft, setDraft] = useState<Profile | undefined>(() =>
+    createOnOpen ? blankProfile() : undefined,
+  );
   const [removeId, setRemoveId] = useState<string>();
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);

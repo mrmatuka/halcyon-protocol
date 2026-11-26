@@ -16,10 +16,9 @@ import { InventoryPanel } from './components/InventoryPanel';
 import { SaveLoadModal } from './components/SaveLoadModal';
 import { SceneView } from './components/SceneView';
 import { createInitialUiState, gameReducer } from './gameReducer';
-import { fallbackStatLabel, slotLabel } from './labels';
+import { slotLabel } from './labels';
 import { localizedLabel, type AdventureManifest } from '../platform/adventure';
 import { useLanguage } from '../platform/language';
-import { CharacterCreator } from '../platform/character';
 
 export interface AppProps {
   content: Content;
@@ -28,6 +27,7 @@ export interface AppProps {
   onLibrary?: () => void;
   initialSlot?: SlotId;
   portableHero?: Hero;
+  onCreateCharacter?: () => void;
   resolveIllustration?: (nodeId: string) => { url: string; alt: string } | undefined;
 }
 
@@ -38,6 +38,7 @@ export function App({
   onLibrary,
   initialSlot,
   portableHero,
+  onCreateCharacter,
   resolveIllustration,
 }: AppProps) {
   const { locale, t } = useLanguage();
@@ -49,13 +50,9 @@ export function App({
     Object.fromEntries(
       Object.entries(manifest.statLabels).map(([id, label]) => [id, localizedLabel(label, locale)]),
     );
-  const [customHero, setCustomHero] = useState<Content['heroes'][number]>();
   const [gameDifficulty, setGameDifficulty] = useState(0);
-  const [mode, setMode] = useState<'preset' | 'custom'>(
-    manifest?.characterMode === 'custom' ? 'custom' : 'preset',
-  );
   const repo = useMemo(() => saveRepository ?? new LocalStorageSaveRepository(), [saveRepository]);
-  const [ui, dispatch] = useReducer(gameReducer, content, createInitialUiState);
+  const [ui, dispatch] = useReducer(gameReducer, undefined, createInitialUiState);
   const [modalOpen, setModalOpen] = useState(false);
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [initialContent] = useState(content);
@@ -184,13 +181,21 @@ export function App({
               : t('Elágazó, interaktív kalandjáték.', 'An interactive branching adventure.')}
           </p>
           <div className="menu-screen__actions">
-            <button
-              type="button"
-              className="btn btn--primary"
-              onClick={() => dispatch({ type: 'GO_HERO_SELECT' })}
-            >
-              {t('Új játék', 'New game')}
-            </button>
+            {portableHero ? (
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={() => dispatch({ type: 'GO_HERO_SELECT' })}
+              >
+                {t('Új játék', 'New game')}
+              </button>
+            ) : (
+              onCreateCharacter && (
+                <button type="button" className="btn btn--primary" onClick={onCreateCharacter}>
+                  {t('Saját karakter létrehozása', 'Create your character')}
+                </button>
+              )
+            )}
             <button type="button" className="btn btn--secondary" onClick={openModal}>
               {t('Betöltés', 'Load')}
             </button>
@@ -203,44 +208,9 @@ export function App({
         </main>
       )}
 
-      {ui.screen === 'heroSelect' && (
+      {ui.screen === 'heroSelect' && portableHero && (
         <main className="hero-screen">
-          <h1>{t('Válassz hőst', 'Choose a hero')}</h1>
-          {!portableHero && manifest?.characterMode === 'both' && (
-            <div className="topbar__actions">
-              <button
-                type="button"
-                className="btn btn--secondary"
-                aria-pressed={mode === 'preset'}
-                onClick={() => setMode('preset')}
-              >
-                {t('Kész hősök', 'Preset heroes')}
-              </button>
-              <button
-                type="button"
-                className="btn btn--secondary"
-                aria-pressed={mode === 'custom'}
-                onClick={() => {
-                  setMode('custom');
-                  setCustomHero(undefined);
-                }}
-              >
-                {t('Saját karakter', 'Custom character')}
-              </button>
-            </div>
-          )}
-          {!portableHero && manifest && mode === 'custom' && (
-            <CharacterCreator
-              heroes={content.heroes}
-              manifest={manifest}
-              onCreate={setCustomHero}
-            />
-          )}
-          {!portableHero && mode === 'custom' && customHero && (
-            <p role="status">
-              {customHero.name} {t('készen áll.', 'is ready.')}
-            </p>
-          )}
+          <h1>{t('Kaland előkészítése', 'Prepare adventure')}</h1>
           {portableHero && (
             <section className="platform-fields assigned-hero">
               <div className="profile-title">
@@ -253,37 +223,6 @@ export function App({
                 </div>
               </div>
             </section>
-          )}
-          {!portableHero && mode === 'preset' && (
-            <div className="hero-grid">
-              {content.heroes.map((hero) => {
-                const selected = hero.id === ui.selectedHeroId;
-                return (
-                  <button
-                    key={hero.id}
-                    type="button"
-                    aria-pressed={selected}
-                    className={`hero-card ${selected ? 'hero-card--selected' : ''}`}
-                    onClick={() => dispatch({ type: 'SELECT_HERO', heroId: hero.id })}
-                  >
-                    <strong>{hero.name}</strong>
-                    <span className="hero-card__role">{hero.role}</span>
-                    <span>{hero.description}</span>
-                    <span className="hero-card__stats">
-                      {Object.entries(hero.stats)
-                        .map(
-                          ([stat, value]) =>
-                            `${statLabels?.[stat] ?? fallbackStatLabel(stat, locale)} ${value}`,
-                        )
-                        .join(' · ')}
-                    </span>
-                    <span className="badge badge--accent">
-                      {t('Kártya:', 'Card:')} {hero.card.name}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           )}
           {manifest && (
             <label className="seed-row">
@@ -313,13 +252,12 @@ export function App({
             <button
               type="button"
               className="btn btn--primary"
-              disabled={!portableHero && mode === 'custom' && !customHero}
               onClick={() =>
                 dispatch({
                   type: 'START_GAME',
                   content,
                   fallbackSeed: Date.now(),
-                  customHero: portableHero ?? (mode === 'custom' ? customHero : undefined),
+                  customHero: portableHero,
                   difficultyModifier: gameDifficulty,
                 })
               }
@@ -384,7 +322,9 @@ export function App({
                   lastCheck={ui.lastCheck}
                   imageUrl={image?.url}
                   imageAlt={image?.alt}
-                  onRestart={() => dispatch({ type: 'GO_HERO_SELECT' })}
+                  onRestart={() =>
+                    portableHero ? dispatch({ type: 'GO_HERO_SELECT' }) : onCreateCharacter?.()
+                  }
                   onMenu={() => dispatch({ type: 'GO_MENU' })}
                 />
               )}

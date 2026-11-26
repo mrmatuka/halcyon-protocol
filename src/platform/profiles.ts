@@ -1,3 +1,4 @@
+import { playerStorage, type KeyValueStorage } from '../persistence/playerStorage';
 import { z } from 'zod';
 import { heroPortraitSchema, type Hero, type Stats } from '../engine/schema';
 import type { Content } from '../engine/validate';
@@ -112,14 +113,14 @@ export function rollPoints(
   return points;
 }
 
-export function readProfiles(storage: Storage = localStorage): Profiles {
+export function readProfiles(storage: KeyValueStorage = playerStorage): Profiles {
   const raw = storage.getItem(storageKey);
   return raw === null
     ? { version: 1, profiles: [], defaultId: null, assignments: {} }
     : profilesSchema.parse(JSON.parse(raw));
 }
 
-export function writeProfiles(library: Profiles, storage: Storage = localStorage): void {
+export function writeProfiles(library: Profiles, storage: KeyValueStorage = playerStorage): void {
   storage.setItem(storageKey, JSON.stringify(profilesSchema.parse(library)));
 }
 

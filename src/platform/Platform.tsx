@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { playerStorage } from '../persistence/playerStorage';
+import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { App } from '../ui/App';
 import { ProfileLibrary } from './ProfileLibrary';
 import {
@@ -107,7 +108,7 @@ function AdventureCard({
 
 export function Platform() {
   const [locale, setLocale] = useState<Locale>(() =>
-    localStorage.getItem(localeKey) === 'en' ? 'en' : 'hu',
+    playerStorage.getItem(localeKey) === 'en' ? 'en' : 'hu',
   );
   const [section, setSection] = useState<'shelf' | 'characters' | 'studio'>('shelf');
   const [library, setLibrary] = useState<Profiles>(() => {
@@ -119,6 +120,7 @@ export function Platform() {
   });
   const [imported, setImported] = useState<Adventure[]>([]);
   const [active, setActive] = useState<{ adventure: Adventure; slot?: SlotId }>();
+  const [createFor, setCreateFor] = useState<Adventure>();
   const [editing, setEditing] = useState<{ adventure: Adventure; builtIn: boolean } | 'new'>();
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
@@ -137,6 +139,8 @@ export function Platform() {
   );
   const repo = useMemo(() => active && adventureSaves(active.adventure.manifest.id), [active]);
   const isHu = locale === 'hu';
+  const temporaryStorage = useSyncExternalStore(playerStorage.subscribe, playerStorage.isTemporary);
+  const [editorStorageError, setEditorStorageError] = useState('');
   const profile = adventure && assignedProfile(library, adventure.manifest.id);
   const portableHero = useMemo(
     () =>
@@ -148,6 +152,7 @@ export function Platform() {
 
   function navigate(next: typeof section) {
     setSection(next);
+    setCreateFor(undefined);
     setActive(undefined);
     setEditing(undefined);
     setNotice('');
@@ -164,7 +169,7 @@ export function Platform() {
         if (active) setImported(entries);
       })
       .catch((err: unknown) => {
-        if (active) setError(String(err));
+        if (active) setEditorStorageError(String(err));
       })
       .finally(() => {
         if (active) setReady(true);
@@ -174,7 +179,7 @@ export function Platform() {
     };
   }, []);
   useEffect(() => {
-    localStorage.setItem(localeKey, locale);
+    playerStorage.setItem(localeKey, locale);
     document.documentElement.lang = locale;
     document.title = locale === 'hu' ? 'Kalandkönyvtár' : 'Adventure Library';
   }, [locale]);
@@ -241,6 +246,13 @@ export function Platform() {
             </select>
           </label>
         </header>
+        {temporaryStorage && (
+          <p role="status" className="app-shell player-storage-notice">
+            {isHu
+              ? 'A böngésző nem tud minden játékadatot tartósan menteni. Az átmeneti adatok az oldal bezárásakor vagy újratöltésekor elveszhetnek.'
+              : 'The browser cannot persist all player data. Temporary data may be lost when you close or reload the page.'}
+          </p>
+        )}
         {adventure && content && repo && (
           <App
             key={adventure.manifest.id}
@@ -249,6 +261,10 @@ export function Platform() {
             saveRepository={repo}
             initialSlot={active?.slot}
             portableHero={portableHero}
+            onCreateCharacter={() => {
+              navigate('characters');
+              setCreateFor(adventure);
+            }}
             onLibrary={() => setActive(undefined)}
             resolveIllustration={(nodeId) => {
               const image = adventure.illustrations[nodeId];
@@ -276,10 +292,16 @@ export function Platform() {
         {!adventure && section === 'characters' && (
           <ProfileLibrary
             library={library}
+            createOnOpen={Boolean(createFor)}
             adventures={adventures}
             onChange={(next) => {
               writeProfiles(next);
               setLibrary(next);
+              if (createFor && assignedProfile(next, createFor.manifest.id)) {
+                setSection('shelf');
+                setActive({ adventure: createFor });
+                setCreateFor(undefined);
+              }
             }}
           />
         )}
@@ -367,9 +389,9 @@ export function Platform() {
             </div>
             {busy && <p role="status">{isHu ? 'Kaland betöltése…' : 'Loading adventure…'}</p>}
             {notice && <p role="status">{notice}</p>}
-            {error && (
+            {(error || editorStorageError) && (
               <p role="alert" className="error-text">
-                {error}
+                {error || editorStorageError}
               </p>
             )}
             <div className="studio-list">

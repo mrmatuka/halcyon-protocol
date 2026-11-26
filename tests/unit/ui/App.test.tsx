@@ -35,7 +35,7 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
     const repo = new LocalStorageSaveRepository(createMemoryStorage());
     const winSeed = findSeedForTotal((t) => t <= 8);
 
-    render(<App content={content} saveRepository={repo} />);
+    render(<App content={content} saveRepository={repo} portableHero={sampleHeroes[0]} />);
 
     // Főmenü
     expect(screen.getByRole('heading', { level: 1, name: 'Kalandkönyvtár' })).toBeInTheDocument();
@@ -45,7 +45,6 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
     const seedInput = screen.getByLabelText(/Seed/i);
     await user.clear(seedInput);
     await user.type(seedInput, winSeed);
-    await user.click(screen.getByRole('button', { name: /Vass Dóra/i }));
     await user.click(screen.getByRole('button', { name: 'Kaland indítása' }));
 
     // Első jelenet
@@ -65,14 +64,14 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
 
     // Újrakezdés
     await user.click(screen.getByRole('button', { name: 'Új játék' }));
-    expect(screen.getByRole('heading', { name: /Válassz hőst/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Kaland előkészítése/i })).toBeInTheDocument();
   });
 
   it('mentés és betöltés a felületen keresztül', async () => {
     const user = userEvent.setup();
     const repo = new LocalStorageSaveRepository(createMemoryStorage());
 
-    render(<App content={content} saveRepository={repo} />);
+    render(<App content={content} saveRepository={repo} portableHero={sampleHeroes[0]} />);
     await user.click(screen.getByRole('button', { name: 'Új játék' }));
     await user.click(screen.getByRole('button', { name: 'Kaland indítása' }));
     await user.click(screen.getByRole('button', { name: /Bemész/i }));
