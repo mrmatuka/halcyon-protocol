@@ -176,6 +176,7 @@ export function Platform() {
   useEffect(() => {
     localStorage.setItem(localeKey, locale);
     document.documentElement.lang = locale;
+    document.title = locale === 'hu' ? 'Kalandkönyvtár' : 'Adventure Library';
   }, [locale]);
 
   async function storeAdventure(entry: Adventure) {

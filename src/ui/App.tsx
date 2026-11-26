@@ -41,7 +41,9 @@ export function App({
   resolveIllustration,
 }: AppProps) {
   const { locale, t } = useLanguage();
-  const title = manifest ? localizedLabel(manifest.title, locale) : 'Csendes Jel';
+  const title = manifest
+    ? localizedLabel(manifest.title, locale)
+    : t('Kalandkönyvtár', 'Adventure Library');
   const statLabels =
     manifest &&
     Object.fromEntries(
@@ -179,10 +181,7 @@ export function App({
           <p className="menu-screen__subtitle">
             {manifest
               ? localizedLabel(manifest.description, locale)
-              : t(
-                  'Interaktív sci-fi kalandjáték az Ébenhold fagyos kutatóállomásán.',
-                  'An interactive sci-fi adventure on Ebony Moon.',
-                )}
+              : t('Elágazó, interaktív kalandjáték.', 'An interactive branching adventure.')}
           </p>
           <div className="menu-screen__actions">
             <button

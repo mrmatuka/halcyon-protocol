@@ -38,7 +38,7 @@ describe('F5.1, F5.8, F5.9 – App teljes folyamat, befejezés és hozzáférhet
     render(<App content={content} saveRepository={repo} />);
 
     // Főmenü
-    expect(screen.getByRole('heading', { level: 1, name: 'Csendes Jel' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Kalandkönyvtár' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Új játék' }));
 
     // Hősválasztás + seed
