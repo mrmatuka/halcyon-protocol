@@ -26,12 +26,21 @@
   border-bottom: 1px solid var(--border);
 }
 .platform-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   border: 0;
   background: none;
-  color: var(--accent);
+  color: #f3ede5;
   padding: 0;
+  font-size: 1.2rem;
   font-weight: 750;
   cursor: pointer;
+}
+.platform-home img {
+  flex: none;
+  border: 1px solid #4b3a33;
+  border-radius: 0.6rem;
 }
 .platform select,
 .platform input:not([type='file']):not([type='checkbox']),
@@ -185,26 +194,22 @@
   background: var(--surface-elevated);
 }
 .bookshelf {
-  padding-top: clamp(2.2rem, 9vw, 6rem);
+  padding-top: clamp(1.75rem, 5vw, 3.5rem);
   padding-bottom: 4rem;
 }
 .bookshelf-heading h1 {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: normal;
   letter-spacing: -0.05em;
-  font-size: clamp(3rem, 8vw, 6.4rem);
-  line-height: 0.95;
+  font-size: clamp(2.1rem, 6vw, 4rem);
+  line-height: 1.05;
   margin: 0;
-}
-.bookshelf-heading p {
-  color: var(--text-muted);
-  margin-top: 1rem;
 }
 .shelf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 15rem));
   gap: clamp(1.25rem, 3vw, 2.25rem);
-  margin-top: 2rem;
+  margin-top: clamp(1.1rem, 4vw, 2rem);
   align-items: start;
 }
 .shelf-book {
@@ -285,7 +290,6 @@
   opacity: 0.75;
 }
 .shelf-book__caption {
-  min-height: 6rem;
   padding: 0.85rem 0 0;
   color: #f3ede5;
 }
@@ -305,7 +309,8 @@
   color: #e4bd83;
   background: none;
   border: none;
-  padding: 0.2rem 0;
+  min-height: 44px;
+  padding: 0.2rem 0.35rem;
   cursor: pointer;
 }
 .studio-list,
@@ -359,15 +364,44 @@
   justify-self: start;
 }
 @media (max-width: 560px) {
+  .platform-bar {
+    padding: 0.55rem 1rem;
+    gap: 0.45rem 0.6rem;
+  }
+  .platform-home {
+    font-size: 1rem;
+  }
+  .platform-home img {
+    width: 34px;
+    height: 34px;
+  }
+  .platform-bar > label {
+    font-size: 0.85rem;
+  }
   .shelf-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.95rem;
+  }
+  .platform .book-cover__title {
+    position: static;
+    background: none;
+    padding: 0.6rem 0 0;
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
+  }
+  .shelf-book__caption {
+    padding-top: 0.2rem;
   }
   .platform-nav {
     order: 3;
     flex-basis: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .platform-nav button {
-    padding-inline: 0.45rem;
+    min-height: 44px;
+    padding-inline: 0.25rem;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
   }
   .assignment-row {
     flex-direction: column;
