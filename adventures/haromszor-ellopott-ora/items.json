@@ -1,0 +1,97 @@
+[
+  {
+    "id": "torott_oralanc",
+    "name": "Törött Óralánc",
+    "description": "Meleg, finoman bizsergő aranylánc, amely az eltűnt Kálmán-kronométerről szakadt le. Az időörvényben segít egyben tartani az elmédet (+1 Idegek az első időugráskor és a fináléban).",
+    "modifiers": [
+      {
+        "stat": "idegek",
+        "delta": 1,
+        "nodeId": "n017_elso_idougras"
+      },
+      {
+        "stat": "idegek",
+        "delta": 1,
+        "nodeId": "n098_harmas_talalkozo"
+      }
+    ]
+  },
+  {
+    "id": "parfumos_level",
+    "name": "Parfümös Levél",
+    "description": "Vörös Lola jázminillatú, sietősen firkantott levele 1928-ból, rajta egy aláírás-mintával és a 23:54-es találkozó időpontjával (+1 Sárm Zóra szembesítésénél).",
+    "modifiers": [
+      {
+        "stat": "sarm",
+        "delta": 1,
+        "nodeId": "n084_zora_szembesites"
+      }
+    ]
+  },
+  {
+    "id": "rezkulcs_1928",
+    "name": "Sárgaréz Szellőzőkulcs",
+    "description": "Nehéz, olajfoltos sárgaréz kulcs 1928-ból a pincei szellőzőhöz és a régi lomtárhoz. Ha elrejted a falba, fél évszázaddal később még a helyén vár."
+  },
+  {
+    "id": "hangvilla_kulcs",
+    "name": "1928-as Hangvilla-kulcs",
+    "description": "Kétágú, finoman rezgő sárgaréz órás-hangvilla 1928-ból, oldalába vésve az 54-es szám (+1 Ész az órásműhely dobozánál és az Időszéf előtt).",
+    "modifiers": [
+      {
+        "stat": "esz",
+        "delta": 1,
+        "nodeId": "n060_muhely_uzenet"
+      },
+      {
+        "stat": "esz",
+        "delta": 1,
+        "nodeId": "n092_szef_elott"
+      }
+    ]
+  },
+  {
+    "id": "csempesz_terkep",
+    "name": "Csempész-alaprajz",
+    "description": "Kézzel rajzolt 1979-es palota-alaprajz titkos tetőátjárókkal és szervizlétrákkal (+1 Ügyesség a 2029-es tetőterasz-hajszában).",
+    "modifiers": [
+      {
+        "stat": "ugyesseg",
+        "delta": 1,
+        "nodeId": "n088_tetoterasz_hajsza"
+      }
+    ]
+  },
+  {
+    "id": "magnetofon_szalag",
+    "name": "Kém-magnetofonszalag",
+    "description": "1979. november 11-én rögzített, három helyen megvágott orsós magnószalag Kardos Ilona lehallgatófülkéjéből. Hangbizonyíték és a 4. rejtvény kulcsa."
+  },
+  {
+    "id": "foszforpor",
+    "name": "Órás Foszforpor",
+    "description": "Halványan derengő órás-foszforpor 1979-ből, amely láthatóvá teszi a láthatatlan fénysugarakat (+2 Ügyesség Pötyi lézerhálójánál).",
+    "modifiers": [
+      {
+        "stat": "ugyesseg",
+        "delta": 2,
+        "nodeId": "n078_potyi_lezerhalo"
+      }
+    ]
+  },
+  {
+    "id": "biometrikus_kartya",
+    "name": "Biometrikus VIP-kártya",
+    "description": "Kálmán Zóra mesterkártyája 2029-ből, amellyel feltűnés nélkül nyitható a magánlakosztály és a páncélszekrény előtere."
+  },
+  {
+    "id": "zsarolasi_akta",
+    "name": "100 Éves Zsarolási Akta",
+    "description": "Vérrel, tintával és kriptokulccsal pecsételt családi akta, amely bizonyítja a Kálmán-palota három generáción átívelő bűneit."
+  },
+  {
+    "id": "vandor_naploja",
+    "name": "A Vándor Zsebnaplója",
+    "description": "Bőrkötésű kis órásnapló 1928-as, 1979-es és 2029-es bejegyzésekkel. Felfedi a Vándor — Kálmán Ádám — valódi kilétét és a Negyedik Idősík titkát."
+  }
+]

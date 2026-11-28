@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "haromszor-ellopott-ora",
+  "title": {
+    "hu": "A Háromszor Ellopott Óra",
+    "en": "The Thrice-Stolen Watch"
+  },
+  "description": {
+    "hu": "Három korszak, egy budapesti bérpalota és egy lehetetlen lopás 1928-ban, 1979-ben és 2029-ben.",
+    "en": "Three eras, one Budapest tenement palace, and an impossible locked-room heist in 1928, 1979, and 2029."
+  },
+  "genre": {
+    "hu": "Időugrós nyomozós kaland",
+    "en": "Time-hopping mystery adventure"
+  },
+  "difficulty": "normal",
+  "minutes": 90,
+  "defaultLocale": "hu",
+  "statLabels": {
+    "esz": {
+      "hu": "Ész",
+      "en": "Wits"
+    },
+    "sarm": {
+      "hu": "Sárm",
+      "en": "Charm"
+    },
+    "ugyesseg": {
+      "hu": "Ügyesség",
+      "en": "Agility"
+    },
+    "idegek": {
+      "hu": "Idegek",
+      "en": "Nerve"
+    },
+    "szerencse": {
+      "hu": "Szerencse",
+      "en": "Luck"
+    }
+  },
+  "characterStatMap": {
+    "esz": "knowledge",
+    "sarm": "presence",
+    "ugyesseg": "agility",
+    "idegek": "resolve"
+  },
+  "theme": {
+    "background": "#151118",
+    "surface": "#231c27",
+    "accent": "#e4b363",
+    "text": "#f4ede2",
+    "font": "serif"
+  },
+  "characterMode": "both",
+  "cover": "images/cover.jpg"
+}

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "roka_mark",
+    "name": "Szabó „Róka” Márk",
+    "role": "Biztosítási csalás-nyomozó",
+    "description": "Három éve még milliárdos műgyűjtők kamu kárigényeit szedte szét, ma már csak az olyan ügyeket vállalja el, ahol jó a pia vagy szaftos a botrány. Szemtelenül gyors az esze, és általában hamarabb találja ki a hazugságot, mint hogy a másik kimondaná.",
+    "stats": {
+      "esz": 9,
+      "sarm": 8,
+      "ugyesseg": 7,
+      "idegek": 7,
+      "szerencse": 8,
+      "eletero": 14
+    },
+    "card": {
+      "id": "apro_reszlet",
+      "name": "Egy apró részlet…",
+      "description": "Egyszer egy kalandban automatikus sikerrel teljesítesz egy Ész- vagy Sárm-próbát.",
+      "options": [
+        {
+          "type": "autoSuccess",
+          "stats": ["esz", "sarm"]
+        }
+      ]
+    }
+  },
+  {
+    "id": "varga_vera",
+    "name": "Varga Vera",
+    "role": "Műkincstolvaj és szabadulóművész",
+    "description": "Állítása szerint csak „átcsoportosítja a rossz helyen tartott értékeket”. Nincs az a rács, párkány vagy lézerháló, amin ne suhanna át egy szemtelen félmosollyal — viszont az időugrások hideg szorítása még őt is kizökkenti.",
+    "stats": {
+      "esz": 7,
+      "sarm": 8,
+      "ugyesseg": 10,
+      "idegek": 6,
+      "szerencse": 9,
+      "eletero": 13
+    },
+    "card": {
+      "id": "b_terv",
+      "name": "B-terv az ablakon át",
+      "description": "Egyszer egy kalandban újradobhatsz egy sikertelen Ügyesség- vagy Szerencse-próbát.",
+      "options": [
+        {
+          "type": "reroll",
+          "stats": ["ugyesseg", "szerencse"]
+        }
+      ]
+    }
+  },
+  {
+    "id": "doki_gabor",
+    "name": "Dr. Kovács „Doki” Gábor",
+    "role": "Éjszakai kórboncnok és kártyás",
+    "description": "Negyvenöt éves, szétnyűtt ballonkabátot hord, és a hullaházi éjszakák óta semmi sem képes felvinni a pulzusát. A sármja olyan, mint egy tompa szike, de a keze nem remeg, és a szesztől sem dől ki.",
+    "stats": {
+      "esz": 8,
+      "sarm": 6,
+      "ugyesseg": 7,
+      "idegek": 10,
+      "szerencse": 8,
+      "eletero": 16
+    },
+    "card": {
+      "id": "ket_ujjnyi_konyak",
+      "name": "Két ujjnyi konyak",
+      "description": "Egyszer egy kalandban gyógyulsz +5 Életerőt, vagy automatikus sikerrel teljesítesz egy Idegek-próbát.",
+      "options": [
+        {
+          "type": "heal",
+          "amount": 5
+        },
+        {
+          "type": "autoSuccess",
+          "stats": ["idegek"]
+        }
+      ]
+    }
+  }
+]

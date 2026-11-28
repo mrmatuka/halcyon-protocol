@@ -1,0 +1,587 @@
+[
+  {
+    "nodeId": "n001_erkezes_palota",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Neon-eső a Kálmán-palota előtt — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n002_elocsarnok_potyi",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Találkozás Pötyivel, a passzív-agresszív MI-vel — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n003_szerviz_folyoso",
+    "file": "act1_palace_rain.jpg",
+    "alt": "A tapéta mögötti huzat — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n004_aukcio_terem",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A tiltott aukció szalonja — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n005_zora_pezsgo",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Kálmán Zóra és a jéghideg mosoly — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n006_maszkos_licitalo",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A Maszkos Licitáló suttogása — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n007_kurator_ideges",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Dr. Fenyves izzadó homloka — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n008_ejfeli_aramszunet",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Éjféli áramszünet és tompa puffanás — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n009_orasoba_ajto",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A belülről reteszelt Óraszoba — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n010_orasoba_helyszin",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A szétvert vitrin és a Törött Óralánc — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n011_nyom_pezsgospohar",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Rúzsnyom és egy húszperces hazugság — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n012_nyom_vernyom",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A semmibe vezető csizmanyom — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n013_nyom_fali_ora",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A 23:54-kor megállt díszóra — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n014_rejtv1_paradoxon",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "1. Logikai feladvány: A Bezárt Szoba Paradoxona — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n015_rejtv1_siker",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A mahagóni óratok kattanása — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n016_rejtv1_kudarc",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Zóra pofonja és a véletlen felfedezés — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n017_elso_idougras",
+    "file": "time_vortex.jpg",
+    "alt": "Zuhanás száz éven át — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n018_erkezes_1928",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Budapest, 1928: Fekete Kakadu — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n019_kakadu_bejarat",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Kőműves Feri és a selyemfüggöny — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n020_kakadu_pult",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "A Fekete Kakadu füstös forgataga — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n021_hatso_sikator",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Szénledobó és pincelépcső — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n022_lola_oltozo_elott",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Jázminparfüm és csattanó ajtó — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n023_lola_oltozoje",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Vörös Lola tükre előtt — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n024_lola_kulissza",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "A pincér italkönyve a kelléktárban — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n025_lola_szovetseg",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Az éjféli nagy szám előtt — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n026_szekely_kartyaszoba",
+    "file": "act2_baron_poker.jpg",
+    "alt": "Báró Székely zöld posztója — Zöld posztós privát kártyaszoba bársonyfüggönyök között szivarfüstben"
+  },
+  {
+    "nodeId": "n027_poker_gyozelem",
+    "file": "act2_baron_poker.jpg",
+    "alt": "A báró ideges pillantása az órára — Zöld posztós privát kártyaszoba bársonyfüggönyök között szivarfüstben"
+  },
+  {
+    "nodeId": "n028_poker_bukas",
+    "file": "act2_baron_poker.jpg",
+    "alt": "Kidobva a kártyaasztaltól — Zöld posztós privát kártyaszoba bársonyfüggönyök között szivarfüstben"
+  },
+  {
+    "nodeId": "n029_szekely_nyom",
+    "file": "act2_baron_poker.jpg",
+    "alt": "Egy ügyvéd túl pontos alibije — Zöld posztós privát kártyaszoba bársonyfüggönyök között szivarfüstben"
+  },
+  {
+    "nodeId": "n030_kazanhaz_lejaro",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A hallgatag Órásinas a kazánházban — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n031_inas_alkuja",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Az idővonal két halk csavarja — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n032_falba_rejtett_kulcs",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Üzenet ötven év múlva — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n033_ora_megkarcolasa",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Az étellift résén át: a Kálmán-kronométer — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n034_kakadu_bar_piheno",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "1919-es aszú és két szem fekete — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n035_ejfeli_loves_1928",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "23:54: Villanás, aztán az éjféli durranás — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n036_orasoba_1928_helyszin",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Lőporfüst és pezsgőszilánkok az Óraszobában — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n037_nyom_zsebora_2354",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A 23:54-kor összeroppant zsebóra — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n038_nyom_harom_uveg",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Három palack pezsgő története — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n039_nyom_kandallo_ora",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Drótozott parázs és kormos zsanér — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n040_rejtv2_pezsgo_ora",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "2. Logikai feladvány: Három pezsgősüveg és a 23:54-es zsebóra — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n041_rejtv2_siker",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A báró leleplezése és az 54-es hangvilla — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n042_rejtv2_kudarc",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Ezüstfejű sétabot és menekülés a fülkébe — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n043_masodik_idougras",
+    "file": "time_vortex.jpg",
+    "alt": "Fél évszázad előre: 1928-ból 1979-be — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n044_erkezes_1979",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Budapest, 1979: Maszek alvilág és szotyihéj — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n045_bela_pinceklub",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Szotyihéj és nyugati farmer a pultnál — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n046_1979_hub",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "1979. november 11., 23:10: A maszek alvilág — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n047_bela_valutazo",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A lelakatolt lomtár és a 79-es tégla — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n048_1928_kulcs_megtalalva",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Fél évszázados pillangóhatás — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n049_lomtar_belso",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A titkos tetőterasz-alaprajz és egy elhallgatott fiú — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n050_bela_lebukas_veszely",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Razzia a maszek pincében! — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n051_bela_hatso_szoba",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A zártörés ára és a maradék papír — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n052_razzia_meguszva",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Fülig vörös sál és tiszta levegő — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n053_ilona_lehallgato",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Kardos Ilona és a kétirányú tükör — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n054_ilona_alku",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Két ügynök egy asztalnál — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n055_ilona_csapda",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "A becsapódó fülkeajtó — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n056_szalag_megszerezve",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Három ragasztócsík a barna szalagon — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n057_ilona_bucsuszava",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Kilépve a füstös tükör mögül — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n058_orasmuhely_1979",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Az öreg pincei órás és az arany pecsétgyűrű — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n059_1979_szabotazs",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A jövő riasztójának gyökere — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n060_muhely_uzenet",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Üzenet a fiókba és a rézdoboz zárja — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n061_rejtv3_fogaskerek",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "3. Logikai feladvány: A három fogaskerék-tárcsa — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n062_rejtv3_siker",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "A rézdoboz második kódszáma: 11 — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n063_rejtv3_kudarc",
+    "file": "act2_boiler_apprentice.jpg",
+    "alt": "Visszacsapó acélrugó — Pincei kazánház és órásműhely meleg fénye, sárgaréz kulcsokkal és titkos járattal"
+  },
+  {
+    "nodeId": "n064_bela_froccs_piheno",
+    "file": "act2_cabaret_hall.jpg",
+    "alt": "Hideg szóda, meleg párizsis zsemle — Füstös pesti alagsori mulató kristálycsillárokkal és pezsgőző vendégekkel"
+  },
+  {
+    "nodeId": "n065_csempesz_aukcio",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A negyedik emeleti csempész-aukció — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n066_hamisitvany_botrany",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A 23:54-es áramszünet és a megvágott szalag — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n067_rejtv4_szalag",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "4. Logikai feladvány: A magnetofonszalag-vágás — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n068_rejtv4_siker",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Ilona vallomása a füstben — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n069_rejtv4_kudarc",
+    "file": "act2_lola_dressing.jpg",
+    "alt": "Az alumíniumorsó csapása — Körtefényes kulisszák mögötti öltöző vörös selyemkimonóval és parfümmel"
+  },
+  {
+    "nodeId": "n070_1979_menekules",
+    "file": "time_vortex.jpg",
+    "alt": "A 2029-es tárcsa hívása — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n071_harmadik_idougras",
+    "file": "time_vortex.jpg",
+    "alt": "Visszazuhanás a neon-jövőbe — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n072_erkezes_2029",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Vissza 2029-be: A megváltozott palota — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n073_2029_visszateres",
+    "file": "act1_palace_rain.jpg",
+    "alt": "A múlt visszhangja a rézfülkében — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n074_2029_hub",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "2029: A kétirányú hurok éjszakája — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n075_szerverszoba_folyoso",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Pötyi hűvös szerverszobája — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n076_szabotazs_hatasa",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Ötvenéves rövidzárlat — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n077_potyi_beszelgetes",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Pötyi udvarias árulása — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n078_potyi_lezerhalo",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Tánc a vörös lézersugarak között — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n079_potyi_mag",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A 23:54-es felülírás és a Biometrikus VIP-kártya — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n080_potyi_logok",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Pötyi utolsó megjegyzése — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n081_szerverszoba_kijarat",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Vissza a harmadik emelet fölé — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n082_zora_lakosztaly_ajto",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Kálmán Zóra smaragdzöld lakosztálya — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n083_zora_szalon",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A kártyával nyitott belső dolgozószoba — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n084_zora_szembesites",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Smaragdselyem, zsarolás és fegyvercső — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n085_zora_alku_vagy_akta",
+    "file": "act1_vip_salon.jpg",
+    "alt": "A 100 Éves Zsarolási Akta — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n086_zora_pancel",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Búcsú Zóra szalonjától — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "n087_tetoterasz_kijarat",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Neon-eső és idővillanás a tetőteraszon — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n088_tetoterasz_hajsza",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Hajsza a csúszós palatetőn — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n089_vandor_talalkozas",
+    "file": "act1_palace_rain.jpg",
+    "alt": "A Vándor álarca lehull — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n090_tetoterasz_vissza",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Vissza a viharból a folyosóra — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "n091_orvosi_szekreny_2029",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Nanogél és koffeintapasz a vészszekrényből — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n092_szef_elott",
+    "file": "time_vortex.jpg",
+    "alt": "A háromtárcsás Időszéf előtt — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n093_rejtv5_idoszef",
+    "file": "time_vortex.jpg",
+    "alt": "5. Logikai feladvány: Az Időszéf három korszak-kombinációja — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n094_rejtv5_siker",
+    "file": "time_vortex.jpg",
+    "alt": "Az Időszéf arany kattanása — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n095_rejtv5_kudarc",
+    "file": "time_vortex.jpg",
+    "alt": "Elektromos visszarúgás és vésznyitás — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n096_idoszef_nyilik",
+    "file": "time_vortex.jpg",
+    "alt": "Minden korszak egy ajtó mögött — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n097_finale_bevezetes",
+    "file": "time_vortex.jpg",
+    "alt": "A Három Korszak Összeér — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n098_harmas_talalkozo",
+    "file": "time_vortex.jpg",
+    "alt": "Az Időörvény nyomása — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n099_szovetsegesek_hangja",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A múlt tanúi felsorakoznak — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n100_rejtv6_1_tettes",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "6. Logikai feladvány (1/3): Ki rendelte el a 2029-es rablást? — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n101_vad1_siker",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Zóra arca megfagy — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n102_vad1_kudarc",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Eltévedt vád és gyors korrekció — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n103_rejtv6_2_modszer",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "6. Logikai feladvány (2/3): Hogyan működött a háromszoros lopás? — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n104_vad2_siker",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A bezárt szoba mítosza szertefoszlik — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n105_vad2_kudarc",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Megrendült bizonyítás — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n106_rejtv6_3_vandor",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "6. Logikai feladvány (3/3): Ki a Vándor mindhárom korszakban? — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n107_vad3_siker",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Ádám mosolya és az utolsó választás — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n108_vad3_kudarc",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A név, amely kimondatlan maradt — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n109_vegso_dontes",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "A Kálmán-kronométer az asztalon — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n110_negyedik_idosik_elott",
+    "file": "time_vortex.jpg",
+    "alt": "A Hangvilla-kulcs negyedik hangja — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "n111_tiszta_lap_elott",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Az utolsó kattanás előtti csend — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "n112_arany_tolvaj_elott",
+    "file": "time_vortex.jpg",
+    "alt": "Ötven év kamat a kabátzsebben — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "e1_tiszta_lap",
+    "file": "act1_watch_room_2029.jpg",
+    "alt": "Az Utolsó Kattanás — Vörös vészfényben úszó Óraszoba a szétvert vitrinnel és a nyíló mahagóni állóórával"
+  },
+  {
+    "nodeId": "e2_arany_tolvaj",
+    "file": "act1_vip_salon.jpg",
+    "alt": "Ötven Év Kamattal — Félhomályos luxus aukciós szalon üres üvegvitrinnel és pezsgőspoharakkal"
+  },
+  {
+    "nodeId": "e3_uj_orasmester",
+    "file": "time_vortex.jpg",
+    "alt": "A Negyedik Idősík — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  },
+  {
+    "nodeId": "e4_felemas_alku",
+    "file": "act1_palace_rain.jpg",
+    "alt": "Félbehagyott Játszma — Esős éjszaka a szecessziós Kálmán-palota előtti téren és hátsó sikátorában"
+  },
+  {
+    "nodeId": "d1_kifogyott_az_ido",
+    "file": "time_vortex.jpg",
+    "alt": "Kifogyott az idő — Rézlemezes fülkében kavargó kék-arany időörvény az eltűnő korszakok fényeivel"
+  }
+]
