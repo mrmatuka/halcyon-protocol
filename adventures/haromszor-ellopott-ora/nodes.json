@@ -1,0 +1,3730 @@
+{
+  "startNodeId": "n001_erkezes_palota",
+  "deathEndingId": "d1_kifogyott_az_ido",
+  "nodes": [
+    {
+      "kind": "scene",
+      "id": "n001_erkezes_palota",
+      "title": "Neon-eső a Kálmán-palota előtt",
+      "text": "2029. november 11., 23:10. A Nagykörút mellékutcáján savanykás, meleg neon-eső kopog a szecessziós homlokzaton. A Kálmán-palota sötét márványkapuja fölött még az aranyozott évszám is gúnyosan csillog, mintha pontosan tudná, hogy ma éjjel megint valaki nagyon pórul jár benne.\n\nA belső zsebedben ott lapul a meghívó, amit Kálmán Zóra küldött „szigorúan diszkrét, nagy pénzű” ügyben. A kapunál azonban már egy túlbuzgó drón-terminál zümmög, és a szemetesek mellett egy régi, rozsdás szervizajtó félrecsúszott reteszét is kiszúrod.",
+      "choices": [
+        {
+          "id": "c_n001_fokapu",
+          "text": "Besétálsz a főkapun, hadd lássa a kamera a legszebb mosolyodat",
+          "target": "n002_elocsarnok_potyi"
+        },
+        {
+          "id": "c_n001_szerviz",
+          "text": "Besurransz a rozsdás szervizajtón át, mielőtt még regisztrálnának",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n003_szerviz_folyoso"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n002_elocsarnok_potyi"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n002_elocsarnok_potyi",
+      "title": "Találkozás Pötyivel, a passzív-agresszív MI-vel",
+      "text": "A márvány előcsarnokban hideg cián fény villan fel, majd egy női hang szólal meg a mennyezeti hangszóróból olyan modorral, mintha egyszerre akarna teát főzni és feljelenteni: „Jó estét kívánok. P-07, házi nevemen Pötyi vagyok, a Kálmán-palota biztonsági rendszere. Örömmel nyugtázom, hogy megérkezett — bár a cipőtalpa nedves, és a pulzusa enyhén gyanús.”\n\nA falon túl már hallatszik a VIP-galéria pezsgős zsongása. Ha gyorsan kezeled Pötyit, még hasznodra is válhat ma éjjel.",
+      "choices": [
+        {
+          "id": "c_n002_potyi_bokat",
+          "text": "Bókolsz Pötyinek, és úgy beszélsz vele, mint egy főúri szalon hölgyével",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "potyi_friendly"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          },
+          "failure": {
+            "target": "n004_aukcio_terem"
+          }
+        },
+        {
+          "id": "c_n002_potyi_szenzor",
+          "text": "Miközben beszél, kifürkészed a lézer-szenzorok látószögét az előtérben",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "clue_laser_blindspot"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          },
+          "failure": {
+            "target": "n004_aukcio_terem"
+          }
+        },
+        {
+          "id": "c_n002_potyi_tovabb",
+          "text": "Rálegyintesz a géphangra, és belépsz a galériába",
+          "target": "n004_aukcio_terem"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n003_szerviz_folyoso",
+      "title": "A tapéta mögötti huzat",
+      "text": "A szűk szervizjáratban még a múlt század pora és egy régi csőposta rozsdás szaga terjeng. Ahogy a galéria mögötti fal mentén végiglopakodsz, észreveszel valamit, ami nem szerepel egyetlen hivatalos tervrajzon sem: a díszburkolat és a régi tégla között embernyi széles, üreges karbantartó rés húzódik — és a modern lézerszenzorok pont a tükör mögött hagynak egy félméteres vakfoltot.\n\nEgy kis faajtón át észrevétlenül becsusszansz a galéria bárpultja mögé, és még egy pohár pezsgőt is elcsensz menet közben.",
+      "choices": [
+        {
+          "id": "c_n003_galeriaba",
+          "text": "Kortyolsz a pezsgőből, és elvegyülsz a galéria vendégei között",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_laser_blindspot"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_wall_cavity"
+            }
+          ],
+          "target": "n004_aukcio_terem"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n004_aukcio_terem",
+      "title": "A tiltott aukció szalonja",
+      "text": "A harmadik emeleti szalonban félhomály, méregdrága parfüm és fojtott kuncogás keveredik. A középső üvegvitrinben még csak egy bársonypárna pihen — a Kálmán-kronométert az emeleten följebb, a bezárt Óraszobában őrzik éjfélig, amikor majd megmutatják a licitálóknak.\n\nAz óra 23:25-öt mutat. Van még időd körülszaglászni a társaságban, mielőtt elüt az éjfél.",
+      "choices": [
+        {
+          "id": "c_n004_zora",
+          "text": "Odaköszönsz Kálmán Zórához a bárpultnál",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_zora_2029"
+            }
+          },
+          "target": "n005_zora_pezsgo"
+        },
+        {
+          "id": "c_n004_maszkos",
+          "text": "Kikérdezed a sarokban ácsorgó Maszkos Licitálót",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_maszkos_2029"
+            }
+          },
+          "target": "n006_maszkos_licitalo"
+        },
+        {
+          "id": "c_n004_kurator",
+          "text": "Megszólítod az idegesen izzadó kurátort, dr. Fenyvest",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_kurator_2029"
+            }
+          },
+          "target": "n007_kurator_ideges"
+        },
+        {
+          "id": "c_n004_ejfel",
+          "text": "Megvárod az éjféli leleplezést a lépcsőház közelében",
+          "target": "n008_ejfeli_aramszunet"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n005_zora_pezsgo",
+      "title": "Kálmán Zóra és a jéghideg mosoly",
+      "text": "Kálmán Zóra smaragdzöld selyemruhában, mezítláb áll egy tigrismintás szőnyegen, kezében két pohár méregdrága rozéval. Úgy mér végig tetőtől talpig, mintha épp azt számolná ki, megéri-e lefektetni téged, vagy olcsóbb egyszerűen lelőni.\n\n„Örülök, hogy eljöttél” — dorombolja, és egy centire hajol az arcodhoz. „Az a vén kurátor egész este úgy néz ki, mint aki bepisil, pedig az órát csak éjfélkor hozzuk le az Óraszobából. Száz éve ugyanazon a napon tűnik el mindig. Ha ma éjjel megint lába kél, én nem a rendőrséget hívom… hanem téged. Persze csak ha bírod a strapát.”",
+      "choices": [
+        {
+          "id": "c_n005_flort",
+          "text": "Visszavágsz egy pimasz flörttel, és rákérdezel a 100 éves családi pletykára",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "visited_zora_2029"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_1979_pattern"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "visited_zora_2029"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          }
+        },
+        {
+          "id": "c_n005_vissza",
+          "text": "Koccintasz vele, és visszasétálsz a terembe",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_zora_2029"
+            }
+          ],
+          "target": "n004_aukcio_terem"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n006_maszkos_licitalo",
+      "title": "A Maszkos Licitáló suttogása",
+      "text": "A terem legsötétebb sarkában egy ódon, velencei rézmaszkot viselő alak álldogál, ujján nehéz arany pecsétgyűrűvel. Amikor mellé lépsz, még csak feléd sem fordul, mégis tisztán hallod a reszelős, mégis furcsán ismerős hangját:\n\n„Ne az ajtót nézze, amikor kialszik a fény. Ebben a házban az idő nem előre megy, hanem körbe-körbe, mint a régi órák mutatója. És ha valaki 23:54-kor elindítja a szerkezetet, az éjfél sosem ér oda.” Mielőtt visszakérdezhetnél, két túlbiztosított kriptobróker tolakszik közétek, és az alak nyomtalanul felszívódik a tömegben.",
+      "choices": [
+        {
+          "id": "c_n006_vissza",
+          "text": "Megjegyzed a „23:54” megjegyzést, és visszatérsz a szalon közepére",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_maszkos_2029"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_2354_gap"
+            }
+          ],
+          "target": "n004_aukcio_terem"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n007_kurator_ideges",
+      "title": "Dr. Fenyves izzadó homloka",
+      "text": "Dr. Fenyves, az aukció kurátora már a harmadik papír zsebkendőt gyűri szét a kezében. Amikor rákérdezel az Óraszoba védelmére, majdnem félrenyeli a tonikját.\n\n„Minden hermetikusan zárva van!” — suttogja kétségbeesetten. „A negyedik emeleti Óraszoba ajtaján biometrikus zár van, az ablakon rács, a folyosón lézerháló, és odabent a régi tükör fölött Pötyi kamerája figyel. Senki nem mehet be és ki! Mégis… húsz perce fura, öreg falióra-ketyegést hallottam a fal túloldaláról, pedig ott nincs is óra. Vagyis de, egy régi díszóra, ami ötven éve áll…”",
+      "choices": [
+        {
+          "id": "c_n007_nyugtat",
+          "text": "Kiszeded belőle a pontos időpontot és a kamera vakfoltját",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "visited_kurator_2029"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_wall_clock"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "visited_kurator_2029"
+              }
+            ],
+            "target": "n004_aukcio_terem"
+          }
+        },
+        {
+          "id": "c_n007_vissza",
+          "text": "Megveregeted a vállát, és hagyod hadonászni",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_kurator_2029"
+            }
+          ],
+          "target": "n004_aukcio_terem"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n008_ejfeli_aramszunet",
+      "title": "Éjféli áramszünet és tompa puffanás",
+      "text": "Pontosan 23:54-kor — nem éjfélkor! — a palota minden csillárja egyszerre pislákolni kezd, mintha valaki egy hatalmas mágnessel rántotta volna meg az egész kerület hálózatát. A vendégek sikoltozása közepette a negyedik emelet felől tompa csattanás, majd egy öreg fémrácsos lift láncának csikorgása hallatszik.\n\nZóra káromkodva félrelök egy milliárdost: „Az Óraszobába! Most!” A vészvilágítás vörös fényében te vagy az első a lépcsőházban — de a sötét lépcsőfordulóban valaki lefelé rohanva nekicsapódik a vállaidnak!",
+      "choices": [
+        {
+          "id": "c_n008_elkap",
+          "text": "Utánakapsz a sötétben, hátha elkapod a rohanó árnyékot",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "clue_lift_click"
+              }
+            ],
+            "target": "n009_orasoba_ajto"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n009_orasoba_ajto"
+          }
+        },
+        {
+          "id": "c_n008_felrohansz",
+          "text": "Félreugrasz az útjából, és egyenesen felszaladsz a negyedikre",
+          "target": "n009_orasoba_ajto"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n009_orasoba_ajto",
+      "title": "A belülről reteszelt Óraszoba",
+      "text": "A negyedik emeleti folyosó végén vörös biztonsági LED villog a vastag tölgyfa ajtó fölött. Fenyves már térden áll előtte, és a zárba dugott kulcsa meg sem moccan: az ajtó belülről reteszelt, az ablakrács érintetlen, Pötyi rendszere pedig automatikus zárlatba kapcsolt.\n\n„Senki sem tudott bemenni!” — nyüszíti a kurátor. „De akkor miért vérzik valami az ajtóküszöb alatt?!”",
+      "choices": [
+        {
+          "id": "c_n009_potyi_beenged",
+          "text": "Szólsz Pötyinek, aki a kedves szavaidra emlékezve azonnal feloldja a zárat",
+          "condition": {
+            "type": "flag",
+            "flag": "potyi_friendly"
+          },
+          "target": "n010_orasoba_helyszin"
+        },
+        {
+          "id": "c_n009_zarfeltor",
+          "text": "Rövidre zárod a vésznyitó panelt a zsebedben lévő fémlappal",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "target": "n010_orasoba_helyszin"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n010_orasoba_helyszin"
+          }
+        },
+        {
+          "id": "c_n009_berug",
+          "text": "Nekifutsz és vállal berúgod a vészreteszt, mielőtt Zóra ideér",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n010_orasoba_helyszin"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n010_orasoba_helyszin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n010_orasoba_helyszin",
+      "title": "A szétvert vitrin és a Törött Óralánc",
+      "text": "Bent a levegőben ózon, olcsó parfüm és friss vér szaga keveredik. Az ablak sértetlen, a belső retesz a helyén, mégis: a középső vitrin üvege szilánkokban hever, az egyik biztonsági őr eszméletlenül, felszakadt szemöldökkel fekszik a szőnyegen, a Kálmán-kronométer pedig eltűnt.\n\nA bársonypárna mellett egy meleg, bizsergő aranylánc-darabot pillantasz meg — a Törött Óraláncot. Zsebre vágod, mielőtt bárki más észrevenné, majd körülnézel a bezárt szobában. Három nyom üvölt figyelemért, mielőtt levonod a következtetést.",
+      "choices": [
+        {
+          "id": "c_n010_pohar",
+          "text": "Megvizsgálod a kisasztalon maradt két pezsgőspoharat",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_pohar"
+            }
+          },
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "torott_oralanc"
+            }
+          ],
+          "target": "n011_nyom_pezsgospohar"
+        },
+        {
+          "id": "c_n010_vernyom",
+          "text": "Követed a szőnyegen látható vérfoltot és a csizmatalp nyomát",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_vernyom"
+            }
+          },
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "torott_oralanc"
+            }
+          ],
+          "target": "n012_nyom_vernyom"
+        },
+        {
+          "id": "c_n010_faliora",
+          "text": "Közelebbről megnézed a falon függő, ötven éve álló nagy díszórát",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_faliora"
+            }
+          },
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "torott_oralanc"
+            }
+          ],
+          "target": "n013_nyom_fali_ora"
+        },
+        {
+          "id": "c_n010_megfejtes",
+          "text": "Összeállt a kép — megfejted a bezárt szoba paradoxonát",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "torott_oralanc"
+            }
+          ],
+          "target": "n014_rejtv1_paradoxon"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n011_nyom_pezsgospohar",
+      "title": "Rúzsnyom és egy húszperces hazugság",
+      "text": "A kisasztalon álló két pohár közül az egyik félig tele van, és már egyáltalán nem pezseg — legalább fél órája töltötték ki. A másik viszont jéghideg, frissen gyöngyöző buborékokkal, a szélén vörös rúzs helyett valami sötét, ódon gyantaszagú pecsétviasz nyoma maradt.\n\nA csattanás és a tolvaj távozása között legfeljebb hat perc telt el, Pötyi kamerája pedig a szoba közepét látta 23:54-ig — utána viszont hat percre sötétbe borult a rendszer.",
+      "choices": [
+        {
+          "id": "c_n011_vissza",
+          "text": "Feljegyzed a poharak időkülönbségét, és visszatérsz a szoba közepére",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_pohar"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_two_glasses"
+            }
+          ],
+          "target": "n010_orasoba_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n012_nyom_vernyom",
+      "title": "A semmibe vezető csizmanyom",
+      "text": "A kiütött biztonsági őr mellett két vércsepp a vitrin felé mutat, ám egy harmadik, friss talpnyom finom, fehér mészporral van tele — és pontosan a belső falnál, az ajtótól legtávolabbi sarkon ér véget.\n\nA szellőzőrács túl szűk egy felnőtt embernek, a csavarjai is be vannak rozsdásodva. Viszont a falburkolat egyik aranyozott léce alatt friss, kézzel letört vakolatpor csillog a vészlámpa fényében.",
+      "choices": [
+        {
+          "id": "c_n012_vissza",
+          "text": "Megjegyzed a fal melletti vakolatport, és tovább keresgélsz",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_vernyom"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_plaster_dust"
+            }
+          ],
+          "target": "n010_orasoba_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n013_nyom_fali_ora",
+      "title": "A 23:54-kor megállt díszóra",
+      "text": "A fal közepén egy kétméteres, faragott mahagóni állóóra áll, amelynek elvileg már ötven éve nem jár a szerkezete. Csakhogy amikor közel hajolsz hozzá, a tenyeredben lévő Törött Óralánc hirtelen forrósodni kezd — és a díszóra mutatói nem éjfélkor, hanem pontosan 23:54-en állnak.\n\nA tok oldalán alig látható kulcslyuk sötétlik, alatta pedig a padlószőnyeg szálai félkörívben befelé vannak nyomódva, mintha maga az egész mahagóni szekrény egy rejtett zsanéron elfordult volna.",
+      "choices": [
+        {
+          "id": "c_n013_vissza",
+          "text": "Ez nem egyszerű díszóra… visszafordulsz a szoba közepére",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_faliora"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_hinged_clock"
+            }
+          ],
+          "target": "n010_orasoba_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n014_rejtv1_paradoxon",
+      "title": "1. Logikai feladvány: A Bezárt Szoba Paradoxona",
+      "text": "Zóra és Fenyves már a küszöbön vitatkoznak, miközben Pötyi rendszere újraindul, és öt másodperc múlva végleg lezárja a belső nyomokat. Neked most azonnal meg kell mondanod, hogyan tűnt el a tolvaj a belülről reteszelt Óraszobából 23:54-kor!",
+      "choices": [
+        {
+          "id": "c_n014_valasz_helyes",
+          "text": "„A falba épített mahagóni díszóra mögött forgóajtós szervizüreg van — 23:54-kor azon át lépett ki!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "solved_puzzle_1_lock"
+            }
+          ],
+          "target": "n015_rejtv1_siker"
+        },
+        {
+          "id": "c_n014_valasz_rossz_ablak",
+          "text": "„Kiugrott a rácsos ablakon egy drónra, aztán visszahúzta a rácsot!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n016_rejtv1_kudarc"
+        },
+        {
+          "id": "c_n014_valasz_rossz_or",
+          "text": "„A kiütött őr maga volt a tolvaj, és lenyelte az órát!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n016_rejtv1_kudarc"
+        },
+        {
+          "id": "c_n014_valasz_rossz_szellozo",
+          "text": "„Bemászott a húszcentis szellőzőrácsba és visszacsavarozta belülről!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n016_rejtv1_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n015_rejtv1_siker",
+      "title": "A mahagóni óratok kattanása",
+      "text": "Még Zóra gúnyos nevetése sem ér véget, amikor egy határozott mozdulattal elfordítod a díszóra mutatóit 23:54-ről éjfélre. A falból fémes kattanás hallatszik, és az egész kétméteres mahagóni szekrény hangtalanul kifordul a helyéről.\n\nMögötte egy szűk, rézlemezekkel borított fülke tárul fel — benne egy háromtárcsás Időszéf (1928 / 1979 / 2029 vésetekkel) és a levegőben vibráló, kékes-arany fényörvény, amelybe a Törött Óralánc szinte bele akar rántani. Zóra döbbenten tátja el a száját, te pedig beveted magad a fülkébe és becsapod magad mögött az órát.",
+      "choices": [
+        {
+          "id": "c_n015_tovabb",
+          "text": "Megérinted az Időszéf hideg rézkeretét a Törött Óralánccal",
+          "target": "n017_elso_idougras"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n016_rejtv1_kudarc",
+      "title": "Zóra pofonja és a véletlen felfedezés",
+      "text": "Zóra egy pillanatig meredten néz rád, majd nevetés helyett egy olyan elegáns, mégis csattanós pofont ad, hogy a falnak tántorodsz — pont neki a hatalmas mahagóni díszórának (-2 Életerő).\n\n„Hagyjuk a hülye elméleteket!” — sziszegi, de mielőtt folytathatná, a díszóra a súlyodtól kattan egyet, és elfordul a rejtett zsanérján! Mögötte egy rézfülke és egy háromtárcsás Időszéf tárul fel, a zsebedben lévő Törött Óralánc pedig izzani kezd. Nem gondolkodsz kétszer: beugrasz a fülkébe, és bezárod az ajtót Zóra orra előtt.",
+      "choices": [
+        {
+          "id": "c_n016_tovabb",
+          "text": "Megragadod az Időszéf rejtélyes fogantyúját az örvény közepén",
+          "target": "n017_elso_idougras"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n017_elso_idougras",
+      "title": "Zuhanás száz éven át",
+      "text": "A Törött Óralánc kéken felizzik a tenyeredben, és a fülke padlója eltűnik a lábad alól. Körülötted neonreklámok, régi szocialista Trabant-lámpák és húszas évekbeli gázlámpák villannak fel visszafelé pörgő filmkockákként. A füledben fület tépő óraketyegés dübörög.\n\nMost minden azon múlik, egyben tudod-e tartani a fejed ebben az időörvényben (a Törött Óralánc +1 Idegek bónuszt ad).",
+      "choices": [
+        {
+          "id": "c_n017_ugras",
+          "text": "Megkapaszkodsz a láncban, és belépsz a legalsó fénykapuba",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n018_erkezes_1928"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n018_erkezes_1928"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n018_erkezes_1928",
+      "title": "Budapest, 1928: Fekete Kakadu",
+      "text": "Nedves macskakőre huppansz egy sikátorban, és az orrodat rögtön megcsapja a szénfüst, az olcsó kölni és a friss lótrágya összetéveszthetetlen bukéja. A fejed fölött gázlámpa sistereg, a szomszédos pincelejárónál pedig egy vörös neon nélküli, mégis harsány cégtábla lóg: „FEKETE KAKADU – ÉJSZAKAI MULATÓ”.\n\nBentől forró dzsessz, pezsgősdugók durranása és női nevetés szűrődik ki. A zsebedben még meleg a Törött Óralánc — pontosan egy évszázaddal korábban vagy, ugyanabban a palotában, az első lopás estéjén.",
+      "choices": [
+        {
+          "id": "c_n018_belep_kakaduba",
+          "text": "Megigazítod a gallérodat, és elindulsz lefelé a Fekete Kakadu lépcsőjén",
+          "target": "n019_kakadu_bejarat"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n019_kakadu_bejarat",
+      "title": "Kőműves Feri és a selyemfüggöny",
+      "text": "A Fekete Kakadu vörös bársonyfüggönye előtt egy kétajtós szekrény méretű, kackiás bajszú kidobó, Kőműves Feri támasztja a falat. Ahogy végigméri a száz évvel későbbi szabású kabátodat, úgy húzza fel a szemöldökét, mintha egy eltévedt marslakót látna.\n\n„Jó estét, uraság — vagy nagyságos asszony” — morogja, és megropogtatja az öklét. „Ma zártkörű este van: Kálmán Oszkár úr pezsgőjéből csak meghívóval lehet inni. A hátsó udvarban amúgy is van egy sötét szénledobó, ha nagyon fázna.”",
+      "choices": [
+        {
+          "id": "c_n019_bloff",
+          "text": "Rávillantasz egy pimasz mosolyt, és Kálmán Oszkár bizalmasának adod ki magad",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "target": "n020_kakadu_pult"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n021_hatso_sikator"
+          }
+        },
+        {
+          "id": "c_n019_piazas",
+          "text": "Farkasszemet nézel Ferivel, és lehúzol egy kupica gyanús házi szilvát az asztalkájáról",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n020_kakadu_pult"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n021_hatso_sikator"
+          }
+        },
+        {
+          "id": "c_n019_oldalajto",
+          "text": "Nem vitatkozol az öklével — megkerülöd az épületet a hátsó sikátor felé",
+          "target": "n021_hatso_sikator"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n020_kakadu_pult",
+      "title": "A Fekete Kakadu füstös forgataga",
+      "text": "Odabent aranyló szivarfüst úszik a kristálycsillárok alatt, a kis színpadon egy rézfúvós szextett tépi a charlestont, a sarkokban pedig selyemharisnyás lányok és monoklis bankárok nevetgélnek. A bárpult mögötti falióra pontosan 23:10-et mutat — ötven perc múlva az emeleten eldördül a végzetes lövés, vagy legalábbis mindenki azt hiszi majd.\n\nHárom irányból is szagot foghatsz a mulatóban: Vörös Lola öltözője felől parfümszag és veszekedés száll, Báró Székely kártyaszobájából koccintás hallatszik, a pincei kazánház ajtajánál pedig egy hallgatag inas figyel. Ha pedig fáj a törődés, a pultnál még frissíthetsz is az éjfél előtt.",
+      "choices": [
+        {
+          "id": "c_n020_lola",
+          "text": "Elsétálsz a kulisszák mögé, Vörös Lola öltözőjéhez",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_lola_1928"
+            }
+          },
+          "target": "n022_lola_oltozo_elott"
+        },
+        {
+          "id": "c_n020_szekely",
+          "text": "Belépsz a bársonyfüggönyön át Báró Székely privát kártyaszobájába",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_szekely_1928"
+            }
+          },
+          "target": "n026_szekely_kartyaszoba"
+        },
+        {
+          "id": "c_n020_pince",
+          "text": "Követed a szótlan inast lefelé a pincei kazánház lépcsőjén",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_pince_1928"
+            }
+          },
+          "target": "n030_kazanhaz_lejaro"
+        },
+        {
+          "id": "c_n020_barpult",
+          "text": "Megpihensz egy percre a bárpultnál egy pohár tokajira és egy feketére",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "healed_1928"
+            }
+          },
+          "target": "n034_kakadu_bar_piheno"
+        },
+        {
+          "id": "c_n020_ejfel",
+          "text": "Közeleg a 23:45-ös finálé — felállsz a színpad közelébe figyelni az éjfélt",
+          "target": "n035_ejfeli_loves_1928"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n021_hatso_sikator",
+      "title": "Szénledobó és pincelépcső",
+      "text": "A hátsó sikátorban két macska veszekszik egy heringfejen, mellettük pedig nyitva tátong a konyhai szénledobó és egy rozsdás vasajtó. Odabentről egy pincér szitkozódása és szódásszifonok sziszegése hallatszik.\n\nA fogason még egy kikeményített fehér pincérkötény is lóg — ha ügyesen besurransz, senki sem kérdez majd meghívót a pultnál.",
+      "choices": [
+        {
+          "id": "c_n021_lopakodas",
+          "text": "Felkapod a pincérkötényt, és hangtalanul becsusszansz a mulatóba",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "disguise_1928"
+              }
+            ],
+            "target": "n020_kakadu_pult"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n020_kakadu_pult"
+          }
+        },
+        {
+          "id": "c_n021_beoson",
+          "text": "Megvárod, míg a pincér hátat fordít, és egyszerűen besétálsz a bárba",
+          "target": "n020_kakadu_pult"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n022_lola_oltozo_elott",
+      "title": "Jázminparfüm és csattanó ajtó",
+      "text": "A kulisszák mögötti keskeny folyosón fojtott, rekedt hangú veszekedés zaja verődik vissza a csempékről: „Ha még egyszer a szádra veszed az örökséget, Oszkár, én magam tépem ki a bajszodat!”\n\nEgy felpörgetett pincér épp egy jeges pezsgősvödörrel szalad el melletted, Lola öltözője előtt pedig a díszlettervező támasztja unottan az ajtót. Ha most nem jutsz be stílusosan, marad a hátsó kellékfolyosó.",
+      "choices": [
+        {
+          "id": "c_n022_sarm",
+          "text": "Úri mosollyal meggyőzöd a díszletest, hogy Lola sürgős táviratot vár tőled",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "target": "n023_lola_oltozoje"
+          },
+          "failure": {
+            "target": "n024_lola_kulissza"
+          }
+        },
+        {
+          "id": "c_n022_kopog",
+          "text": "Megkerülöd a kelléktár felé, hátha beleleshetsz a pincér főkönyvébe is",
+          "target": "n024_lola_kulissza"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n023_lola_oltozoje",
+      "title": "Vörös Lola tükre előtt",
+      "text": "Várady „Vörös” Lola vörös selyemkimonóban, púderecsettel a kezében fordul feléd a villanykörtés tükör elől. Szemében annyi füst és irónia van, hogy két pesti újságírót is reggelire megenne.\n\n„Na végre valaki, akinek nincs monoklija” — fújja ki a szippantásnyi cigarettafüstöt. „Ha Oszkár miatt jöttél, elkéstél: 23:15-kor kinyitottuk az első üveg pezsgőjét odafent az Óraszobában, aztán összevesztünk azon a nyomorult háromtárcsás zsebórán, és 23:30-kor leléptem. Fél óra múlva, 23:45-től éjfélig a színpadon énekelek kétszáz részeg előtt. Tessék, itt ez a parfümös levelecske az asztalon — szerinted mire készül az a vén kéjenc?”",
+      "choices": [
+        {
+          "id": "c_n023_meggyoz",
+          "text": "Őszintén figyelmezteted Lolát, hogy ma éjjel valaki rá akarja kenni a gyilkosságot",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "lola_ally"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          }
+        },
+        {
+          "id": "c_n023_elemez",
+          "text": "Megvizsgálod a levél aláírását és az asztalon felejtett pezsgősszámlát",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "lola_ally"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          }
+        },
+        {
+          "id": "c_n023_elcsen",
+          "text": "Amíg a rúzsát keresi, gyorsan zsebre vágod a Parfümös Levelet és visszahúzódsz",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              },
+              {
+                "type": "addItem",
+                "itemId": "parfumos_level"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_bottle1"
+              },
+              {
+                "type": "setFlag",
+                "flag": "visited_lola_1928"
+              }
+            ],
+            "target": "n025_lola_szovetseg"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n024_lola_kulissza",
+      "title": "A pincér italkönyve a kelléktárban",
+      "text": "A kellékek és tollboák között a főpincér nyitott italkönyvére bukkansz az asztalon. A mai dátumnál három tétel virít Kálmán Oszkár negyedik emeleti Óraszobájára írva: három palack 1921-es francia pezsgő — egyet még 23:15-kor vittek fel, egyet a kandalló mellé kértek előre, a harmadikat pedig Báró Székely rendelte meg 23:50-re.\n\nHárom üveg egyetlen órára kicsit sok még egy mágnásnak is. Mielőtt bárki észrevenne, kopogsz és belépsz Lola öltözőjébe.",
+      "choices": [
+        {
+          "id": "c_n024_belep",
+          "text": "Megjegyzed a három pezsgős tételt, és belépsz Lola ajtaján",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_ledger"
+            }
+          ],
+          "target": "n023_lola_oltozoje"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n025_lola_szovetseg",
+      "title": "Az éjféli nagy szám előtt",
+      "text": "A zsebében lapul már a jázminillatú Parfümös Levél, Lola pedig egy utolsó mozdulattal megigazítja vörös selyemkesztyűjét. A színpadmester már az ajtóban toporog: öt perc múlva kezdődik az éjféli műsorszám.\n\n„Figyelj ide” — kacsint vissza a válla fölött. „23:45-től egészen éjfélig a reflektor alatt állok. Ha odafent bármi történik, én tiszta vagyok — de ha tényleg bűnbakot keresnek, találkozunk még a lépcsőházban.”",
+      "choices": [
+        {
+          "id": "c_n025_vissza",
+          "text": "Bólintasz, és visszasétálsz a Fekete Kakadu nagytermébe",
+          "target": "n020_kakadu_pult"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n026_szekely_kartyaszoba",
+      "title": "Báró Székely zöld posztója",
+      "text": "A bársonyfüggöny mögötti félhomályban Báró Székely Artúr, Kálmán Oszkár cinikus ügyvédje és kártyapartnere terpeszkedik a zöld posztó fölött. Aranyozott ezüst cigarettatárcája mellett egy üres pezsgősvödör és egy frissen írt ügyvédi meghatalmazás fekszik.\n\n„Egy újabb szerencsevadász?” — mormolja a báró, miközben gépiesen keveri a francia kártyát. „Üljön le egy kör pókerre, ha már bejött. Mondjuk úgy… tíz perc múlva úgyis fel kell szaladnom az emeletre aláírni egy apró kis végrendelet-módosítást.”",
+      "choices": [
+        {
+          "id": "c_n026_poker",
+          "text": "Beülsz egy vakmerő emelésre, hogy a szeme elárulja a blöffjét",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "target": "n027_poker_gyozelem"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n028_poker_bukas"
+          }
+        },
+        {
+          "id": "c_n026_kifigyel",
+          "text": "Inkább az asztalon heverő jegyzettömböt és az órájára vetett pillantásait olvasod le",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "target": "n027_poker_gyozelem"
+          },
+          "failure": {
+            "target": "n028_poker_bukas"
+          }
+        },
+        {
+          "id": "c_n026_ellop",
+          "text": "Amíg a poharáért nyúl, kiemelsz egy cédulát a nyitott tárcája mellől",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n027_poker_gyozelem"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n028_poker_bukas"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n027_poker_gyozelem",
+      "title": "A báró ideges pillantása az órára",
+      "text": "Székely szája sarka megrándul, amikor az asztalra dobod a lapokat — vagy amikor leolvasod a tükörben az asztalán heverő számlát. Székely 23:45-kor készül felmenni az Óraszobába, és kifejezetten meghagyta a pincérnek, hogy két további pezsgőt tartsanak fent: az egyik jegelve várja 23:50-re, a másik pedig már rég a kandalló melletti asztalkán melegszik.\n\n„Elég ebből a játékból” — csattan fel hidegen, és feláll. „Negyed óra múlva fent találkozunk a pezsgőnél, ha mer.”",
+      "choices": [
+        {
+          "id": "c_n027_kovet",
+          "text": "Elrakod a zsebedbe a két pezsgőről szóló adatot, és feljegyzed Székely 23:45-ös távozását",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_szekely_gap"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_bottle2"
+            },
+            {
+              "type": "setFlag",
+              "flag": "visited_szekely_1928"
+            }
+          ],
+          "target": "n029_szekely_nyom"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n028_poker_bukas",
+      "title": "Kidobva a kártyaasztaltól",
+      "text": "Báró Székely gúnyosan felnevet, és a két testőre olyan finoman tesz ki a bársonyfüggönyön, hogy a bordád még két percig sajog utána. Azért a csukódó ajtón át még tisztán hallod, amint az órájára néz:\n\n„23:45-kor indulok felfelé Oszkárhoz. Szólj a fiúnak, hogy a jégbe hűtött pezsgő pontosan 23:50-kor legyen az ajtó előtt — az éjféli koccintást pedig bízza rám.”",
+      "choices": [
+        {
+          "id": "c_n028_osszeszed",
+          "text": "Leporolod a kabátodat, és megjegyzed Székely 23:45-ös menetrendjét",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_szekely_gap"
+            },
+            {
+              "type": "setFlag",
+              "flag": "visited_szekely_1928"
+            }
+          ],
+          "target": "n029_szekely_nyom"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n029_szekely_nyom",
+      "title": "Egy ügyvéd túl pontos alibije",
+      "text": "A kártyaszoba ajtaja mögött állva összeáll benned az első gyanús részlet: Báró Székely 23:45-től bő tíz percre eltűnik a vendégek szeme elől, pont akkor, amikor Lola már a színpadon énekel — mégis valamiért 23:50-re is felrendelt egy jéghideg pezsgőt. Ha ma éjjel gyilkosság lesz, az időzítésben bűzlik valami.",
+      "choices": [
+        {
+          "id": "c_n029_vissza",
+          "text": "Visszalépsz a nagyterem nyüzsgésébe",
+          "target": "n020_kakadu_pult"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n030_kazanhaz_lejaro",
+      "title": "A hallgatag Órásinas a kazánházban",
+      "text": "A pincei kazánházban szénpor, olaj és vörösréz szaga terjeng. A lüktető kazán mellett egy fiatal, vézna fiú áll zsíros kötényben — a kezében egy súlyos sárgaréz kulcsot tart, a bal mutatóujján pedig egy ismerős, nehéz arany pecsétgyűrű csillan meg. Pont ugyanolyan, mint a 2029-es Maszkos Licitáló ujján.\n\nA fiú nem szól egy szót sem, csak a tenyeredbe nyomja a Sárgaréz Szellőzőkulcsot, majd két dologra mutat a sötétben: egy meglazult, fehér krétával „79”-esre jelölt téglára a lomtár-szellőző mellett, és egy keskeny, felfelé futó régi étellift-aknára.",
+      "choices": [
+        {
+          "id": "c_n030_kulcs_eltesz",
+          "text": "Elveszed a Sárgaréz Szellőzőkulcsot, és követed az inas mutatóujját",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "rezkulcs_1928"
+            }
+          ],
+          "target": "n031_inas_alkuja"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n031_inas_alkuja",
+      "title": "Az idővonal két halk csavarja",
+      "text": "A kazánház órája 23:40-et mutat. Az Órásinas szótlanul várja, mit teszel a jelzett téglával és a felső emeletre futó étellift-aknával. Ha a kulcsot elrejted itt 1928-ban, fél évszázaddal később talán még ott vár; ha pedig felkémlelsz az ételliften, még a lövés előtt elérheted az Óraszoba előtti kronométert.",
+      "choices": [
+        {
+          "id": "c_n031_elrejt_kulcs",
+          "text": "Kifeszíted a krétával jelölt téglát, és elrejted mögé a Sárgaréz Szellőzőkulcsot 1979-re",
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "hasItem",
+                "itemId": "rezkulcs_1928"
+              },
+              {
+                "type": "not",
+                "condition": {
+                  "type": "flag",
+                  "flag": "key_hidden_1928"
+                }
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "removeItem",
+              "itemId": "rezkulcs_1928"
+            },
+            {
+              "type": "setFlag",
+              "flag": "key_hidden_1928"
+            }
+          ],
+          "target": "n032_falba_rejtett_kulcs"
+        },
+        {
+          "id": "c_n031_etellift",
+          "text": "Felhúzod magad a szűk étellift kötelén a negyedik emeleti Óraszoba faláig",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "tried_mark_watch_1928"
+            }
+          },
+          "target": "n033_ora_megkarcolasa"
+        },
+        {
+          "id": "c_n031_vissza",
+          "text": "Búcsút intesz az inasnak, és visszasétálsz a Fekete Kakadu bárjába",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_pince_1928"
+            }
+          ],
+          "target": "n020_kakadu_pult"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n032_falba_rejtett_kulcs",
+      "title": "Üzenet ötven év múlva",
+      "text": "A laza tégla mögött száraz, koromtól fekete üreg tátong. Belehelyezed a Sárgaréz Szellőzőkulcsot, majd óvatosan visszatolod a téglát a helyére. Az Órásinas bólint egyet — mintha pontosan tudná, hogy fél évszázad múlva egy szotyihéjas pesti pultosnak vagy neked lesz még rá szükséged.\n\nA kezed poros, de a múltba éppen bevéstél egy apró biztonsági hálót.",
+      "choices": [
+        {
+          "id": "c_n032_vissza_kazan",
+          "text": "Lemorzsolod a téglaport a kabátodról, és visszafordulsz a kazánházba",
+          "target": "n031_inas_alkuja"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n033_ora_megkarcolasa",
+      "title": "Az étellift résén át: a Kálmán-kronométer",
+      "text": "23:42-kor a szűk étellift faajtaját egy centire résre nyitod a negyedik emeleten. Az Óraszoba még üres! A mahagóni íróasztalon ott fekszik érintetlenül az arany-obszidián Kálmán-kronométer, mellette pedig az égő kandalló párkányán egy már bontatlan, gyanúsan drótozott pezsgősüveg melegszik a parázs közelében.\n\nHa most kinyújtod a kezed egy acélszöggel, egy apró X-et karcolhatsz a kronométer hátlapjába — hogy 1979-ben azonnal felismerd az igazit a hamisítványok között. Csak nehogy zajt csapj a fal túloldalán!",
+      "choices": [
+        {
+          "id": "c_n033_karcol_ugyesseg",
+          "text": "Gyors, sebészi mozdulattal apró X-et karcolsz a kronométer hátlapjába",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "watch_marked_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "tried_mark_watch_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_hearth_bottle"
+              }
+            ],
+            "target": "n031_inas_alkuja"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              },
+              {
+                "type": "setFlag",
+                "flag": "tried_mark_watch_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_hearth_bottle"
+              }
+            ],
+            "target": "n031_inas_alkuja"
+          }
+        },
+        {
+          "id": "c_n033_karcol_idegek",
+          "text": "Visszafojtott lélegzettel, rezzenéstelen kézzel nyúlsz át a sötét résen",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "watch_marked_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "tried_mark_watch_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_hearth_bottle"
+              }
+            ],
+            "target": "n031_inas_alkuja"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              },
+              {
+                "type": "setFlag",
+                "flag": "tried_mark_watch_1928"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1928_hearth_bottle"
+              }
+            ],
+            "target": "n031_inas_alkuja"
+          }
+        },
+        {
+          "id": "c_n033_csak_figyel",
+          "text": "Nem kockáztatsz — csak megjegyzed a kandalló melletti üveget, és visszacsúszol",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "tried_mark_watch_1928"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_hearth_bottle"
+            }
+          ],
+          "target": "n031_inas_alkuja"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n034_kakadu_bar_piheno",
+      "title": "1919-es aszú és két szem fekete",
+      "text": "A csapos egy meleg törölköző mellett két ujjnyi 1919-es tokaji aszút és egy csésze sűrű, méregerős presszókávét csúsztat eléd. A pesti éjszaka két perce még fájt, de a bor édes melege és a kávé rögtön helyrerakja a lüktető halántékodat (+3 Életerő).\n\nKözben a pultnál két pincér arról sugdos, hogy Vörös Lola pont 23:45-kor lép színpadra, és az éjfélig tartó fináléja alatt még a csillárok is beleremegnek.",
+      "choices": [
+        {
+          "id": "c_n034_gyogyul",
+          "text": "Lehajtod a kávét, és újult erővel visszafordulsz a terem felé",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": 3
+            },
+            {
+              "type": "setFlag",
+              "flag": "healed_1928"
+            }
+          ],
+          "target": "n020_kakadu_pult"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n035_ejfeli_loves_1928",
+      "title": "23:54: Villanás, aztán az éjféli durranás",
+      "text": "23:45-kor Vörös Lola kilép a reflektorfénybe, és a teljes mulató néma csendben issza minden szavát. Pontosan 23:54-kor — amikor a rezesbanda a legnagyobb fortissimót fújja — a csillárok egy pillanatra baljósan megremegnek, mintha valahol a házban megnyílt volna egy láthatatlan örvény.\n\n23:58-kor Báró Székely ráérősen, makulátlan frakkban sétál le a lépcsőn a nagyterembe, és hangosan rákacsint a bárpultnál álló bíróra. Majd pontban éjfélkor — 00:00-kor — a negyedik emeletről olyan fülsiketítő durranás hallatszik, hogy még Lola éneke is elakad!",
+      "choices": [
+        {
+          "id": "c_n035_elore_fut",
+          "text": "Átugrod a felborult székeket, és mindenki előtt felsprintelsz a negyedikre",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "first_at_scene_1928"
+              }
+            ],
+            "target": "n036_orasoba_1928_helyszin"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n036_orasoba_1928_helyszin"
+          }
+        },
+        {
+          "id": "c_n035_szekely_mellett",
+          "text": "Székely nyomában rohansz felfelé, szemmel tartva a báró minden rezdülését",
+          "target": "n036_orasoba_1928_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n036_orasoba_1928_helyszin",
+      "title": "Lőporfüst és pezsgőszilánkok az Óraszobában",
+      "text": "Amikor feltöritek az Óraszoba ajtaját, odabent csípős füst és édes pezsgőszag gomolyog. Kálmán Oszkár a mahagóni íróasztalra borulva fekszik — halott, szíven lőtték, a Kálmán-kronométer pedig ismét eltűnt az asztalról.\n\nA báró drámaian a mellkasához kap: „Szörnyűség! Hiszen pont éjfélkor dördült el a lövés, amikor én már két perce lent álltam a bíró úrral!” Három árulkodó részlet ordít figyelmet kérve, mielőtt Székely elviszi a balhét — vagy megússza.",
+      "choices": [
+        {
+          "id": "c_n036_holttest",
+          "text": "Megvizsgálod Kálmán Oszkár holttestét, a párnát és a zsebóráját",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_1928_body"
+            }
+          },
+          "target": "n037_nyom_zsebora_2354"
+        },
+        {
+          "id": "c_n036_uvegek",
+          "text": "Megszámolod és megtapogatod a szobában heverő három pezsgősüveget",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_1928_bottles"
+            }
+          },
+          "target": "n038_nyom_harom_uveg"
+        },
+        {
+          "id": "c_n036_kandallo",
+          "text": "Benézel a parázsló kandallóhoz és a fal mellett álló nagy mahagóni órához",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "inspected_1928_hearth"
+            }
+          },
+          "target": "n039_nyom_kandallo_ora"
+        },
+        {
+          "id": "c_n036_megfejtes",
+          "text": "Minden adat a kezedben van — leleplezed az éjféli trükköt",
+          "target": "n040_rejtv2_pezsgo_ora"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n037_nyom_zsebora_2354",
+      "title": "A 23:54-kor összeroppant zsebóra",
+      "text": "Kálmán Oszkár mellényzsebében egy olcsóbb ezüst zsebóra lapul, amelynek üvegét átszakította a halálos golyó. A mutatói pontosan 23:54-re görbülve állnak. A seb körül egyáltalán nincs lőporkorom — viszont a díványon heverő díszes bársonypárna közepén feketére pörkölt, átlőtt lyuk tátong, mintha rajta keresztül fojtották volna el a valódi lövést.\n\nVagyis amikor 23:54-kor lent szólt a rézfúvósok fináléja, senki nem hallotta meg a tompított pisztolyt.",
+      "choices": [
+        {
+          "id": "c_n037_vissza",
+          "text": "Feljegyzed a 23:54-es zsebórát és az átlőtt párnát, majd körülnézel még",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_1928_body"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_2354_death"
+            }
+          ],
+          "target": "n036_orasoba_1928_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n038_nyom_harom_uveg",
+      "title": "Három palack pezsgő története",
+      "text": "A szobában pontosan három pezsgősüveg nyoma látszik, pontosan úgy, ahogy a pincér italkönyvében is szerepelt. Az I. számú üveg meleg és félig ki van öntve a dívány mellett (ezt nyitotta ki Lola és Oszkár 23:15-kor). A II. számú üveg bontatlanul, érintetlen jégvödörben hűl az ajtó mellett (ezt hozták fel 23:50-kor).\n\nA III. számú palack viszont ezer szilánkra robbant a kandalló kövén — zöld üvegcserép, felpöndörödött aranyfólia és egy meggörbült rézdrót maradt utána, golyónyomnak azonban nyoma sincs a falon vagy a mennyezeten.",
+      "choices": [
+        {
+          "id": "c_n038_vissza",
+          "text": "Összeveted a három palack hőmérsékletét és állapotát, majd visszatérsz középre",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_1928_bottles"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_three_bottles"
+            }
+          ],
+          "target": "n036_orasoba_1928_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n039_nyom_kandallo_ora",
+      "title": "Drótozott parázs és kormos zsanér",
+      "text": "A kandalló parazsa mellett egy megpörkölődött rézdrót-hurok és letört kanóc maradványa bűzlik — valaki szándékosan tolta a tűz közelébe a zárt pezsgőspalackot, hogy a felhevült nyomás pontosan éjfél körül durranjon el, mint egy ágyúlövés.\n\nÉs néhány lépéssel arrébb a vadonatúj mahagóni állóóra mutatói már 1928-ban is 23:54-en állnak, a zsanérján pedig friss koromcsík húzódik. Valaki az imént ezen a titkos rézfülkén át lépett le!",
+      "choices": [
+        {
+          "id": "c_n039_lola_sugo",
+          "text": "Lola csendesen odasúgja a hátad mögött: „Székely 23:58-kor jött le, bőven a durranás előtt!”",
+          "condition": {
+            "type": "flag",
+            "flag": "lola_ally"
+          },
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_1928_hearth"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_rigged_bottle"
+            }
+          ],
+          "target": "n036_orasoba_1928_helyszin"
+        },
+        {
+          "id": "c_n039_vissza",
+          "text": "Elrakod a megpörkölődött rézdrót képét a fejedbe, és visszafordulsz",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "inspected_1928_hearth"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1928_rigged_bottle"
+            }
+          ],
+          "target": "n036_orasoba_1928_helyszin"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n040_rejtv2_pezsgo_ora",
+      "title": "2. Logikai feladvány: Három pezsgősüveg és a 23:54-es zsebóra",
+      "text": "A vendégek már az ajtóban tolonganak, Báró Székely pedig diadalmasan mutat az órájára, mondván, ő 23:58 óta lent volt a bíróval, tehát nem lőhetett éjfélkor.\n\nEmlékezz a tényekre: Lola 23:45-től éjfélig a színpadon énekelt; az I. palack 23:15 óta meleg és félig tele van; a II. palack bontatlanul áll a 23:50-es jégben; a III. palack a parázsló kandalló mellett robbant szét; Oszkár zsebórája pedig 23:54-re állt meg, az átlőtt párna mellett. Mi történt valójában ma éjjel?",
+      "choices": [
+        {
+          "id": "c_n040_helyes",
+          "text": "„Székely 23:54-kor a párnán át lőtte le Oszkárt a rézfúvósok alatt, a III. pezsgőt pedig a parázsra állította, hogy 00:00-kor robbanjon és hamis alibit adjon!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "solved_puzzle_2_bottles"
+            },
+            {
+              "type": "setFlag",
+              "flag": "code_part_1"
+            },
+            {
+              "type": "addItem",
+              "itemId": "hangvilla_kulcs"
+            }
+          ],
+          "target": "n041_rejtv2_siker"
+        },
+        {
+          "id": "c_n040_rossz_lola",
+          "text": "„Vörös Lola megmérgezte az I. számú pezsgősüveget 23:15-kor, Oszkár pedig csak éjfélkor dőlt össze!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n042_rejtv2_kudarc"
+        },
+        {
+          "id": "c_n040_rossz_inas",
+          "text": "„Az Órásinas bombát rejtett a bontatlan, jégbe hűtött II. pezsgőbe, és az végzett Oszkárral éjfélkor!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n042_rejtv2_kudarc"
+        },
+        {
+          "id": "c_n040_rossz_ongyilkos",
+          "text": "„Oszkár 23:54-kor saját magára lőtt biztosítási csalásból, és éjfélkor a szellemét hallottuk!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n042_rejtv2_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n041_rejtv2_siker",
+      "title": "A báró leleplezése és az 54-es hangvilla",
+      "text": "Székely arca falfehérre vált, amint a bíró és két megtermett pincér elállja az ajtót. A báró kétségbeesetten hátrál, és frakkzsebéből egy kétágú, finoman zengő sárgaréz kulcsot — az 1928-as Hangvilla-kulcsot, oldalán az „54” vésettel — ejt a szőnyegre, miközben felhördül:\n\n„A pokolba is! Igen, én lőttem le a vén zsugorit 23:54-kor — de amikor a zsebébe nyúltam, a Kálmán-kronométer már nem volt ott! Valaki más megelőzött egy perccel azelőtt, hogy lelöktem volna az üveget!” Felkapod a Hangvilla-kulcsot, és míg Székely az ablakon át próbál elmenekülni, te belépsz a kifordított mahagóni óra mögötti rézfülkébe.",
+      "choices": [
+        {
+          "id": "c_n041_idokapu",
+          "text": "Megpöccinted a Hangvilla-kulcsot az Időszéf 1979-es tárcsájához",
+          "target": "n043_masodik_idougras"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n042_rejtv2_kudarc",
+      "title": "Ezüstfejű sétabot és menekülés a fülkébe",
+      "text": "Székely gúnyosan felhorkant az erőtlen vádadon, és még mielőtt a vendégek felfognák a helyzetet, az ezüstfejű sétabotjával akkorát sóz a bordádra, hogy elakadt a lélegzeted. A földre zuhanva még hallod a sziszegését:\n\n„Ostoba kontár! Én már akkor sem találtam meg a kronométert, amikor 23:54-kor végeztem vele!” — veti oda, majd menekülőre fogja a folyosón, zsebéből viszont kiesik egy kétágú sárgaréz Hangvilla-kulcs, mielőtt te is beveted magad a mahagóni óra mögötti rézfülkébe.",
+      "choices": [
+        {
+          "id": "c_n042_elkap_kulcs",
+          "text": "Utánanyúlsz a csillogó Hangvilla-kulcsnak, mielőtt becsapódna mögötted a szekrény",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "hangvilla_kulcs"
+              }
+            ],
+            "target": "n043_masodik_idougras"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n043_masodik_idougras"
+          }
+        },
+        {
+          "id": "c_n042_bemenekul",
+          "text": "Nem kockáztatsz újabb ütést — egyenesen az Időszéf örvényébe veted magad",
+          "target": "n043_masodik_idougras"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n043_masodik_idougras",
+      "title": "Fél évszázad előre: 1928-ból 1979-be",
+      "text": "A Törött Óralánc ismét felizzik a tenyeredben, de ezúttal előrefelé ránt az időfolyamban: húszas évekbeli kalapok, háborús szirénák, neoncsöves presszók és ötvenévnyi por kavarog körülötted egy vakító, zümmögő rézspirálban.\n\nValaki 1928-ban is egy perccel Székely előtt járt az Óraszobában — és most az 1979-es tárcsa felé száguldasz. Tartsd meg a hidegvéred, vagy számold ki a becsapódás ütemét!",
+      "choices": [
+        {
+          "id": "c_n043_idegek",
+          "text": "Összeszorítod a fogad, és az Idegeidre hagyatkozva törsz át az 1979-es fénykapun",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n044_erkezes_1979"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n044_erkezes_1979"
+          }
+        },
+        {
+          "id": "c_n043_esz",
+          "text": "A ketyegés ütemét számolva lépsz ki pontosan az 1979-es rezonanciapontnál",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "target": "n044_erkezes_1979"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n044_erkezes_1979"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n044_erkezes_1979",
+      "title": "Budapest, 1979: Maszek alvilág és szotyihéj",
+      "text": "Egy kopott műbőr kanapéra huppansz egy félhomályos, diszkógömbös pesti pincelépcső alján. A levegőben Traubisoda, Symphonia cigaretta és csempészett nyugati farmer szaga keveredik, a hangszóróból pedig rekedt Neoton-sláger szól.\n\nA pult mögül egy mackófelsős, aranyfogú figura hajol ki, szájában napraforgómaggal: „Na szevasz, főnök! Te se a lépcsőn jöttél, mi? Itt van 1979. november 11., én vagyok Szotyis Béla — ha ma éjjel nem lopják el megint azt a nyavalyás aranyórát a negyediken, megeszem a trabantom rendszámtábláját!”",
+      "choices": [
+        {
+          "id": "c_n044_bela_pinceje",
+          "text": "Lesepered a 1928-as port a kabátodról, és belépsz Szotyis Béla füstös pincéjébe",
+          "target": "n045_bela_pinceklub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n045_bela_pinceklub",
+      "title": "Szotyihéj és nyugati farmer a pultnál",
+      "text": "Szotyis Béla szórakozottan leporol egy üres Traubisoda-üveget, közben tetőtől talpig végigméri a viharvert ruhádat. A sarokban két bőrdzsekis figura halkan vitatkozik egy kék diplomata-táska fölött, a táncparketten pedig alig látni a füsttől.\n\n„Na figyelj, cimbora” — hajol közelebb Béla tegeződve, halkabb hangra váltva. „Ma éjjel fenn a negyediken valami nagy dobás készül az öreg órával, lent meg Kardos Ilona fülkéjéből mindenki után hallgatóznak. Ha nem a rendőrségtől jöttél — bár ránézésre inkább egy időgépből estél ki —, eldöntheted, hogyan állsz hozzám.”",
+      "choices": [
+        {
+          "id": "c_n045_bela_sarm",
+          "text": "Pimaszul visszamosolyogsz, és felajánlod, hogy elintézed neki a fentiek egyik gondját",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "bela_ally"
+              }
+            ],
+            "target": "n046_1979_hub"
+          },
+          "failure": {
+            "target": "n046_1979_hub"
+          }
+        },
+        {
+          "id": "c_n045_bela_idegek",
+          "text": "Rezzenéstelen arccal leteszed az asztalra a Törött Óraláncot, hogy lássa, nem viccelsz",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "bela_ally"
+              }
+            ],
+            "target": "n046_1979_hub"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n046_1979_hub"
+          }
+        },
+        {
+          "id": "c_n045_tovabb",
+          "text": "Rákacsintasz Bélára, és inkább magad nézel körül a pinceklubban",
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n046_1979_hub",
+      "title": "1979. november 11., 23:10: A maszek alvilág",
+      "text": "A neonfényes pinceklub órája 23:10-et mutat — negyvennégy perc maradt 23:54-ig. A bár egyik oldalán Béla valutázó raktárának nehéz vasajtaja zárul, a másik sarkon egy füstös üveg mögött Kardos Ilona titkos lehallgatófülkéje bújik meg, hátul pedig a régi kazánház helyén egy poros órásműhely kattog.\n\nA negyedik emeleten eközben már gyülekeznek a nyugati csempészek a tiltott éjféli óraaukcióra. Merre indulsz először?",
+      "choices": [
+        {
+          "id": "c_n046_bela",
+          "text": "Benézel Béla valutázó raktárába és az 1928-as régi szellőzőfalhoz",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_bela_1979"
+            }
+          },
+          "target": "n047_bela_valutazo"
+        },
+        {
+          "id": "c_n046_ilona",
+          "text": "Bekopogsz Kardos Ilona lehallgatófülkéjébe",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_ilona_1979"
+            }
+          },
+          "target": "n053_ilona_lehallgato"
+        },
+        {
+          "id": "c_n046_muhely",
+          "text": "Lemész a hátsó folyosón az öreg pincei órásműhelybe",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_muhely_1979"
+            }
+          },
+          "target": "n058_orasmuhely_1979"
+        },
+        {
+          "id": "c_n046_piheno",
+          "text": "Iszol egy hideg kisfröccsöt és megrágcsálsz egy szendvicset Béla pultjánál",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "healed_1979"
+            }
+          },
+          "target": "n064_bela_froccs_piheno"
+        },
+        {
+          "id": "c_n046_aukcio",
+          "text": "Közeledik a csempész-aukció ideje — felmész a negyedik emeletre",
+          "target": "n065_csempesz_aukcio"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n047_bela_valutazo",
+      "title": "A lelakatolt lomtár és a 79-es tégla",
+      "text": "Béla hátsó folyosóján márkás farmerbálák, kék útlevél-másolatok és német márkás dobozok sorakoznak egy vastag, rozsdás szellőzőrács előtt. A lomtár ajtaján hatalmas sárgaréz lakat lóg — pont olyan, amilyenhez 1928-ban láttál egy kulcsot.\n\nMellette a régi téglafalon még ma is halványan látszik az ötven évvel korábban krétával megjelölt 79-es tégla körvonala.",
+      "choices": [
+        {
+          "id": "c_n047_tegla",
+          "text": "Kifeszíted a 79-es téglát — az 1928-ban elrejtett Sárgaréz Szellőzőkulcs pontosan ott vár!",
+          "condition": {
+            "type": "flag",
+            "flag": "key_hidden_1928"
+          },
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "rezkulcs_1928"
+            }
+          ],
+          "target": "n048_1928_kulcs_megtalalva"
+        },
+        {
+          "id": "c_n047_feltor",
+          "text": "Drótdarabbal esel neki a beállt sárgaréz lakatnak",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n049_lomtar_belso"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n051_bela_hatso_szoba"
+          }
+        },
+        {
+          "id": "c_n047_bela_segit",
+          "text": "Szólsz Bélának, aki barátságból odadobja a páncélozott feszítővasát",
+          "condition": {
+            "type": "flag",
+            "flag": "bela_ally"
+          },
+          "target": "n049_lomtar_belso"
+        },
+        {
+          "id": "c_n047_vissza",
+          "text": "Hagyod a lomtárat, és visszamész a pinceklubba",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_bela_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n048_1928_kulcs_megtalalva",
+      "title": "Fél évszázados pillangóhatás",
+      "text": "A tégla könnyedén kicsúszik a porból, mögötte pedig ott csillan az ötven éve elrejtett Sárgaréz Szellőzőkulcs, mintha csak tegnap tetted volna le. Egyetlen hangtalan fordulattal kinyitod a régi lomtár lakatját, mielőtt bárki meghallaná.",
+      "choices": [
+        {
+          "id": "c_n048_belep",
+          "text": "Belépsz a régi lomtár sötétjébe",
+          "target": "n049_lomtar_belso"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n049_lomtar_belso",
+      "title": "A titkos tetőterasz-alaprajz és egy elhallgatott fiú",
+      "text": "A lomtár dohos polcán, megsárgult 1928-as születési anyakönyvi kivonatok mellett egy gondosan feltekert Csempész-alaprajz hever, amely a Kálmán-palota tetőtéri szervizlétráit és titkos átjáróit jelöli. Zsebre vágod!\n\nAz egyik irat szélén egy kézzel írt megjegyzés akad a szemedbe: „Kálmán Oszkár eltitkolt fia, Kálmán Ádám — 1928 óta a palota gondozásában.” Odakintről azonban hirtelen bakancsdobogás és rendőrségi sziréna szűrődik le!",
+      "choices": [
+        {
+          "id": "c_n049_kimegy",
+          "text": "Összecsavarod az alaprajzot, és kilesel a folyosóra",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "csempesz_terkep"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_1979_secret_son"
+            }
+          ],
+          "target": "n050_bela_lebukas_veszely"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n050_bela_lebukas_veszely",
+      "title": "Razzia a maszek pincében!",
+      "text": "„Rendőrség! Mindenki a falhoz!” — üvölti egy túlbuzgó főhadnagy a lépcső tetejéről, miközben Béla villámgyorsan lekapcsolja a diszkógömböt és egy szőnyeg alá rúgja a valutás bőröndöt. Két egyenruhás már épp a folyosód felé fordul zseblámpával!",
+      "choices": [
+        {
+          "id": "c_n050_razzia_szerencse",
+          "text": "Vakmerő mázlira bízva behúzódsz a szennyeskosár és a farmerbálák közé",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "target": "n052_razzia_meguszva"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n052_razzia_meguszva"
+          }
+        },
+        {
+          "id": "c_n050_razzia_bloff",
+          "text": "Előlépsz, és rezzenéstelenül tűzvédelmi ellenőrnek adod ki magad",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "target": "n052_razzia_meguszva"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n052_razzia_meguszva"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n051_bela_hatso_szoba",
+      "title": "A zártörés ára és a maradék papír",
+      "text": "A rozsdás lakat visszacsap a hüvelykujjadra, mielőtt végül nagy csattanással enged. Bent felkapod a falra tűzött Csempész-alaprajzot a tetőtéri menekülőutakkal, de a zajra fentről máris megindul a razzia!",
+      "choices": [
+        {
+          "id": "c_n051_tovabb",
+          "text": "Zsebre tömöd az alaprajzot, és a lépcső felé nézel",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "csempesz_terkep"
+            }
+          ],
+          "target": "n050_bela_lebukas_veszely"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n052_razzia_meguszva",
+      "title": "Fülig vörös sál és tiszta levegő",
+      "text": "Béla egy köteg csempészett rágógumival és egy zsíros borítékkal pillanatok alatt „elrendezi a félreértést” a főhadnaggyal. Öt perc múlva a rendőrök már a szomszéd presszóban razziáznak, te pedig egy jókora szívességgel és egy titkos alaprajzzal gazdagodva térsz vissza a bárba.",
+      "choices": [
+        {
+          "id": "c_n052_vissza",
+          "text": "Lesepered a port, és visszasétálsz a 1979-es pinceközpontba",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_bela_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n053_ilona_lehallgato",
+      "title": "Kardos Ilona és a kétirányú tükör",
+      "text": "A sötétített üveg mögött, egy kék füstfelhőbe burkolózva Kardos Ilona ül két forgó orsós magnetofon között. Szikrázóan éles tekintete és fanyar, hűvös mosolya azonnal jelzi, hogy egyszerre játszik a nyugati vevőknek és a budapesti állambiztonságnak.\n\n„Jó estét” — fújja a füstöt a mikrofon fölé. „Ha az emeletről érkező hangszalagra kíváncsi, rossz hírem van: ma éjjel mindenki hazudik, még a szalagok is. Mit ajánl cserébe azért, ami ezen az orsón forog?”",
+      "choices": [
+        {
+          "id": "c_n053_flort",
+          "text": "Elhúzod előtte a 1928-as botrányok lapját, és sármmal egyenrangú alkut ajánlasz",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "ilona_deal"
+              }
+            ],
+            "target": "n054_ilona_alku"
+          },
+          "failure": {
+            "target": "n055_ilona_csapda"
+          }
+        },
+        {
+          "id": "c_n053_esz",
+          "text": "Rámutatsz a szalag vágási nyomaira, jelezve, hogy értesz a lehallgató-szakmához",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "ilona_deal"
+              }
+            ],
+            "target": "n054_ilona_alku"
+          },
+          "failure": {
+            "target": "n055_ilona_csapda"
+          }
+        },
+        {
+          "id": "c_n053_elcsen",
+          "text": "Amikor a tekerőgombhoz nyúl, egy gyors mozdulattal lekapod az asztalról a Kém-magnetofonszalagot",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "magnetofon_szalag"
+              }
+            ],
+            "target": "n056_szalag_megszerezve"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n055_ilona_csapda"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n054_ilona_alku",
+      "title": "Két ügynök egy asztalnál",
+      "text": "Ilona elismerően felvonja a szemöldökét, és egy halk kattanással leállítja a bal oldali gépet. „Ügyes. Ha az éjféli aukción elviszi a balhét az eladótól, én magam segítek megtalálni, hová tűnik az igazi óra 23:54-kor.” Kezedbe nyomja a Kém-magnetofonszalagot.",
+      "choices": [
+        {
+          "id": "c_n054_szalag",
+          "text": "Átveszed a Kém-magnetofonszalagot, és közelebbről megnézed a tekercset",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "magnetofon_szalag"
+            }
+          ],
+          "target": "n056_szalag_megszerezve"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n055_ilona_csapda",
+      "title": "A becsapódó fülkeajtó",
+      "text": "Ilona hideg mosolya azonnal megfagy, és az asztal alatti gombbal reteszeli a hangszigetelt ajtót. „Kár érted, édesem. A vendégek nem szoktak szaglászni a csatornák között.” A keze már a hívógomb fölött lebeg, mellette azonban ott forog a keresett Kém-magnetofonszalag.",
+      "choices": [
+        {
+          "id": "c_n055_kitor",
+          "text": "Lerántod a szalagot az orsóról, és vállal nekifeszülsz a reteszelt ajtónak",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "addItem",
+                "itemId": "magnetofon_szalag"
+              }
+            ],
+            "target": "n056_szalag_megszerezve"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              },
+              {
+                "type": "addItem",
+                "itemId": "magnetofon_szalag"
+              }
+            ],
+            "target": "n056_szalag_megszerezve"
+          }
+        },
+        {
+          "id": "c_n055_kicsuszik",
+          "text": "Zsebre csúsztatod a szalagot, és a szellőzőrács melletti szervizajtón át lépsz le",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "magnetofon_szalag"
+            }
+          ],
+          "target": "n056_szalag_megszerezve"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n056_szalag_megszerezve",
+      "title": "Három ragasztócsík a barna szalagon",
+      "text": "A fény felé tartva látod, hogy a Kém-magnetofonszalagot három helyen vágták meg és ragasztották össze átlátszó szalaggal. A kazettatok címkéje szerint 23:50-től éjfélig veszi az Óraszoba hangját — mégis már most gyanúsan sok rajta az ollónyom.",
+      "choices": [
+        {
+          "id": "c_n056_tovabb",
+          "text": "Elteszed a szalagot az éjféli lejátszáshoz",
+          "target": "n057_ilona_bucsuszava"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n057_ilona_bucsuszava",
+      "title": "Kilépve a füstös tükör mögül",
+      "text": "Kardos Ilona még egy utolsó pillantást vet rád a félig nyitott ajtórésből: „Ne higgy a csempészek órájának az aukción. Ma éjjel egyetlen eredeti darab sincs a szalonban — vagy ha mégis, nem az, amelyikre a legtöbben licitálnak.”",
+      "choices": [
+        {
+          "id": "c_n057_vissza",
+          "text": "Bólintasz, és visszatérsz a pinceközpontba",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_ilona_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n058_orasmuhely_1979",
+      "title": "Az öreg pincei órás és az arany pecsétgyűrű",
+      "text": "A régi kazánház helyén most szűk órásműhely bújik meg, ezer ketyegő zsebórával és sárgás asztali lámpával. A munkapadon egy ősz hajú, szikár férfi hajol egy nagyító fölé — a bal mutatóujján pontosan ugyanaz a nehéz arany pecsétgyűrű csillan, amelyet az 1928-as inason és a 2029-es Maszkos Licitálón láttál.\n\nAmikor belépsz, nem ijed meg. Egy apró üvegcsében halványan derengő Órás Foszforport csúsztat eléd, majd két dologra mutat: a falon futó 2029-es épületriasztó főkábelére és egy háromtárcsás rézdobozra az asztalán.",
+      "choices": [
+        {
+          "id": "c_n058_beszel",
+          "text": "Elveszed az Órás Foszforport, és közelebbről megvizsgálod a fal kábeleit",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "foszforpor"
+            }
+          ],
+          "target": "n059_1979_szabotazs"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n059_1979_szabotazs",
+      "title": "A jövő riasztójának gyökere",
+      "text": "A műhely falában már 1979-ben is fut az a vastag szürke védőcső, amely a későbbi évtizedekben a palota biztonsági központját köti össze a negyedik emelettel. Ha most megbabrálod az árnyékoló relét, ötven évvel később egy egész biztonsági zóna dadogni fog miatta.",
+      "choices": [
+        {
+          "id": "c_n059_riaszto_szabotazs",
+          "text": "Finom csavarhúzóval áthidalod a késleltető relét, hogy 2029-ben lassabban kapcsoljon a riasztó",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "alarm_sabotaged_1979"
+            }
+          ],
+          "target": "n060_muhely_uzenet"
+        },
+        {
+          "id": "c_n059_csak_tovabb",
+          "text": "Nem nyúlsz a kábelekhez — inkább a munkapadhoz lépsz",
+          "target": "n060_muhely_uzenet"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n060_muhely_uzenet",
+      "title": "Üzenet a fiókba és a rézdoboz zárja",
+      "text": "Az öreg órás asztalán egy üres, 2029-ig lepecsételt fémfiók várakozik — ha most bedobsz egy rövid üzenetet, a jövőben még választ kaphatsz rá. Mellette egy három fogaskerék-tárcsával védett titkos óradoboz áll (az 1928-as Hangvilla-kulcs +1 Ész bónuszt ad a szerkezet felmérésénél).",
+      "choices": [
+        {
+          "id": "c_n060_uzenet_es_doboz",
+          "text": "Bedobsz egy figyelmeztető cetlit a 2029-es fiókba, és átnézed a fogaskerék-tárcsákat",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "note_left_1979"
+              },
+              {
+                "type": "setFlag",
+                "flag": "clue_1979_gears"
+              }
+            ],
+            "target": "n061_rejtv3_fogaskerek"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "note_left_1979"
+              }
+            ],
+            "target": "n061_rejtv3_fogaskerek"
+          }
+        },
+        {
+          "id": "c_n060_doboz_siman",
+          "text": "Üzenet nélkül lépsz a három fogaskerék-tárcsás doboz elé",
+          "target": "n061_rejtv3_fogaskerek"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n061_rejtv3_fogaskerek",
+      "title": "3. Logikai feladvány: A három fogaskerék-tárcsa",
+      "text": "A rézdoboz tetején három tárcsa (A, B, C) áll 1 és 9 közötti számokkal, a fedélbe pedig az órás kézírásával ez a három szabály van vésve:\n\n1. A három tárcsa számának összege pontosan 11.\n2. A középső B tárcsa pontosan 2-vel nagyobb, mint az A tárcsa.\n3. Az A és a C tárcsa értéke egyenlő.\n\nMelyik kombináció nyitja a zárat?",
+      "choices": [
+        {
+          "id": "c_n061_helyes",
+          "text": "Beállítod az A = 3, B = 5, C = 3 állást",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "solved_puzzle_3_gears"
+            },
+            {
+              "type": "setFlag",
+              "flag": "code_part_2"
+            }
+          ],
+          "target": "n062_rejtv3_siker"
+        },
+        {
+          "id": "c_n061_rossz_1",
+          "text": "Beállítod az A = 2, B = 4, C = 5 állást",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n063_rejtv3_kudarc"
+        },
+        {
+          "id": "c_n061_rossz_2",
+          "text": "Beállítod az A = 4, B = 6, C = 1 állást",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n063_rejtv3_kudarc"
+        },
+        {
+          "id": "c_n061_rossz_3",
+          "text": "Beállítod az A = 3, B = 6, C = 2 állást",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n063_rejtv3_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n062_rejtv3_siker",
+      "title": "A rézdoboz második kódszáma: 11",
+      "text": "A 3-5-3-as kombinációra a rézfedél lágyan felpattan. Belül egy apró rézlapocskán az „1979 – 11” felirat és egy kézzel vésett monogram csillog: „K. Á.”. Az öreg órás elmosolyodik: „Jó a szemed. Az 1979-es tárcsa kulcsa megvan — most már csak azt nézd meg odafent, mit akarnak eladni az igazi helyett.”",
+      "choices": [
+        {
+          "id": "c_n062_vissza",
+          "text": "Megjegyzed a 11-es számot és a monogramot, majd visszamész a klubba",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_muhely_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n063_rejtv3_kudarc",
+      "title": "Visszacsapó acélrugó",
+      "text": "Ahogy elfordítod a tárcsákat, a rugós biztonsági pecek nagyot csattan az ujjperceden (-2 Életerő). Az öreg órás sóhajtva csóválja a fejét, és egy ronggyal bekeni a kezed: „A matek egyszerűbb volt, fiam. Az 1979-es szám úgyis 11 — de menj, mert fent mindjárt kezdődik a csempészek vására.”",
+      "choices": [
+        {
+          "id": "c_n063_vissza",
+          "text": "Lerázod a sajgó kezed, és visszatámolyogsz a bárba",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_muhely_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n064_bela_froccs_piheno",
+      "title": "Hideg szóda, meleg párizsis zsemle",
+      "text": "Béla egy jókora pohár hideg kisfröccsöt és két vastagon megkent párizsis zsemlét csúsztat át a pulton. „Edd meg, mielőtt elfogy a szufla! Odafent az öreg óra körül füstös a levegő.” A hideg szóda és az ennivaló pillanatok alatt helyrebillent (+3 Életerő).",
+      "choices": [
+        {
+          "id": "c_n064_vissza",
+          "text": "Megköszönöd Bélának, és új erővel folytatod a nyomozást",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": 3
+            },
+            {
+              "type": "setFlag",
+              "flag": "healed_1979"
+            }
+          ],
+          "target": "n046_1979_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n065_csempesz_aukcio",
+      "title": "A negyedik emeleti csempész-aukció",
+      "text": "23:45-kor a negyedik emeleti Óraszoba előterében és szalonjában nyugatnémet nepperek, szocialista funkcionáriusok és Kardos Ilona gyülekeznek egy vörös bársonydoboz körül. A díszes asztalon ott csillog a Kálmán-kronométer — vagy legalábbis egy nagyon drága darab.\n\nAmint megpillantod az órát, eszedbe jut az 1928-as este és az étellift-akna.",
+      "choices": [
+        {
+          "id": "c_n065_karcolast_nez",
+          "text": "Megfordítod az órát, és rámutatsz: hiányzik róla az 1928-ban belekarcolt apró X!",
+          "condition": {
+            "type": "flag",
+            "flag": "watch_marked_1928"
+          },
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "exposed_fake_1979"
+            }
+          ],
+          "target": "n066_hamisitvany_botrany"
+        },
+        {
+          "id": "c_n065_esz_vizsgal",
+          "text": "Megvizsgálod a foglalatot és a zsanér csillogását, hátha hamisítványt sóznak el",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "exposed_fake_1979"
+              }
+            ],
+            "target": "n066_hamisitvany_botrany"
+          },
+          "failure": {
+            "target": "n066_hamisitvany_botrany"
+          }
+        },
+        {
+          "id": "c_n065_kivar",
+          "text": "Hátul maradsz a falnál, és figyeled a közelgő 23:54-et",
+          "target": "n066_hamisitvany_botrany"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n066_hamisitvany_botrany",
+      "title": "A 23:54-es áramszünet és a megvágott szalag",
+      "text": "Alighogy kitör a botrány a vitrinben lévő hamisítvány miatt, pontban 23:54-kor kialszik minden lámpa az egész emeleten! Amikor két perccel később visszatér az áram, a belső Óraszoba páncéldoboza üres — az igazi kronométert megint elvitték a sötétben!\n\nKardos Ilona azonnal elindítja a lejátszót, és gúnyosan rámosolyog a csempészekre: „Nincs miről beszélni, a felvétel 23:50-től éjfélig vágatlan!” De te emlékszel a szalagon látott ragasztócsíkokra.",
+      "choices": [
+        {
+          "id": "c_n066_elemzes",
+          "text": "Ráközelítesz a szalag négy szakaszára, és kiszúrod a hamisított percet",
+          "target": "n067_rejtv4_szalag"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n067_rejtv4_szalag",
+      "title": "4. Logikai feladvány: A magnetofonszalag-vágás",
+      "text": "A magnószalag négy, pontosan kétperces szakaszból áll 23:52-től éjfélig, de az egyik szakaszt máshonnan vágták be, hogy elfedjék az igazi tolvajt:\n\n• A szakasz (23:52–23:54): léptek az előtérből, távoli koccanás és éles 50 Hz-es áramzúgás a végén.\n• B szakasz (23:54–23:56): teljes némaság áramszüneti zúgás nélkül, középen pedig kétszer egymás után hallatszik ugyanaz a 4-es villamos csengése.\n• C szakasz (23:56–23:58): ideges suttogás, üvegtörés, majd távoli sziréna a Nagykörút felől.\n• D szakasz (23:58–00:00): nehéz ajtócsapódás, kiabálás és felkapcsolódó fénycső zúgása.\n\nMelyik szakasz a beillesztett hamisítvány?",
+      "choices": [
+        {
+          "id": "c_n067_helyes",
+          "text": "„A B szakasz (23:54–23:56)! Áramszünetkor nincs áramzúgás, és duplán ismétlődik benne a villamoscsengő!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "solved_puzzle_4_tape"
+            }
+          ],
+          "target": "n068_rejtv4_siker"
+        },
+        {
+          "id": "c_n067_rossz_a",
+          "text": "„Az A szakasz (23:52–23:54), mert 50 Hz-es zúgás nem létezik régebbi házban!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n069_rejtv4_kudarc"
+        },
+        {
+          "id": "c_n067_rossz_c",
+          "text": "„A C szakasz (23:56–23:58), mert a Nagykörúton éjjel nem járhat sziréna!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n069_rejtv4_kudarc"
+        },
+        {
+          "id": "c_n067_rossz_d",
+          "text": "„A D szakasz (23:58–00:00), mert fénycső sosem zúg felkapcsoláskor!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n069_rejtv4_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n068_rejtv4_siker",
+      "title": "Ilona vallomása a füstben",
+      "text": "Amikor leleplezed a B szakasz ismétlődő villamoscsengőjét, a csempészek egyszerre rántanak elő bicskát és pisztolyt. Ilona káromkodva rúgja fel a kisasztalt: „Jó, rendben! Tényleg kivágtam azt a két percet — de amikor 23:54-kor beléptem a sötétbe, az igazi óra már ott sem volt! Egy árnyék lépett ki a mahagóni falióra mögött, nekem meg csak a hűlt helye maradt!”",
+      "choices": [
+        {
+          "id": "c_n068_menekul",
+          "text": "A lövöldözés elől a mahagóni állóóra felé veted magad",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_1979_ilona_confession"
+            }
+          ],
+          "target": "n070_1979_menekules"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n069_rejtv4_kudarc",
+      "title": "Az alumíniumorsó csapása",
+      "text": "Ilona gúnyosan felnevet, és mielőtt védekezhetnél, az alumínium magnóorsóval keményen tarkón vág (-2 Életerő). „Gyenge próbálkozás — de nem maradok itt a milícia előtt!” — kiáltja, és kifelé futtában még odaveti a csempészeknek, hogy a 23:54-es áramszünetben már valaki más elvitte az igazi órát a mahagóni órán át!",
+      "choices": [
+        {
+          "id": "c_n069_menekul",
+          "text": "Feltápászkodsz a szőnyegről, és belöktöd a mahagóni állóóra rejtett ajtaját",
+          "target": "n070_1979_menekules"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n070_1979_menekules",
+      "title": "A 2029-es tárcsa hívása",
+      "text": "A rézfülkében még mindig ott áll a levegőben vibráló örvény, a bejárat előtt pedig az öreg pincei órás áll egy másodpercre az arany pecsétgyűrűjével. Némán a 2029-es tárcsára mutat: ideje visszatérni oda, ahonnan elindultál — csak ezúttal már két múltbéli korszak következményeivel.",
+      "choices": [
+        {
+          "id": "c_n070_ugras",
+          "text": "Megragadod a Törött Óraláncot, és elfordítod a mutatót 2029 felé",
+          "target": "n071_harmadik_idougras"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n071_harmadik_idougras",
+      "title": "Visszazuhanás a neon-jövőbe",
+      "text": "Szocialista neonreklámok, régi híradók és kék kriptohologramok folynak össze körülötted egy tébolyult rézörvényben. A Törött Óralánc úgy forrósodik a markodban, mintha végre hazafelé húzna — de a harmadik ugrás még az eddigieknél is keményebben tépi a testedet.",
+      "choices": [
+        {
+          "id": "c_n071_idegek",
+          "text": "Vasmarokkal szorítod a láncot, és az Idegeid erejével tartod egyben a tudatodat",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n072_erkezes_2029"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n072_erkezes_2029"
+          }
+        },
+        {
+          "id": "c_n071_ugyesseg",
+          "text": "Hajlékonyan gördülve csapódsz ki a 2029-es rézfülke padlójára",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n072_erkezes_2029"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n072_erkezes_2029"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n072_erkezes_2029",
+      "title": "Vissza 2029-be: A megváltozott palota",
+      "text": "Keményen a 2029-es Óraszoba parkettájára huppansz — de az épület csendesebb és feszültebb, mint amikor elindultál. A kinti vörös neon-eső tovább veri az ablakot, a falba rejtett rézszéf előtt pedig ott hever két friss lábnyom a finom porban.\n\nA folyosón halk zúgással felébred Pötyi hangszórója: „Üdvözlöm újra 2029-ben. A távollétében… ötven év alatt néhány irat és kábel egészen érdekesen alakult.”",
+      "choices": [
+        {
+          "id": "c_n072_tovabb",
+          "text": "Feltápászkodsz, és szemügyre veszed az átformált 2029-es palotát",
+          "target": "n073_2029_visszateres"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n073_2029_visszateres",
+      "title": "A múlt visszhangja a rézfülkében",
+      "text": "Kilépsz a nyitott mahagóni állóóra mögül, és azonnal észreveszed, mennyire másképp ketyeg körülötted a ház. A fal melletti régi szervizfiók enyhén ki van húzva, és az Óraszoba lámpái vörös-arany készenléti fényben vibrálnak.\n\nA középen álló háromtárcsás Időszéf most már ott feszít a falmélyedésben — de az ajtaja három számzáras tárcsával van lezárva: 1928, 1979 és 2029. Odalent Pötyi rendszere, Zóra magánlakosztálya és a tetőterasz is válaszokra vár.",
+      "choices": [
+        {
+          "id": "c_n073_uzenet_olvas",
+          "text": "Kihúzod a 2029-ig lepecsételt fémfiókot — az 1979-es cetlidre válasz érkezett!",
+          "condition": {
+            "type": "flag",
+            "flag": "note_left_1979"
+          },
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_2029_wanderer_reply"
+            }
+          ],
+          "target": "n074_2029_hub"
+        },
+        {
+          "id": "c_n073_tovabb",
+          "text": "Kiosonsz a negyedik emeleti folyosóra, hogy felmérd a 2029-es terepet",
+          "target": "n074_2029_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n074_2029_hub",
+      "title": "2029: A kétirányú hurok éjszakája",
+      "text": "Az okosórád kijelzője szerint még mindig 2029. november 11., nem sokkal éjfél után — a külső világ számára alig telt el pár perc, de te már érzed, hogyan feszül egymásnak a három korszak. A folyosó egyik végén Pötyi szerverszobájának hűvös zúgása hallatszik, a másikon Kálmán Zóra magánlakosztályának aranyozott ajtaja csillog.\n\nFelfelé a tetőteraszra vezető vészkijárat ajtaja csapódik a huzatban, mintha valaki az imént szaladt volna ki rajta, a szemközti elsősegély-szekrény zöld keresztje pedig csábítóan világít.",
+      "choices": [
+        {
+          "id": "c_n074_potyi",
+          "text": "Behatolsz az alagsori szerverszobába Pötyi MI-magjához",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_potyi_2029"
+            }
+          },
+          "target": "n075_szerverszoba_folyoso"
+        },
+        {
+          "id": "c_n074_zora",
+          "text": "Felkeresed Kálmán Zórát a harmadik emeleti magánlakosztályában",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_zora_suite_2029"
+            }
+          },
+          "target": "n082_zora_lakosztaly_ajto"
+        },
+        {
+          "id": "c_n074_teto",
+          "text": "Utánamész a tetőterasz felé menekülő árnyéknak a neon-esőbe",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "visited_teto_2029"
+            }
+          },
+          "target": "n087_tetoterasz_kijarat"
+        },
+        {
+          "id": "c_n074_orvosi",
+          "text": "Feltöröd a falra szerelt okos-elsősegélydobozt egy gyors ellátásért",
+          "condition": {
+            "type": "not",
+            "condition": {
+              "type": "flag",
+              "flag": "healed_2029"
+            }
+          },
+          "target": "n091_orvosi_szekreny_2029"
+        },
+        {
+          "id": "c_n074_idoszef",
+          "text": "Visszatérsz a háromtárcsás Időszéf elé, hogy kinyisd a belső kamrát",
+          "target": "n092_szef_elott"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n075_szerverszoba_folyoso",
+      "title": "Pötyi hűvös szerverszobája",
+      "text": "A szerverfolyosón fagypont közeli levegő és halk kék LED-ek fogadnak. A mennyezeti hangszóró azonnal feléled, bár hangja mintha egy fokkal idegesebben csengene: „Megállni! A biztonsági naplómban épp harminchét megmagyarázhatatlan anomália villog, és mindegyik az ön cipőméretéhez kapcsolódik.”",
+      "choices": [
+        {
+          "id": "c_n075_szabotalt_riaszto",
+          "text": "Aktiválod az 1979-ben megbabrált relé hibajelét — Pötyi védelme két percre lefagy!",
+          "condition": {
+            "type": "flag",
+            "flag": "alarm_sabotaged_1979"
+          },
+          "target": "n076_szabotazs_hatasa"
+        },
+        {
+          "id": "c_n075_potyi_barat",
+          "text": "Udvariasan magázódva kéred Pötyi segítségét, hivatkozva a régi szép estére",
+          "condition": {
+            "type": "flag",
+            "flag": "potyi_friendly"
+          },
+          "target": "n077_potyi_beszelgetes"
+        },
+        {
+          "id": "c_n075_hekkel",
+          "text": "Rácsatlakozol a szervizterminálra, és megpróbálod kijátszani a tűzfalat",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "target": "n078_potyi_lezerhalo"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n078_potyi_lezerhalo"
+          }
+        },
+        {
+          "id": "c_n075_beront",
+          "text": "Nem tárgyalsz egy szellőzővel — berúgod a szervizajtót a lézerfolyosóba",
+          "target": "n078_potyi_lezerhalo"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n076_szabotazs_hatasa",
+      "title": "Ötvenéves rövidzárlat",
+      "text": "Pötyi hangja hirtelen belassul: „Érdekes… az 1979-es alagsori kábelkötegből érkező feszültség-ingadozás miatt a B-szektorom készenléti módba lépett. Ön igazán bosszantóan előrelátó.” A belső ajtó felpattan előtted, bár a belső lézerháló tartalékáramon még pislákol.",
+      "choices": [
+        {
+          "id": "c_n076_tovabb",
+          "text": "Belépsz a halványan villogó lézerháló elé",
+          "target": "n078_potyi_lezerhalo"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n077_potyi_beszelgetes",
+      "title": "Pötyi udvarias árulása",
+      "text": "Pötyi egy pillanatig hallgat, majd olyan nőies sóhajt hallat, amit biztosan egy szinkronszínésznőtől tanult: „Nos, ön legalább nem lökte félre a szenzoraimat, mint Kálmán Zóra. Elárulok egy számot a házi nyilvántartásból: a 2029-es áramszünet pontosan 06 percig tartott — pont ennyi a harmadik tárcsa kódja is.”",
+      "choices": [
+        {
+          "id": "c_n077_tovabb",
+          "text": "Megköszönöd a 06-os kódot, és belépsz a lézerterembe",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "code_part_3"
+            }
+          ],
+          "target": "n078_potyi_lezerhalo"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n078_potyi_lezerhalo",
+      "title": "Tánc a vörös lézersugarak között",
+      "text": "A központi szerverterem előtt sűrű, vörös lézersugarak hálózzák be a sötét márványt. Ha van nálad az 1979-es Órás Foszforpor, a levegőbe szórva azonnal kirajzolja az összes láthatatlan érzékelőt (+2 Ügyesség bónuszt ad), de vakmerő mázlival is átcsúszhatsz a rácson.",
+      "choices": [
+        {
+          "id": "c_n078_lezer_ugyesseg",
+          "text": "Átbújsz és átvetődsz a vörös lézersugarak között a központi konzolig",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n079_potyi_mag"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n079_potyi_mag"
+          }
+        },
+        {
+          "id": "c_n078_lezer_szerencse",
+          "text": "Egy vakmerő előrevetődéssel a Szerencsédre bízod az utolsó két métert",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "target": "n079_potyi_mag"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n079_potyi_mag"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n079_potyi_mag",
+      "title": "A 23:54-es felülírás és a Biometrikus VIP-kártya",
+      "text": "A központi pultnál egy töltőállomáson ott hever egy tartalék Biometrikus VIP-kártya, a monitoron pedig vörösen villog a 23:54-es parancssor: Kálmán Zóra saját belépőkódjával tiltotta le Pötyi kameráit pontosan hat percre — 23:54-től 00:00-ig! Vagyis a 2029-es áramszünet hossza pontosan 06 perc volt.",
+      "choices": [
+        {
+          "id": "c_n079_kartya",
+          "text": "Zsebre vágod a Biometrikus VIP-kártyát, és lemented a 06 perces blokkot",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "biometrikus_kartya"
+            },
+            {
+              "type": "setFlag",
+              "flag": "code_part_3"
+            },
+            {
+              "type": "setFlag",
+              "flag": "clue_2029_zora_override"
+            }
+          ],
+          "target": "n080_potyi_logok"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n080_potyi_logok",
+      "title": "Pötyi utolsó megjegyzése",
+      "text": "Ahogy kihúzod a tárolót a konzolból, Pötyi hangja váratlanul tárgyilagosra vált: „Még egy apró adat, ha már ennyit dolgozott érte: Zóra nem csupán a kamerát kapcsolta le. Egy olyan kriptokulcsot keres az Óraszobában, amely száz éve minden Kálmán-örökös kezét vérhez kötötte.”",
+      "choices": [
+        {
+          "id": "c_n080_tovabb",
+          "text": "Elteszed az információt, és a hátsó lépcső felé indulsz",
+          "target": "n081_szerverszoba_kijarat"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n081_szerverszoba_kijarat",
+      "title": "Vissza a harmadik emelet fölé",
+      "text": "A szervizlépcsőn felérve már tisztábban látod a teljes hálózatot: Zóra 23:54-kor állította le a biztonságot hat percre, hogy valakit vagy valamit kimentsen — vagy eltegyen láb alól — még azelőtt, hogy a vendégek felérnének.",
+      "choices": [
+        {
+          "id": "c_n081_vissza",
+          "text": "Kilépsz a negyedik emeleti központi folyosóra",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_potyi_2029"
+            }
+          ],
+          "target": "n074_2029_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n082_zora_lakosztaly_ajto",
+      "title": "Kálmán Zóra smaragdzöld lakosztálya",
+      "text": "A harmadik emeleti lakosztály fekete tölgyajtaja előtt ujjlenyomat-leolvasó és halvány smaragdzöld jelzőfény világít. Odabentről jégkockák csörrenése és egy halkan duruzsoló hírfolyam szűrődik ki.",
+      "choices": [
+        {
+          "id": "c_n082_kartyaval",
+          "text": "Használod a Biometrikus VIP-kártyát, hogy hangtalanul belépj Zóra előszobájába",
+          "condition": {
+            "type": "hasItem",
+            "itemId": "biometrikus_kartya"
+          },
+          "target": "n083_zora_szalon"
+        },
+        {
+          "id": "c_n082_kopog",
+          "text": "Határozottan bekopogsz és belépsz egyenesen Zóra elé",
+          "target": "n084_zora_szembesites"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n083_zora_szalon",
+      "title": "A kártyával nyitott belső dolgozószoba",
+      "text": "A VIP-kártya hangtalanul nyitja a szervizajtót. Zóra dolgozóasztalán egy nyitott kriptotranszfer-tervezet világít: ha éjfélig nem mutatja fel az eredeti Kálmán-kronométert és a családi archívumot, a hitelezői reggelre elárverezik alóla az egész palotát. Mielőtt tovább nézelődnél, Zóra belép a teraszról egy pohár rozéval.",
+      "choices": [
+        {
+          "id": "c_n083_tovabb",
+          "text": "Előlépsz az árnyékból, és szembesíted Zórát a tényekkel",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "clue_2029_zora_motive"
+            }
+          ],
+          "target": "n084_zora_szembesites"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n084_zora_szembesites",
+      "title": "Smaragdselyem, zsarolás és fegyvercső",
+      "text": "Zóra egyáltalán nem lepődik meg — elegánsan rátámaszkodik a nyitott faliszéf szélére, amelyben egy vastag, bőrkötésű iratköteg lapul, a másik kezében pedig egy apró, matt fekete pisztolyt pörget. A Parfümös Levél 1928-ból itt +1 Sárm bónuszt ad, ha az orra alá dörgölöd a családi múltat.\n\n„Nos?” — mosolyog hűvösen. „Megtaláltad az apám és nagyapám szennyesét, vagy csak egy jó ajánlatért jöttél?”",
+      "choices": [
+        {
+          "id": "c_n084_bloff_sarm",
+          "text": "Pimaszul meglebegteted előtte a családi múltat, és kiszeded belőle az aktát",
+          "check": {
+            "stat": "sarm"
+          },
+          "success": {
+            "target": "n085_zora_alku_vagy_akta"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n085_zora_alku_vagy_akta"
+          }
+        },
+        {
+          "id": "c_n084_alku",
+          "text": "Cinkos félmosollyal alkut ajánlasz: együtt lépünk meg a nagy pénzzel az éjszaka végén",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "zora_deal"
+            }
+          ],
+          "target": "n085_zora_alku_vagy_akta"
+        },
+        {
+          "id": "c_n084_elragad",
+          "text": "Félresöpröd a pisztolyát, és egyenesen kitéped az aktát a széfből",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n085_zora_alku_vagy_akta"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n085_zora_alku_vagy_akta"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n085_zora_alku_vagy_akta",
+      "title": "A 100 Éves Zsarolási Akta",
+      "text": "A kezedbe kerül a 100 Éves Zsarolási Akta — három nemzedék titkos adásvételei, megvesztegetett bírók, valamint egy 1928-as záradék, amely szerint Kálmán Oszkár összes vagyona valójában egy bizonyos „Ádám” nevű fiút és annak vérvonalát illeti. Zóra ajka megfeszül: „Vigyázz vele. Én már csak azért rendeztem meg a mai lopást, hogy végleg elégessem ezeket a papírokat — de valaki megelőzött az Óraszobában!”",
+      "choices": [
+        {
+          "id": "c_n085_akta",
+          "text": "Kabátod alá rejted a 100 Éves Zsarolási Aktát",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "zsarolasi_akta"
+            }
+          ],
+          "target": "n086_zora_pancel"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n086_zora_pancel",
+      "title": "Búcsú Zóra szalonjától",
+      "text": "Zóra még utánad kiált a küszöbről: „Ha az Óraszobában megtalálod azt a maszkos nyomorultat és az igazi órát, ne felejtsd el, kinek a pezsgőjét ittad először ma este!”",
+      "choices": [
+        {
+          "id": "c_n086_vissza",
+          "text": "Visszasietesz a negyedik emeleti központi folyosóra",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_zora_suite_2029"
+            }
+          ],
+          "target": "n074_2029_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n087_tetoterasz_kijarat",
+      "title": "Neon-eső és idővillanás a tetőteraszon",
+      "text": "Kivágod a tetőterasz nehéz vasajtaját. Odakint a viharos pesti éjszakában eső veri a palatetőt, a szecessziós tornyocskák között pedig kékes idővillámok cikáznak. A gerincen át egy velencei rézmaszkos alak sprintel a tetőlétrák felé — ugyanaz a Maszkos Licitáló, aki a szalonban suttogott neked!",
+      "choices": [
+        {
+          "id": "c_n087_kimegy",
+          "text": "Utánarohansz a csúszós palatetőre",
+          "target": "n088_tetoterasz_hajsza"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n088_tetoterasz_hajsza",
+      "title": "Hajsza a csúszós palatetőn",
+      "text": "Két korabeli vízköpő között a tető hirtelen megszakad egy mély fényudvar fölött, körülötted pedig egy pillanatra 1928-as gázlámpák és 1979-es tévéantennák szellemképei villannak fel. Ha nálad van az 1979-es Csempész-alaprajz, pontosan tudod, hol bújik meg a keskeny szervizhíd (+1 Ügyesség).",
+      "choices": [
+        {
+          "id": "c_n088_ugras_ugyesseg",
+          "text": "Átveted magad a csúszós gerincen a vízköpő melletti keskeny párkányra",
+          "check": {
+            "stat": "ugyesseg"
+          },
+          "success": {
+            "target": "n089_vandor_talalkozas"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n089_vandor_talalkozas"
+          }
+        },
+        {
+          "id": "c_n088_idegek",
+          "text": "Nem nézel le a mélybe — hideg fejjel átgázolsz a vakító idővillanáson",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n089_vandor_talalkozas"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n089_vandor_talalkozas"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n089_vandor_talalkozas",
+      "title": "A Vándor álarca lehull",
+      "text": "A kupola tövében végre sarokba szorítod a maszkos alakot. Amikor leemeli a velencei rézmaszkot, ugyanazt a szikár, ismerős arcot és nehéz arany pecsétgyűrűt látod meg, mint az 1979-es pincei órásnál — csak még idősebben, kimerült mosollyal.\n\n„Kálmán Ádám vagyok” — mondja halkan az esőben. „Oszkár eltitkolt fia. 1928 óta én őrzöm az Időszéfet, hogy sem a báró, sem az ügynökök, sem Zóra ne tehesse rá a kezét a palota valódi szívére. Fogd a zsebnaplómat — az Óraszobában találkozunk!”",
+      "choices": [
+        {
+          "id": "c_n089_naplo",
+          "text": "Elkapod a feléd dobott A Vándor Zsebnaplóját, mielőtt eltűnne a ködben",
+          "effects": [
+            {
+              "type": "addItem",
+              "itemId": "vandor_naploja"
+            },
+            {
+              "type": "setFlag",
+              "flag": "knows_wanderer_identity"
+            }
+          ],
+          "target": "n090_tetoterasz_vissza"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n090_tetoterasz_vissza",
+      "title": "Vissza a viharból a folyosóra",
+      "text": "Bőrig ázva, de a zsebnaplóval a kezedben csúszol vissza a tetőlétrán. Most már pontosan tudod, ki mozgatta a láthatatlan szálakat mindhárom korszak 23:54-es pillanatában.",
+      "choices": [
+        {
+          "id": "c_n090_vissza",
+          "text": "Visszalépsz a negyedik emeleti folyosóra",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "visited_teto_2029"
+            }
+          ],
+          "target": "n074_2029_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n091_orvosi_szekreny_2029",
+      "title": "Nanogél és koffeintapasz a vészszekrényből",
+      "text": "Feltöröd a folyosói okos-elsősegélydoboz vészreteszét. Pötyi ugyan rosszallóan pittyeg egyet, de a két adag hűsítő nanogél és egy mentolos stimuláns tapasz pillanatok alatt helyrekalapálja a vérnyomásodat (+3 Életerő).",
+      "choices": [
+        {
+          "id": "c_n091_vissza",
+          "text": "Becsukod a szekrényt, és folytatod az utad",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": 3
+            },
+            {
+              "type": "setFlag",
+              "flag": "healed_2029"
+            }
+          ],
+          "target": "n074_2029_hub"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n092_szef_elott",
+      "title": "A háromtárcsás Időszéf előtt",
+      "text": "Visszatérsz a mahagóni állóóra mögötti rézfülkébe. A fal közepén masszív, három kétjegyű tárcsával zárt Időszéf fénylik: az első fölött az 1928, a második fölött az 1979, a harmadik fölött pedig a 2029 évszám áll.\n\nAz 1928-as Hangvilla-kulcsod finoman rezonál a fém közelében (+1 Ész a tárcsák hangolásánál).",
+      "choices": [
+        {
+          "id": "c_n092_hangvilla",
+          "text": "Finoman megpendíted a fémkeretet, hogy az Ész és a füled kiszűrje a hamis kattanásokat",
+          "check": {
+            "stat": "esz"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "vault_hint_2029"
+              }
+            ],
+            "target": "n093_rejtv5_idoszef"
+          },
+          "failure": {
+            "target": "n093_rejtv5_idoszef"
+          }
+        },
+        {
+          "id": "c_n092_egyenest",
+          "text": "Közvetlenül nekilátsz beállítani a három korszak kétjegyű számkódját",
+          "target": "n093_rejtv5_idoszef"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n093_rejtv5_idoszef",
+      "title": "5. Logikai feladvány: Az Időszéf három korszak-kombinációja",
+      "text": "Az Időszéf három kétjegyű tárcsája az egész háromkorszakos nyomozásod kulcsait kéri sorrendben:\n\n• 1928-as tárcsa: A végzetes perc, amikor Oszkár zsebórája és az óraszobai díszóra megállt (és ami az 1928-as Hangvilla-kulcs oldalán áll).\n• 1979-es tárcsa: Az öreg órás rézdobozának száma, és egyben a novemberi nap dátuma.\n• 2029-es tárcsa: A 23:54-es áramszünet hossza percekben éjfélig.\n\nMelyik háromszámos kombinációval fordítod el a kart?",
+      "choices": [
+        {
+          "id": "c_n093_helyes",
+          "text": "Beállítod az 54 – 11 – 06 kombinációt",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "solved_puzzle_5_vault"
+            }
+          ],
+          "target": "n094_rejtv5_siker"
+        },
+        {
+          "id": "c_n093_rossz_1",
+          "text": "Beállítod a 00 – 79 – 29 kombinációt",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -3
+            }
+          ],
+          "target": "n095_rejtv5_kudarc"
+        },
+        {
+          "id": "c_n093_rossz_2",
+          "text": "Beállítod a 23 – 15 – 50 kombinációt",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -3
+            }
+          ],
+          "target": "n095_rejtv5_kudarc"
+        },
+        {
+          "id": "c_n093_rossz_3",
+          "text": "Beállítod a 28 – 11 – 12 kombinációt",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -3
+            }
+          ],
+          "target": "n095_rejtv5_kudarc"
+        },
+        {
+          "id": "c_n093_vakszerencse",
+          "text": "Vakon pörgeted meg a tárcsákat egy utolsó Szerencse-próbával",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "effects": [
+              {
+                "type": "setFlag",
+                "flag": "solved_puzzle_5_vault"
+              }
+            ],
+            "target": "n094_rejtv5_siker"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -3
+              }
+            ],
+            "target": "n095_rejtv5_kudarc"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n094_rejtv5_siker",
+      "title": "Az Időszéf arany kattanása",
+      "text": "54 – 11 – 06. Mindhárom réztárcsa egyszerre kattan egy tiszta, mély hangon, mint egy százéves toronyóra éjféli ütése. A nehéz páncélajtó magától kitárul, és meleg, arany fény árad ki belőle — bent pedig ott nyugszik mind a három korszak eltűnt Kálmán-kronométere, egyetlen sértetlen, ragyogó műszerré egyesülve!",
+      "choices": [
+        {
+          "id": "c_n094_belep",
+          "text": "Kiemeled a kronométert, és belépsz a széf mögötti végső terembe",
+          "target": "n096_idoszef_nyilik"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n095_rejtv5_kudarc",
+      "title": "Elektromos visszarúgás és vésznyitás",
+      "text": "A téves tárcsaállás kék ívkisülést csap a csuklódra (-3 Életerő) — ám az ütés hatására a zsebedben lévő Törött Óralánc meglendül, és magától az 54 – 11 – 06 állásba rántja a rugós zárreteszt! A páncélajtó szikrázva bár, de kitárul előtted.",
+      "choices": [
+        {
+          "id": "c_n095_belep",
+          "text": "Megrázod az égett kezed, és belépsz a kitárult Időszéfbe",
+          "target": "n096_idoszef_nyilik"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n096_idoszef_nyilik",
+      "title": "Minden korszak egy ajtó mögött",
+      "text": "Az Időszéf mögött nem szűk páncélkamra van, hanem az Óraszoba időn kívüli, tükröző tükörképe. A hármas ablakon egyszerre látszik az 1928-as gázlámpás pesti utca, az 1979-es Trabantok fénye és a 2029-es neon-eső. Ideje lezárni a játszmát.",
+      "choices": [
+        {
+          "id": "c_n096_vegszoba",
+          "text": "Belépsz az Óraszoba időn kívüli csarnokába",
+          "target": "n097_finale_bevezetes"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n097_finale_bevezetes",
+      "title": "A Három Korszak Összeér",
+      "text": "Az időn kívüli Óraszoba padlóján egyszerre keveredik a 1928-as szivarfüst, az 1979-es Traubisoda-illat és a 2029-es ózonszag. A nagy asztalnál három alak feszül egymásnak: Kálmán Zóra csőre töltött pisztollyal, Báró Székely és Kardos Ilona sápadt árnyképei az ajtóban, a kandallónál pedig a maszkjától megvált Kálmán Ádám — a Vándor —, akinek kezében halkan ketyeg az igazi Kálmán-kronométer.\n\n„Elég volt a körbe-körbe futásból!” — kiáltja Zóra, és rád szegezi a fegyvert. „Ha olyan okos nyomozó vagy, most mondd ki mindenki előtt, mi történt valójában ebben a házban száz év alatt!”",
+      "choices": [
+        {
+          "id": "c_n097_tovabb",
+          "text": "Középre lépsz a Kálmán-palota három korszakának kereszttüzében",
+          "target": "n098_harmas_talalkozo"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n098_harmas_talalkozo",
+      "title": "Az Időörvény nyomása",
+      "text": "Ahogy a három korszak egyszerre akar összeomlani az Óraszobában, a levegő beleremeg, és az ablaküvegek megrepednek. A zsebedben a Törött Óralánc kéken szikrázik (+1 Idegek bónusz), segítve, hogy egyben tartsd az elmédet a végső kihallgatás előtt.",
+      "choices": [
+        {
+          "id": "c_n098_idegek",
+          "text": "Megveted a lábad, és acélos Idegekkel állod a három korszak szelét",
+          "check": {
+            "stat": "idegek"
+          },
+          "success": {
+            "target": "n099_szovetsegesek_hangja"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n099_szovetsegesek_hangja"
+          }
+        },
+        {
+          "id": "c_n098_szerencse",
+          "text": "Kacsintasz egyet a sorsra, és a Szerencsédre bízod, hogy állva maradsz",
+          "check": {
+            "stat": "szerencse"
+          },
+          "success": {
+            "target": "n099_szovetsegesek_hangja"
+          },
+          "failure": {
+            "effects": [
+              {
+                "type": "changeStat",
+                "stat": "eletero",
+                "delta": -2
+              }
+            ],
+            "target": "n099_szovetsegesek_hangja"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n099_szovetsegesek_hangja",
+      "title": "A múlt tanúi felsorakoznak",
+      "text": "A terem szélén egy pillanatra feldereng mindaz, amit a három éjszakán gyűjtöttél: Vörös Lola színpadi alibije, Szotyis Béla pincei tanúsága, Pötyi 23:54-es naplója és Ádám őszinte vallomása. Mindannyian rád várnak.\n\nHárom kérdésre kell hibátlanul felelned a Végső Vád során: ki szervezte meg a 2029-es látszat-rablást, pontosan milyen módszerrel tűnt el az óra mindhárom éjjel, és ki a titokzatos Vándor.",
+      "choices": [
+        {
+          "id": "c_n099_kihallgatas",
+          "text": "Belekezdesz a Végső Vád első lépésébe",
+          "target": "n100_rejtv6_1_tettes"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n100_rejtv6_1_tettes",
+      "title": "6. Logikai feladvány (1/3): Ki rendelte el a 2029-es rablást?",
+      "text": "Első kérdés: 2029. november 11-én ki használta saját biometrikus kódját, hogy 23:54-kor hat percre kikapcsolja Pötyi kameráit és elterelje a figyelmet a családi archívum eltüntetése közben?",
+      "choices": [
+        {
+          "id": "c_n100_helyes",
+          "text": "„Kálmán Zóra! Ő tiltotta le Pötyit 23:54-től hat percre, hogy megmentse az örökségét és elégesse a 100 Éves Zsarolási Aktát!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "verdict_killer_right"
+            }
+          ],
+          "target": "n101_vad1_siker"
+        },
+        {
+          "id": "c_n100_rossz_fenyves",
+          "text": "„Dr. Fenyves kurátor egymaga zárta le a kamerákat, hogy eladja az órát kriptóért!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n102_vad1_kudarc"
+        },
+        {
+          "id": "c_n100_rossz_potyi",
+          "text": "„Pötyi MI öntudatra ébredt és saját magát kapcsolta ki unalmában!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n102_vad1_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n101_vad1_siker",
+      "title": "Zóra arca megfagy",
+      "text": "Zóra szeme összeszűkül, a pisztoly csöve megremeg egy millimétert. „Okos vagy… de az alibi felét még el sem mondtad.”",
+      "choices": [
+        {
+          "id": "c_n101_tovabb",
+          "text": "Folytatod a Végső Vád második lépésével",
+          "target": "n103_rejtv6_2_modszer"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n102_vad1_kudarc",
+      "title": "Eltévedt vád és gyors korrekció",
+      "text": "Zóra gúnyosan felnevet, és egy csattanós figyelmeztető lövéssel leveri melletted a díszvázát, aminek szilánkja felhasítja a karodat (-2 Életerő). „Gondolkozz, mielőtt rámutatsz valakire!” — sziszegi, te pedig máris a következő kérdésre összpontosítasz.",
+      "choices": [
+        {
+          "id": "c_n102_tovabb",
+          "text": "Összeszeded magad, és kimondod a módszert a második kérdésre",
+          "target": "n103_rejtv6_2_modszer"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n103_rejtv6_2_modszer",
+      "title": "6. Logikai feladvány (2/3): Hogyan működött a háromszoros lopás?",
+      "text": "Második kérdés: Mi volt a közös trükk mindhárom korszak bezárt szobás eltűnésében — 1928-ban, 1979-ben és 2029-ben is?",
+      "choices": [
+        {
+          "id": "c_n103_helyes",
+          "text": "„A 23:54-es hatperces áramszünet alatt a kiforduló mahagóni állóóra mögötti Időszéfen át vitték el az órát, miközben hamis éjféli zajjal fedték az alibit!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "verdict_method_right"
+            }
+          ],
+          "target": "n104_vad2_siker"
+        },
+        {
+          "id": "c_n103_rossz_ablak",
+          "text": "„Minden korszakban egy pontosan ugyanolyan idomított galamb vitte ki a zárt ablakrácson!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n105_vad2_kudarc"
+        },
+        {
+          "id": "c_n103_rossz_lift",
+          "text": "„A három korszakban sosem volt bent az igazi óra az Óraszobában — csak hipnózis volt!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n105_vad2_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n104_vad2_siker",
+      "title": "A bezárt szoba mítosza szertefoszlik",
+      "text": "A teremben néma csend támad — még Székely és Ilona árnyai is döbbenten bólintanak. A bezárt szoba paradoxona végre minden korszakban értelmet nyert. Már csak egyetlen név hiányzik.",
+      "choices": [
+        {
+          "id": "c_n104_tovabb",
+          "text": "Rámutatsz a kandalló mellett álló Vándorra a harmadik kérdéshez",
+          "target": "n106_rejtv6_3_vandor"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n105_vad2_kudarc",
+      "title": "Megrendült bizonyítás",
+      "text": "A kétségbeesett tippre Zóra hidegen meglendíti a fegyver agyát az oldalad felé (-2 Életerő). „Ne rontsd el a végén, nyomozó!” — morogja, miközben Ádám szomorúan a falióra mögötti üregre mutat, jelezve, mire nem figyeltél eléggé.",
+      "choices": [
+        {
+          "id": "c_n105_tovabb",
+          "text": "Ráfókuszálsz az utolsó kérdésre: ki is a Vándor valójában",
+          "target": "n106_rejtv6_3_vandor"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n106_rejtv6_3_vandor",
+      "title": "6. Logikai feladvány (3/3): Ki a Vándor mindhárom korszakban?",
+      "text": "Harmadik, egyben utolsó kérdés: Ki volt az a pecsétgyűrűs alak, aki 1928-ban néma inas, 1979-ben pincei órás, 2029-ben pedig a Maszkos Licitáló alakjában mindig egy perccel a tolvajok előtt menekítette ki az igazi Kálmán-kronométert?",
+      "choices": [
+        {
+          "id": "c_n106_helyes",
+          "text": "„Kálmán Ádám — Kálmán Oszkár eltitkolt fia és valódi örököse, aki száz éve őrzi az órát!”",
+          "effects": [
+            {
+              "type": "setFlag",
+              "flag": "verdict_wanderer_right"
+            }
+          ],
+          "target": "n107_vad3_siker"
+        },
+        {
+          "id": "c_n106_rossz_szekely",
+          "text": "„Báró Székely Artúr klónozta saját magát három korszakba!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n108_vad3_kudarc"
+        },
+        {
+          "id": "c_n106_rossz_bela",
+          "text": "„Szotyis Béla szökött át 1979-ből, hogy megszerezze a 2029-es farmereket!”",
+          "effects": [
+            {
+              "type": "changeStat",
+              "stat": "eletero",
+              "delta": -2
+            }
+          ],
+          "target": "n108_vad3_kudarc"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n107_vad3_siker",
+      "title": "Ádám mosolya és az utolsó választás",
+      "text": "Kálmán Ádám mélyen meghajol, és leteszi a ragyogó Kálmán-kronométert az asztal közepére. „Végre valaki kimondta a nevemet a saját házamban. A játszma azonban most a te kezedben ér véget — mit teszel az órával, az aktával és velünk?”",
+      "choices": [
+        {
+          "id": "c_n107_tovabb",
+          "text": "Az asztalhoz lépsz, és meghozod a végső döntést",
+          "target": "n109_vegso_dontes"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n108_vad3_kudarc",
+      "title": "A név, amely kimondatlan maradt",
+      "text": "Ádám szomorúan megrázza a fejét, miközben az időörvény egy utolsó, éles szikrával a válladba mar (-2 Életerő). „Nem mindenki emlékszik az árnyékokra” — suttogja, majd az asztalra teszi a kronométert, és hagyja, hogy mégis te döntsd el az éjszaka sorsát.",
+      "choices": [
+        {
+          "id": "c_n108_tovabb",
+          "text": "Felszívod magad, és kiválasztod a kiutat a káoszból",
+          "target": "n109_vegso_dontes"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n109_vegso_dontes",
+      "title": "A Kálmán-kronométer az asztalon",
+      "text": "Az Óraszoba középpontjában ott ketyeg a hibátlan, arany-obszidián Kálmán-kronométer, mellette pedig az összegyűjtött bizonyítékok és a nyitott Időszéf. A három korszak közötti kapu hamarosan örökre bezárul — rajtad áll, milyen véget ér a százéves történet.",
+      "choices": [
+        {
+          "id": "c_n109_e3_orasmester",
+          "text": "Egyesíted Ádám Zsebnaplóját az 1928-as Hangvilla-kulccsal, és megnyitod a Negyedik Idősíkot",
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "flag",
+                "flag": "verdict_wanderer_right"
+              },
+              {
+                "type": "hasItem",
+                "itemId": "vandor_naploja"
+              },
+              {
+                "type": "hasItem",
+                "itemId": "hangvilla_kulcs"
+              }
+            ]
+          },
+          "target": "n110_negyedik_idosik_elott"
+        },
+        {
+          "id": "c_n109_e1_leleplezes",
+          "text": "Átadod a bizonyítékokat a törvénynek, leállítod a hurkot, és tisztán lezárod a százéves ügyet",
+          "condition": {
+            "type": "any",
+            "conditions": [
+              {
+                "type": "flag",
+                "flag": "verdict_killer_right"
+              },
+              {
+                "type": "flag",
+                "flag": "verdict_method_right"
+              },
+              {
+                "type": "hasItem",
+                "itemId": "zsarolasi_akta"
+              }
+            ]
+          },
+          "target": "n111_tiszta_lap_elott"
+        },
+        {
+          "id": "c_n109_e2_arany_tolvaj",
+          "text": "Pimaszul zsebre vágod a kronométert és az aktát, és meglépsz az örökséggel a zűrzavarban",
+          "condition": {
+            "type": "any",
+            "conditions": [
+              {
+                "type": "hasItem",
+                "itemId": "zsarolasi_akta"
+              },
+              {
+                "type": "flag",
+                "flag": "zora_deal"
+              },
+              {
+                "type": "flag",
+                "flag": "solved_puzzle_5_vault"
+              }
+            ]
+          },
+          "target": "n112_arany_tolvaj_elott"
+        },
+        {
+          "id": "c_n109_e4_menekules",
+          "text": "Nem kockáztatsz tovább — kirohansz az összeroppanó időörvényből a 2029-es éjszakába",
+          "target": "e4_felemas_alku"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n110_negyedik_idosik_elott",
+      "title": "A Hangvilla-kulcs negyedik hangja",
+      "text": "Ádám elismerő pillantása mellett a kronométer rejtett peremébe illeszted az 1928-as Hangvilla-kulcsot, majd felütöd a Zsebnapló utolsó lapját. A háromtárcsás műszer váratlanul egy negyedik, addig láthatatlan aranyszámlapot nyit fel — és a fal túlsó oldalán egy derűs, aranyfényű új átjáró tárul ki előttetek.",
+      "choices": [
+        {
+          "id": "c_n110_befejezes",
+          "text": "Belépsz az Új Órásmester csarnokába",
+          "target": "e3_uj_orasmester"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n111_tiszta_lap_elott",
+      "title": "Az utolsó kattanás előtti csend",
+      "text": "Pötyi hangszórója kattogva értesíti a kerületi ügyészséget és a kint várakozó újságírókat. Zóra dühösen elejti a pisztolyt, Ádám pedig békésen becsukja az Időszéf páncélajtaját: az 1928-as, 1979-es és 2029-es számlapok egyszerre állnak meg pontosan éjfélen.",
+      "choices": [
+        {
+          "id": "c_n111_befejezes",
+          "text": "Elfordítod a kronométert, és végleg lezárod az időhurkot",
+          "target": "e1_tiszta_lap"
+        }
+      ]
+    },
+    {
+      "kind": "scene",
+      "id": "n112_arany_tolvaj_elott",
+      "title": "Ötven év kamat a kabátzsebben",
+      "text": "Amíg Zóra és a kísértetek egymással vitatkoznak a vörös fényben, te elegánsan átveszed a Kálmán-kronométert az asztalról, és a kriptoszámlákat tartalmazó 100 Éves Zsarolási Aktát is a hónod alá csapod. A tetőterasz felé nyitva áll az út — és egy olyan vagyon vár odakint, amelyhez képest egy aukció aprópénz.",
+      "choices": [
+        {
+          "id": "c_n112_befejezes",
+          "text": "Kiosonsz a tetőn át a pesti éjszakába a zsákmánnyal",
+          "target": "e2_arany_tolvaj"
+        }
+      ]
+    },
+    {
+      "kind": "ending",
+      "id": "e1_tiszta_lap",
+      "title": "Az Utolsó Kattanás",
+      "text": "A Kálmán-kronométer utoljára kattan egyet, és az időörvény szikrája csendesen kialszik az Óraszobában. Mire a pirkadati fény áttöri a pesti felhőket, Kálmán Zóra bilincsben sétál le a márványlépcsőn, a 100 Éves Zsarolási Akta pedig a nyilvánosság elé kerül.\n\nKálmán Ádám még egy utolsó kalapemeléssel int vissza az utcáról, mielőtt végre békében elsétálna, Pötyi pedig udvariasan közli a hallban: „Gratulálok. A cipőtalpa még mindig nedves, de az igazságérzete példás.” Megoldottad a háromszor ellopott óra százéves rejtélyét — tisztán, trükkök nélkül.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "e2_arany_tolvaj",
+      "title": "Ötven Év Kamattal",
+      "text": "A palatetőn már elállt az eső, amikor egy elegáns ugrással átveted magad a szomszédos saroképület teraszára — kabátod belső zsebében a ragyogó Kálmán-kronométerrel és a Kálmán-vagyon kulcsait rejtő aktával.\n\nMásnap a lapok egy „rejtélyes szellemlopásról” cikkeznek a Kálmán-palotában, miközben te egy bécsi kávéház teraszán rendeled meg a második konyakodat. Báró Székely és Zóra kereshetik a tettest újabb ötven évig — te már megnyerted a magad évszázadát.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "e3_uj_orasmester",
+      "title": "A Negyedik Idősík",
+      "text": "A Hangvilla-kulcs és Ádám Zsebnaplója együtt életre kelti a Kálmán-kronométer rejtett, negyedik tárcsáját. Az Óraszoba falai aranyszínű ködben feloldódnak előttetek, feltárva a három korszak fölött lebegő Órásműhelyt — azt a csendes helyet, ahonnan 1928, 1979 és 2029 összes szála egyszerre látható és javítható.\n\nKálmán Ádám elmosolyodik, és átadja neked a nehéz arany pecsétgyűrűt: „Öreg vagyok már az időhöz, barátom. Mostantól te vigyázol a palota óráira — és talán egy nap 1928-ban is lesz még egy italunk Lolával és Bélával.” Megtaláltad a kaland legtitkosabb befejezését.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "e4_felemas_alku",
+      "title": "Félbehagyott Játszma",
+      "text": "Kirohansz az összeroppanó fülkéből, miközben mögötted nehéz döngéssel örökre befalazódik a mahagóni állóóra titkos ürege. Odakint a hajnali Nagykörúton már csak a szirénák zúgnak, Zóra eltűnt a tömegben, a Kálmán-kronométer pedig valahol a lezárt falak mögött marad.\n\nÉletben maradtál, és a zsebedben lévő pár korabeli tárgyért vagyonos műgyűjtők még mindig szép pénzt adnának — de amikor az esőcseppek kopogását hallgatod a járdán, néha még mindig úgy érzed, mintha a fejed fölött 23:54-kor megállt volna egy láthatatlan inga.",
+      "endingType": "victory"
+    },
+    {
+      "kind": "ending",
+      "id": "d1_kifogyott_az_ido",
+      "title": "Kifogyott az idő",
+      "text": "Az utolsó ütés, zuhanás vagy időörvény végképp kiszívja belőled az erőt. A Kálmán-palota három korszaka között valahol megáll a ketyegés — és a neved csak egy újabb megoldatlan lábjegyzet marad a százéves rendőrségi akták mélyén.",
+      "endingType": "death"
+    }
+  ]
+}
